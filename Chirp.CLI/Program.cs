@@ -1,12 +1,11 @@
 ﻿using DocoptNet;
-using CsvHelper;
-using System.Globalization;
+using SimpleDB;
 
 namespace Chirp.CLI
 {
     class Program
     {
-        static readonly string filePath = "cheepDB.csv";
+        private readonly static string filePath = "cheepDB.csv";
         private const string Usage = @"Chirp CLI.
 
 Usage:
@@ -30,53 +29,35 @@ Options:
 
         static void ReadCheeps()
         {
-            if(!File.Exists(filePath))
+            var db = new CSVDatabase<Cheep>(filePath);
+            IEnumerable<Cheep> cheeps = db.Read();
+            foreach(var cheep in cheeps)
             {
-                Console.WriteLine("No cheeps found.");
-                return;
-            }
-
-            using var reader = new StreamReader(filePath);
-            using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
-            var cheeps = csv.GetRecords<Cheep>();
-            foreach (var cheep in cheeps)
-            {
-                Console.WriteLine(cheep.Author + " @ " + UnixTimeStampToDateTime(cheep.Timestamp) + ": " + cheep.Message);
-            }
+                Console.WriteLine(cheep.ToString());
+            }   
         }
         static void WriteCheep(string message)
         {
-            var cheep = new Cheep(
-                Author: Environment.UserName,
-                Message: message,
-                Timestamp: ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds() // ugly for now
-            );
-
-            using var writer = new StreamWriter(filePath, true);
-            using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
-
-            if(!File.Exists(filePath))
-            {
-                Console.WriteLine("CSV file not found. Creating new file..");
-                csv.WriteHeader<Cheep>();
-                writer.WriteLine();
-            }
-            
-            csv.WriteRecord(cheep);
-            writer.WriteLine();
-
-            Console.WriteLine("Cheep sent!");
-            
-        }
-
-        // Modified version of https://stackoverflow.com/a/250400
-        static string UnixTimeStampToDateTime(long unixTimeStamp)
-        {
-            DateTime dateTime = new(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            dateTime = dateTime.AddSeconds(unixTimeStamp).ToLocalTime();
-            return dateTime.ToString("dd-MM-yyyy HH:mm:ss");
+            var db = new CSVDatabase<Cheep>(filePath);
+            var date = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
+            db.Store(new Cheep(Environment.UserName, message, date));
+            Console.WriteLine("Cheeped: " + message);
         }
     }
 
-    public record Cheep(string Author, string Message, long Timestamp);
+    // we have to refactor this to a separate file 
+    public record Cheep(string Author, string Message, long Timestamp)
+    {
+        public override string ToString()
+        {
+            return Author + " @ " + UnixTimeStampToDateTime(Timestamp) + ": " + Message;
+        }
+
+        private static string UnixTimeStampToDateTime(long timestamp)
+        {
+            DateTime dateTime = new(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            dateTime = dateTime.AddSeconds(timestamp).ToLocalTime();
+            return dateTime.ToString("dd-MM-yyyy HH:mm:ss");
+        }
+    }
 }
