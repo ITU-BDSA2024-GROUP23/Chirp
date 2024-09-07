@@ -1,22 +1,63 @@
-﻿var dbPath = "cheepDB.csv";
+﻿using DocoptNet;
+using SimpleDB;
 
-if (args[0] == "cheep" && args.Length == 2) 
+namespace Chirp.CLI
 {
-    var cheep = args[1];
-    var username = Environment.UserName;
-    var date = DateTime.Now;
-    
-    using var sw = new StreamWriter(dbPath, true);
-    var line = $"{date},{username},{cheep}";
-    sw.WriteLine(line);
-}
-
-if (args[0] == "read" && args.Length == 1)
-{
-    using var sr = new StreamReader(dbPath);
-    for (var line = sr.ReadLine(); line != null; line = sr.ReadLine()) 
+    class Program
     {
-        var data = line.Split(',', 3);
-        Console.WriteLine($"{data[0]} @ {data[1]}: {data[2]}");
+        private readonly static string filePath = "cheepDB.csv";
+        private const string Usage = @"Chirp CLI.
+
+Usage:
+    chirp read
+    chirp cheep <cheep>...
+    chirp (-h | --help)
+
+Options:
+    -h --help     Show this screen.";
+
+        static void Main(string[] args)
+        {
+            var arguments = new Docopt().Apply(Usage, args, version: "Chirp CLI 0.1", exit: true);
+            if(arguments["read"].IsTrue) {
+                ReadCheeps();
+            }
+            else if(arguments["cheep"].IsTrue) {
+                WriteCheep(string.Join(" ", args[1..]));
+            }
+        }
+
+        static void ReadCheeps()
+        {
+            var db = new CSVDatabase<Cheep>(filePath);
+            IEnumerable<Cheep> cheeps = db.Read();
+            foreach(var cheep in cheeps)
+            {
+                Console.WriteLine(cheep.ToString());
+            }   
+        }
+        static void WriteCheep(string message)
+        {
+            var db = new CSVDatabase<Cheep>(filePath);
+            var date = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
+            db.Store(new Cheep(Environment.UserName, message, date));
+            Console.WriteLine("Cheeped: " + message);
+        }
+    }
+
+    // we have to refactor this to a separate file 
+    public record Cheep(string Author, string Message, long Timestamp)
+    {
+        public override string ToString()
+        {
+            return Author + " @ " + UnixTimeStampToDateTime(Timestamp) + ": " + Message;
+        }
+
+        private static string UnixTimeStampToDateTime(long timestamp)
+        {
+            DateTime dateTime = new(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            dateTime = dateTime.AddSeconds(timestamp).ToLocalTime();
+            return dateTime.ToString("dd-MM-yyyy HH:mm:ss");
+        }
     }
 }
