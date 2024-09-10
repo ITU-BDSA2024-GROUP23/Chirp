@@ -1,5 +1,6 @@
 ﻿using DocoptNet;
 using SimpleDB;
+using static Chirp.CLI.UserInterface;
 
 namespace Chirp.CLI
 {
@@ -31,10 +32,7 @@ Options:
         {
             var db = new CSVDatabase<Cheep>(filePath);
             IEnumerable<Cheep> cheeps = db.Read();
-            foreach(var cheep in cheeps)
-            {
-                Console.WriteLine(cheep.ToString());
-            }   
+            PrintCheeps(cheeps);
         }
         static void WriteCheep(string message)
         {
@@ -42,22 +40,6 @@ Options:
             var date = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
             db.Store(new Cheep(Environment.UserName, message, date));
             Console.WriteLine("Cheeped: " + message);
-        }
-    }
-
-    // we have to refactor this to a separate file 
-    public record Cheep(string Author, string Message, long Timestamp)
-    {
-        public override string ToString()
-        {
-            return Author + " @ " + UnixTimeStampToDateTime(Timestamp) + ": " + Message;
-        }
-
-        private static string UnixTimeStampToDateTime(long timestamp)
-        {
-            DateTime dateTime = new(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            dateTime = dateTime.AddSeconds(timestamp).ToLocalTime();
-            return dateTime.ToString("dd-MM-yyyy HH:mm:ss");
         }
     }
 }
