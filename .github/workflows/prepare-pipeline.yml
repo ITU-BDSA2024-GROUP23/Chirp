@@ -80,7 +80,7 @@ jobs:
           SECRETS_CONTEXT: ${{ toJson(secrets) }}
           VARS_CONTEXT: ${{ toJson(vars) }}
         run: |
-          required_variables=(PROJECT_TYPE)
+          required_variables=()
 
           if [[ $DEPLOY_PLATFORM == 'azure' ]]; then
             required_variables+=(AZURE_CLIENT_ID AZURE_SUBSCRIPTION_ID AZURE_TENANT_ID)
