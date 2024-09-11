@@ -6,7 +6,7 @@ namespace Chirp.CLI
 {
     class Program
     {
-        private readonly static string filePath = "cheepDB.csv";
+        private readonly static string filePath = "../SimpleDB/data/cheepDB.csv";
         private const string Usage = @"Chirp CLI.
 
 Usage:
@@ -36,6 +36,7 @@ Options:
             IEnumerable<Cheep> cheeps = db.Read();
             PrintCheeps(cheeps);
         }
+        
         static void WriteCheep(string message)
         {
             var db = new CSVDatabase<Cheep>(filePath);
