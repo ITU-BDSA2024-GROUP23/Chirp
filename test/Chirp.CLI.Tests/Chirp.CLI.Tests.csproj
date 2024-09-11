@@ -6,6 +6,9 @@
     <Nullable>enable</Nullable>
 
     <IsPackable>false</IsPackable>
+
+    <OutputType>Exe</OutputType>
+    <OutputName>chirp</OutputName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,7 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="Chirp.CLI.Tests.csproj" />
     <ProjectReference Include="..\..\src\Chirp.CLI\Chirp.CLI.csproj" />
     <ProjectReference Include="..\..\src\SimpleDB\SimpleDB.csproj" />
   </ItemGroup>

@@ -1,0 +1,59 @@
+name: Release dotnet project
+
+on:
+  workflow_call:
+    inputs:
+      deploy_env:
+        description: Deployment environment (prod, stag or dev)
+        required: true
+        type: string
+
+jobs:
+  release-cli:
+    if: inputs.deploy_env == 'prod'
+    runs-on: ubuntu-latest
+
+    environment: ${{ inputs.deploy_env }}
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 7.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build and zip the project for windows
+        run: |
+          dotnet publish -c Release -r win-x64 --self-contained -o chirp-cli-win-x64
+          zip -r chirp-cli-win-x64 chirp-cli-win-x64.zip
+
+      - name: Build and zip the project for linux
+        run: |
+          dotnet publish -c Release -r linux-x64 --self-contained -o chirp-cli-linux-x64
+          zip -r chirp-cli-linux-x64 chirp-cli-linux-x64.zip
+
+      - name: Build and zip the project for macos
+        run: |
+          dotnet publish -c Release -r osx-x64 --self-contained -o chirp-cli-osx-x64
+          zip -r chirp-cli-osx-x64 chirp-cli-osx-x64.zip
+
+      - name: Archive the project
+        uses: actions/upload-artifact@v4
+        with:
+          path: |
+            chirp-cli-win-x64.zip 
+            chirp-cli-linux-x64.zip 
+            chirp-cli-osx-x64.zip 
+        
+      - name: Create a GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            chirp-cli-win-x64.zip 
+            chirp-cli-linux-x64.zip 
+            chirp-cli-osx-x64.zip
