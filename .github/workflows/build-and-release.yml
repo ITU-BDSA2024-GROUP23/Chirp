@@ -63,6 +63,21 @@ jobs:
           PACKAGE_VERSION="$(sed -n 's/.*<PackageVersion>\(.*\)<\/PackageVersion>.*/\1/p' src/Chirp.CLI/Chirp.CLI.csproj)"
           echo "PACKAGE_VERSION=$PACKAGE_VERSION$(echo $PACKAGE_VERSION_SUFFIX)"
           echo "PACKAGE_VERSION=$PACKAGE_VERSION$(echo $PACKAGE_VERSION_SUFFIX)" >> $GITHUB_OUTPUT
+      
+      - name: Version check summary
+        run: |
+          if [[if [ $(git tag -l "$version") ]; then
+            echo "Version $version already exists"
+            exit 1
+          fi
+
+          echo "### Version check summary
+          <table>
+            <tr>
+              <td>📦 Package version</td>
+              <td>${{ steps.get_version.outputs.PACKAGE_VERSION }}</td>
+            </tr>
+          </table>" >> $GITHUB_STEP_SUMMARY
         
       - name: Create a GitHub release
         uses: softprops/action-gh-release@v2
