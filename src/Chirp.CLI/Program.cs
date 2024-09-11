@@ -34,6 +34,7 @@ Options:
             IEnumerable<Cheep> cheeps = db.Read();
             PrintCheeps(cheeps);
         }
+        
         static void WriteCheep(string message)
         {
             var db = new CSVDatabase<Cheep>(filePath);

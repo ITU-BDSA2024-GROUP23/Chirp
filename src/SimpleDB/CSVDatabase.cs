@@ -11,7 +11,6 @@ public class CSVDatabase<T> : IDatabaseRepository<T>
     {
         if(!File.Exists(filePath))
         {
-            Console.Write("bruh");
             throw new FileNotFoundException("Database file not found.");
         }
 
