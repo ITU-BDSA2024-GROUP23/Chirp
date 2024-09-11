@@ -28,20 +28,27 @@ public class UnitTests
     }
 
     [Fact]
-    public void TestStore()
+    public void TestStoreThrows()
+    {
+        string filePath ="../../../../data/testData.csv";
+        var db = new CSVDatabase<TestRecord>(filePath);
+        Assert.Throws<ArgumentNullException>(() => db.Store(null));
+    }
+
+    [Fact]
+    public void TestResetDB()
     {
         //Arrange
         string filePath ="../../../../data/testData.csv";
         var db = new CSVDatabase<TestRecord>(filePath);
-
+        
         //Act
         db.ResetTestDB();
-        db.Store(new TestRecord("yo"));
-
-        //Assert
-        var result = db.Read();
-        Assert.Contains("yo", result.Select(r => r.Message));
         
+        //Assert
+        using StreamReader sr = new StreamReader(filePath);
+        Assert.Equal("Message", sr.ReadLine());
+        Assert.Null(sr.ReadLine());
     }
 
     public record TestRecord(string Message);
