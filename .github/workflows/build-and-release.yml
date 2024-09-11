@@ -1,0 +1,75 @@
+name: Release dotnet project
+
+on:
+  workflow_call:
+    inputs:
+      deploy_env:
+        description: Deployment environment (prod, stag or dev)
+        required: true
+        type: string
+
+jobs:
+  release-cli:
+    if: inputs.deploy_env == 'prod' || inputs.deploy_env == 'stag'
+    runs-on: ubuntu-latest
+
+    environment: ${{ inputs.deploy_env }}
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 7.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build and zip the project for windows
+        run: |
+          dotnet publish src/Chirp.CLI -c Release -r win-x64 --self-contained -o chirp-cli-win-x64
+          zip -r chirp-cli-win-x64.zip chirp-cli-win-x64
+
+      - name: Build and zip the project for linux
+        run: |
+          dotnet publish src/Chirp.CLI -c Release -r linux-x64 --self-contained -o chirp-cli-linux-x64
+          zip -r chirp-cli-linux-x64.zip chirp-cli-linux-x64
+
+      - name: Build and zip the project for macos
+        run: |
+          dotnet publish src/Chirp.CLI -c Release -r osx-x64 --self-contained -o chirp-cli-osx-x64
+          zip -r chirp-cli-osx-x64.zip chirp-cli-osx-x64
+
+      - name: Archive the project
+        uses: actions/upload-artifact@v4
+        with:
+          path: |
+            chirp-cli-win-x64.zip 
+            chirp-cli-linux-x64.zip 
+            chirp-cli-osx-x64.zip 
+      
+      - name: Get project version
+        id: get_version
+        env: 
+          DEPLOY_ENV: ${{ inputs.deploy_env }}
+        run: |
+          if [[ $DEPLOY_ENV == "stag" ]]; then
+            PACKAGE_VERSION_SUFFIX="-dev"
+          else
+            PACKAGE_VERSION_SUFFIX=""
+          fi
+          PACKAGE_VERSION="$(sed -n 's/.*<PackageVersion>\(.*\)<\/PackageVersion>.*/\1/p' src/Chirp.CLI/Chirp.CLI.csproj)"
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION$(echo $PACKAGE_VERSION_SUFFIX)"
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION$(echo $PACKAGE_VERSION_SUFFIX)" >> $GITHUB_OUTPUT
+        
+      - name: Create a GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.get_version.outputs.PACKAGE_VERSION }}
+          prerelease: ${{ inputs.deploy_env == 'stag' }}
+          files: |
+            chirp-cli-win-x64.zip 
+            chirp-cli-linux-x64.zip 
+            chirp-cli-osx-x64.zip
