@@ -1,0 +1,66 @@
+name: Prepare pipeline and set variables
+
+on:
+  workflow_call:
+    outputs:
+      deploy_platform:
+        description: Deployment platform (e.g. azure, flyio...)
+        value: ${{ jobs.prepare-pipeline-vars.outputs.deploy_platform }}
+        
+      deploy_env:
+        description: Deployment environment (prod, stag or dev)
+        value: ${{ jobs.prepare-pipeline-vars.outputs.deploy_env }}
+
+jobs:
+  prepare-pipeline-vars:
+    runs-on: ubuntu-latest
+
+    outputs:
+      deploy_platform: ${{ steps.pipeline-vars.outputs.DEPLOY_PLATFORM }}
+      deploy_env: ${{ steps.pipeline-vars.outputs.DEPLOY_ENV }}
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Get deployment variables
+        id: pipeline-vars
+        env:
+          DEPLOY_PLATFORM: ${{ vars.DEPLOY_PLATFORM }}
+          BRANCH: ${{ github.ref_name }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          echo "Checking deployment variables"
+
+          if [[ -z $DEPLOY_PLATFORM ]]; then
+            DEPLOY_PLATFORM="None"
+          fi
+
+          echo "DEPLOY_PLATFORM=$DEPLOY_PLATFORM"
+          echo "DEPLOY_PLATFORM=$DEPLOY_PLATFORM" >> $GITHUB_OUTPUT
+
+
+          if [[ $BRANCH == "main" || $BRANCH == "master" ]]; then
+            DEPLOY_ENV="prod"
+          elif [[ $BRANCH == "staging" ]]; then
+            DEPLOY_ENV="stag"
+          else
+            DEPLOY_ENV="dev"
+          fi
+
+          echo "DEPLOY_ENV=$DEPLOY_ENV"
+          echo "DEPLOY_ENV=$DEPLOY_ENV" >> $GITHUB_OUTPUT
+
+      - name: Write pipeline vars summary
+        run: |
+          echo "### Prepare pipeline:               
+          <table>
+            <tr>
+              <td>🚀 Deployment platform</td>
+              <td>${{ steps.pipeline-vars.outputs.DEPLOY_PLATFORM }}</td>
+            </tr>
+            <tr>
+              <td>🎯 Deployment environment</td>
+              <td>${{ steps.pipeline-vars.outputs.DEPLOY_ENV }}</td>
+            </tr>
+          </table>" >> $GITHUB_STEP_SUMMARY

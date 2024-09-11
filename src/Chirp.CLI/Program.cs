@@ -20,10 +20,12 @@ Options:
         static void Main(string[] args)
         {
             var arguments = new Docopt().Apply(Usage, args, version: "Chirp CLI 0.1", exit: true);
-            if(arguments["read"].IsTrue) {
+            if (arguments["read"].IsTrue)
+            {
                 ReadCheeps();
             }
-            else if(arguments["cheep"].IsTrue) {
+            else if (arguments["cheep"].IsTrue)
+            {
                 WriteCheep(string.Join(" ", args[1..]));
             }
         }

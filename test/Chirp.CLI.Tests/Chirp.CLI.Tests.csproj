@@ -6,6 +6,9 @@
     <Nullable>enable</Nullable>
 
     <IsPackable>false</IsPackable>
+
+    <OutputType>Exe</OutputType>
+    <OutputName>chirp</OutputName>
   </PropertyGroup>
 
   <ItemGroup>

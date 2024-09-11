@@ -4,7 +4,7 @@ public static class UserInterface
 {
     public static void PrintCheeps(IEnumerable<Cheep> cheeps)
     {
-        foreach(var cheep in cheeps)
+        foreach (var cheep in cheeps)
         {
             Console.WriteLine(cheep.ToString());
         }
@@ -23,5 +23,5 @@ public static class UserInterface
             dateTime = dateTime.AddSeconds(timestamp).ToLocalTime();
             return dateTime.ToString("dd-MM-yyyy HH:mm:ss");
         }
-    }       
+    }
 }
