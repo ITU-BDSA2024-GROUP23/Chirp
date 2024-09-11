@@ -10,7 +10,7 @@ on:
 
 jobs:
   release-cli:
-    if: inputs.deploy_env == 'prod'
+    if: inputs.deploy_env == 'prod' || inputs.deploy_env == 'stag'
     runs-on: ubuntu-latest
 
     environment: ${{ inputs.deploy_env }}
@@ -52,15 +52,23 @@ jobs:
       
       - name: Get project version
         id: get_version
+        env: 
+          DEPLOY_ENV: ${{ inputs.deploy_env }}
         run: |
-          PACKAGE_VERSION=$(sed -n 's/.*<PackageVersion>\(.*\)<\/PackageVersion>.*/\1/p' src/Chirp.CLI/Chirp.CLI.csproj)
-          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
-          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
+          if [[ $DEPLOY_ENV == "stag" ]]; then
+            PACKAGE_VERSION_SUFFIX="-dev"
+          else
+            PACKAGE_VERSION_SUFFIX=""
+          fi
+          PACKAGE_VERSION="$(sed -n 's/.*<PackageVersion>\(.*\)<\/PackageVersion>.*/\1/p' src/Chirp.CLI/Chirp.CLI.csproj)"
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION$(echo $PACKAGE_VERSION_SUFFIX)"
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION$(echo $PACKAGE_VERSION_SUFFIX)" >> $GITHUB_OUTPUT
         
       - name: Create a GitHub release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.get_version.outputs.PACKAGE_VERSION }}
+          prerelease: ${{ inputs.deploy_env == 'stag' }}
           files: |
             chirp-cli-win-x64.zip 
             chirp-cli-linux-x64.zip 
