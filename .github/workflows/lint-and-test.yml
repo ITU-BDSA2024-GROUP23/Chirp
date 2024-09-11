@@ -24,14 +24,14 @@ jobs:
       - name: Install dotnet format
         run: dotnet tool install -g dotnet-format
 
-      - name: Lint the project
-        run: dotnet format --verify-no-changes
-      
       - name: Restore dependencies
         run: dotnet restore
       
       - name: Build the project
         run: dotnet build --no-restore
+
+      - name: Lint the project
+        run: dotnet format --verify-no-changes --no-restore
       
       - name: Test the project
-        run: dotnet test Chrip.sln --no-build --verbosity normal
+        run: dotnet test --no-build
