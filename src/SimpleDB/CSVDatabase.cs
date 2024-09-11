@@ -13,7 +13,7 @@ public class CSVDatabase<T> : IDatabaseRepository<T>
     }
     public IEnumerable<T> Read(int? limit = null)
     {
-        if(!File.Exists(filePath))
+        if (!File.Exists(filePath))
         {
             Console.WriteLine("Database file not found.");
             return Enumerable.Empty<T>();
@@ -28,13 +28,13 @@ public class CSVDatabase<T> : IDatabaseRepository<T>
 
     public void Store(T record)
     {
-        if(!File.Exists(filePath))
+        if (!File.Exists(filePath))
         {
             Console.WriteLine("Database file not found.");
         }
         using var writer = new StreamWriter(filePath, true);
         using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
-        writer.WriteLine(); 
+        writer.WriteLine();
         csv.WriteRecord(record);
     }
 }
