@@ -28,6 +28,9 @@ jobs:
       contents: write
 
     steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+
       - name: Get deployment variables
         id: pipeline-vars
         env:
