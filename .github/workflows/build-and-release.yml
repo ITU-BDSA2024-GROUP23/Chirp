@@ -7,6 +7,11 @@ on:
         description: Deployment environment (prod, stag or dev)
         required: true
         type: string
+      
+      package_version:
+        description: Package version
+        required: true
+        type: string
 
 jobs:
   release-cli:
@@ -19,6 +24,15 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v4
 
+      - name: Validate package version
+        env:
+          PACKAGE_VERSION: ${{ inputs.package_version }}
+        run: |
+          if git rev-parse "refs/tags/$PACKAGE_VERSION" >/dev/null 2>&1; then
+            echo "Tag $PACKAGE_VERSION already exists."
+            exit 1
+          fi
+        
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
@@ -50,41 +64,10 @@ jobs:
             chirp-cli-linux-x64.zip 
             chirp-cli-osx-x64.zip 
       
-      - name: Get project version
-        id: get_version
-        env: 
-          DEPLOY_ENV: ${{ inputs.deploy_env }}
-        run: |
-          if [[ $DEPLOY_ENV == "stag" ]]; then
-            PACKAGE_VERSION_SUFFIX="-dev"
-          else
-            PACKAGE_VERSION_SUFFIX=""
-          fi
-          PACKAGE_VERSION="$(sed -n 's/.*<PackageVersion>\(.*\)<\/PackageVersion>.*/\1/p' src/Chirp.CLI/Chirp.CLI.csproj)"
-          echo "PACKAGE_VERSION=$PACKAGE_VERSION$(echo $PACKAGE_VERSION_SUFFIX)"
-          echo "PACKAGE_VERSION=$PACKAGE_VERSION$(echo $PACKAGE_VERSION_SUFFIX)" >> $GITHUB_OUTPUT
-      
-      - name: Version check summary
-        env:
-          PACKAGE_VERSION: ${{ steps.get_version.outputs.PACKAGE_VERSION }}
-        run: |
-          if [[ $(git tag -l "$PACKAGE_VERSION") ]]; then
-            echo "Version $version already exists"
-            exit 1
-          fi
-
-          echo "### Version check summary
-          <table>
-            <tr>
-              <td>📦 Package version</td>
-              <td>$PACKAGE_VERSION</td>
-            </tr>
-          </table>" >> $GITHUB_STEP_SUMMARY
-        
       - name: Create a GitHub release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.get_version.outputs.PACKAGE_VERSION }}
+          tag_name: ${{ inputs.package_version }}
           prerelease: ${{ inputs.deploy_env == 'stag' }}
           files: |
             chirp-cli-win-x64.zip 
