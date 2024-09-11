@@ -19,6 +19,9 @@ jobs:
       deploy_platform: ${{ steps.pipeline-vars.outputs.DEPLOY_PLATFORM }}
       deploy_env: ${{ steps.pipeline-vars.outputs.DEPLOY_ENV }}
 
+    permissions:
+      contents: write
+
     steps:
       - name: Get deployment variables
         id: pipeline-vars
