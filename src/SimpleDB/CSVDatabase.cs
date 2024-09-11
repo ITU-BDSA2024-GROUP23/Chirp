@@ -9,16 +9,15 @@ public class CSVDatabase<T> : IDatabaseRepository<T>
 
     public CSVDatabase(string filePath)
     {
+        if(!File.Exists(filePath))
+        {
+            throw new FileNotFoundException("Database file not found.");
+        }
+
         this.filePath = filePath;
     }
     public IEnumerable<T> Read(int? limit = null)
     {
-        if(!File.Exists(filePath))
-        {
-            Console.WriteLine("Database file not found.");
-            return Enumerable.Empty<T>();
-        }
-
         using var reader = new StreamReader(filePath);
         using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
         IEnumerable<T> records = csv.GetRecords<T>();
@@ -28,10 +27,6 @@ public class CSVDatabase<T> : IDatabaseRepository<T>
 
     public void Store(T record)
     {
-        if(!File.Exists(filePath))
-        {
-            Console.WriteLine("Database file not found.");
-        }
         using var writer = new StreamWriter(filePath, true);
         using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
         writer.WriteLine(); 

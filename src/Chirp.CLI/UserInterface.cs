@@ -17,7 +17,7 @@ public static class UserInterface
             return Author + " @ " + UnixTimeStampToDateTime(Timestamp) + ": " + Message;
         }
 
-        private static string UnixTimeStampToDateTime(long timestamp)
+        public static string UnixTimeStampToDateTime(long timestamp)
         {
             DateTime dateTime = new(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
             dateTime = dateTime.AddSeconds(timestamp).ToLocalTime();
