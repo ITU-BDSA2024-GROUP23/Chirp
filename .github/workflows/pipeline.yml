@@ -1,6 +1,7 @@
 name: CI/CD pipeline for a .NET project
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - '**'
