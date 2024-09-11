@@ -1,4 +1,4 @@
-namespace test;
+namespace Chirp.CLI.Tests;
 
 public class UnitTest1
 {
