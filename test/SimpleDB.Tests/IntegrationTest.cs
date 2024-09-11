@@ -1,2 +1,0 @@
-namespace SimpleDB.Tests;
-

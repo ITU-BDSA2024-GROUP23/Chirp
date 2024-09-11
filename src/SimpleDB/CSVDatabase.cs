@@ -32,4 +32,12 @@ public class CSVDatabase<T> : IDatabaseRepository<T>
         writer.WriteLine(); 
         csv.WriteRecord(record);
     }
+
+    public void ResetTestDB()
+    {
+        //Write "id" as header
+        using var writer = new StreamWriter(filePath);
+        using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
+        csv.WriteHeader<T>();
+    }
 }
