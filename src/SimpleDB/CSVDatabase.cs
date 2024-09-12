@@ -9,7 +9,7 @@ public class CSVDatabase<T> : IDatabaseRepository<T>
 
     public CSVDatabase(string filePath)
     {
-        if(!File.Exists(filePath))
+        if (!File.Exists(filePath))
         {
             throw new FileNotFoundException("Database file not found.");
         }
@@ -27,13 +27,13 @@ public class CSVDatabase<T> : IDatabaseRepository<T>
 
     public void Store(T record)
     {
-        if(record == null)
+        if (record == null)
         {
             throw new ArgumentNullException(nameof(record));
         }
         using var writer = new StreamWriter(filePath, true);
         using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
-        writer.WriteLine(); 
+        writer.WriteLine();
         csv.WriteRecord(record);
     }
 

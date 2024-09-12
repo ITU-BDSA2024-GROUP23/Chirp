@@ -8,7 +8,7 @@ public class IntegrationTests
     public void TestStore()
     {
         //Arrange
-        string filePath ="../../../../data/testData.csv";
+        string filePath = "../../../../data/testData.csv";
         var db = new CSVDatabase<TestRecord>(filePath);
 
         //Act

@@ -13,7 +13,8 @@ public class End2EndTests
         string output;
 
         //Act
-        var process = new Process{
+        var process = new Process
+        {
             StartInfo = {
                 FileName = "dotnet",
                 Arguments = "exec " + dir + " " + args,
@@ -33,10 +34,10 @@ public class End2EndTests
         Assert.StartsWith("ropf", firstCheep);
         Assert.NotEmpty(cheeps);
         Assert.EndsWith("Hello, BDSA students!", firstCheep);
-    }  
+    }
 
     [Fact]
-    public void TestWriteCheep() 
+    public void TestWriteCheep()
     {
         //Arrange
         string dir = "src/Chirp.CLI/bin/Debug/net7.0/Chirp.CLI.dll";
@@ -44,7 +45,8 @@ public class End2EndTests
         string output;
 
         //Act
-        var process = new Process{
+        var process = new Process
+        {
             StartInfo = {
                 FileName = "dotnet",
                 Arguments = "exec " + dir + " " + args,

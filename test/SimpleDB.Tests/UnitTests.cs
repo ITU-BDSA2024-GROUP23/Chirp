@@ -3,12 +3,12 @@ namespace SimpleDB.Tests;
 public class UnitTests
 {
     [Fact]
-    public void TestFileNotFound() 
+    public void TestFileNotFound()
     {
         //Arrange
         string path = "notfound.csv";
         Console.WriteLine(Environment.CurrentDirectory);
-        
+
         //Assert
         Assert.Throws<FileNotFoundException>(() => new CSVDatabase<TestRecord>(path));
     }
@@ -17,7 +17,7 @@ public class UnitTests
     public void TestRead()
     {
         //Arrange
-        string filePath ="../../../../data/testData.csv";
+        string filePath = "../../../../data/testData.csv";
         var db = new CSVDatabase<TestRecord>(filePath);
 
         //Act
@@ -30,7 +30,7 @@ public class UnitTests
     [Fact]
     public void TestStoreThrows()
     {
-        string filePath ="../../../../data/testData.csv";
+        string filePath = "../../../../data/testData.csv";
         var db = new CSVDatabase<TestRecord>(filePath);
         Assert.Throws<ArgumentNullException>(() => db.Store(null));
     }
@@ -39,12 +39,12 @@ public class UnitTests
     public void TestResetDB()
     {
         //Arrange
-        string filePath ="../../../../data/testData.csv";
+        string filePath = "../../../../data/testData.csv";
         var db = new CSVDatabase<TestRecord>(filePath);
-        
+
         //Act
         db.ResetTestDB();
-        
+
         //Assert
         using StreamReader sr = new StreamReader(filePath);
         Assert.Equal("Message", sr.ReadLine());

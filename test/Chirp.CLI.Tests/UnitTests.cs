@@ -23,5 +23,5 @@ public class UnitTests
 
         //Assert
         Assert.Equal("axlu @ 02-08-2023 15:04:47: test", chirp.ToString());
-    } 
+    }
 }
