@@ -8,93 +8,56 @@ public class End2EndTests
     public void TestReadCheep()
     {
         //Arrange
-        var filePath = Directory.GetCurrentDirectory();
-        var chirpCLIPath = Path.GetFullPath(Path.Combine(filePath, "..", "..", "..", "..", "..", "src", "Chirp.CLI", "bin", "Debug", "net7.0", "Chirp.CLI"));
-        
+        string dir = "src/Chirp.CLI/bin/Debug/net7.0/Chirp.CLI.dll";
+        string args = "read";
+        string output;
+
         //Act
-        var process = new Process {
-            StartInfo = new ProcessStartInfo {
-                //FileName = "dotnet",
-                //Arguments = $"{chirpCLIPath} read",
-                FileName = "pwd",
-                RedirectStandardOutput = true,
-                UseShellExecute = false,
-            }
-        };
-        process.Start();
-        StreamReader sr = process.StandardOutput;
-        string output = sr.ReadToEnd();
-        process.WaitForExit();
-
-        string[] cheeps = output.Split("\n");
-
-
-        //Assert
-        Assert.Equal("new string[10]", output);
-        //Assert.NotEmpty(cheeps);
-    }
-
-    [Fact]
-    public void TestReadCheep2()
-    {
-        //Arrange
-        var filePath = Directory.GetCurrentDirectory();
-        var chirpCLIPath = Path.GetFullPath(Path.Combine(filePath, "..", "..", "..", "..", "..", "src", "Chirp.CLI", "bin", "Debug", "net7.0", "Chirp.CLI"));
-        
-        //Act
-        var process = new Process {
-            StartInfo = new ProcessStartInfo {
+        var process = new Process{
+            StartInfo = {
                 FileName = "dotnet",
-                Arguments = $"{chirpCLIPath} read",
-                RedirectStandardOutput = true,
+                Arguments = "exec " + dir + " " + args,
                 UseShellExecute = false,
+                WorkingDirectory = Path.Combine("..", "..", "..", "..", ".."),
+                RedirectStandardOutput = true
             }
         };
         process.Start();
-        StreamReader sr = process.StandardOutput;
-        string output = sr.ReadToEnd();
+        output = process.StandardOutput.ReadToEnd();
         process.WaitForExit();
 
         string[] cheeps = output.Split("\n");
+        string firstCheep = cheeps[0];
 
         //Assert
+        Assert.StartsWith("ropf", firstCheep);
         Assert.NotEmpty(cheeps);
-        Assert.Equal("ropf", cheeps[0]);
-    }
-
-
-
-
-
+        Assert.EndsWith("Hello, BDSA students!", firstCheep);
+    }  
 
     [Fact]
-    public void TestReadCheep3()
+    public void TestWriteCheep() 
     {
         //Arrange
-        //var filePath = Directory.GetCurrentDirectory();
-        //var chirpCLIPath = Path.GetFullPath(Path.Combine(filePath, "..", "..", "..", "..", "..", "src", "Chirp.CLI", "bin", "Debug", "net7.0", "Chirp.CLI"));
-        
+        string dir = "src/Chirp.CLI/bin/Debug/net7.0/Chirp.CLI.dll";
+        string args = "cheep end2end test";
+        string output;
+
         //Act
-        var process = new Process {
-            StartInfo = new ProcessStartInfo {
-                FileName = "../../../../../src/Chirp.CLI/bin/Debug/net7.0/Chirp.CLI",
-                Arguments = "read",
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
+        var process = new Process{
+            StartInfo = {
+                FileName = "dotnet",
+                Arguments = "exec " + dir + " " + args,
                 UseShellExecute = false,
+                WorkingDirectory = Path.Combine("..", "..", "..", "..", ".."),
+                RedirectStandardOutput = true
             }
         };
-        
         process.Start();
-        StreamReader sr = process.StandardOutput;
-        string output = sr.ReadToEnd();
+        output = process.StandardOutput.ReadToEnd();
         process.WaitForExit();
 
-        string[] cheeps = output.Split("\n");
-
-
         //Assert
-        Assert.Equal("new string[10]", output);
-        //Assert.NotEmpty(cheeps);
+        Assert.Equal("Cheeped: end2end test\n", output);
     }
 }

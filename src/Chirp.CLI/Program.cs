@@ -5,8 +5,8 @@ using static Chirp.CLI.UserInterface;
 namespace Chirp.CLI
 {
     class Program
-    {
-        private readonly static string filePath = "../SimpleDB/data/cheepDB.csv";
+        {
+        private readonly static string filePath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "SimpleDB", "data", "cheepDB.csv")); // Surely there is a better way to do this?
         private const string Usage = @"Chirp CLI.
 
 Usage:
