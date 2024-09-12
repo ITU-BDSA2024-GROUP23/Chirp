@@ -20,7 +20,7 @@ public static class UserInterface
         public static string UnixTimeStampToDateTime(long timestamp)
         {
             DateTime dateTime = new(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            dateTime = dateTime.AddSeconds(timestamp).ToLocalTime();
+            dateTime = dateTime.AddSeconds(timestamp).AddHours(2);
             return dateTime.ToString("dd-MM-yyyy HH:mm:ss");
         }
     }
