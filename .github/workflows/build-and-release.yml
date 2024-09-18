@@ -29,8 +29,10 @@ jobs:
           PACKAGE_VERSION: ${{ inputs.package_version }}
         run: |
           if git rev-parse "refs/tags/$PACKAGE_VERSION" >/dev/null 2>&1; then
-            echo "Tag $PACKAGE_VERSION already exists."
-            exit 1
+              echo "Tag $PACKAGE_VERSION already exists."
+              exit 1
+          else 
+              echo "Tag $PACKAGE_VERSION does not exists."
           fi
         
       - name: Setup .NET
