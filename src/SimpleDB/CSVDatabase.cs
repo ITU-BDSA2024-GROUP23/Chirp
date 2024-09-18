@@ -6,15 +6,25 @@ namespace SimpleDB;
 public class CSVDatabase<T> : IDatabaseRepository<T>
 {
     private readonly string filePath;
+    private static CSVDatabase<T>? instance;
 
-    public CSVDatabase(string filePath)
+    private CSVDatabase(string filePath)
+    {
+        this.filePath = filePath;
+    }
+
+    public static CSVDatabase<T> GetInstance(string filePath)
     {
         if (!File.Exists(filePath))
         {
             throw new FileNotFoundException("Database file not found.");
         }
 
-        this.filePath = filePath;
+        if (instance == null)
+        {
+            instance = new CSVDatabase<T>(filePath);
+        }
+        return instance;
     }
     public IEnumerable<T> Read(int? limit = null)
     {
