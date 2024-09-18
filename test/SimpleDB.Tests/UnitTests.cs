@@ -62,9 +62,9 @@ public class UnitTests
         var instance2 = CSVDatabase<TestRecord>.GetInstance(path);
 
         //Assert
-        Assert.NotNull(instance1); 
-        Assert.NotNull(instance2); 
-        Assert.Same(instance1, instance2); 
+        Assert.NotNull(instance1);
+        Assert.NotNull(instance2);
+        Assert.Same(instance1, instance2);
     }
 
     public record TestRecord(string Message);
