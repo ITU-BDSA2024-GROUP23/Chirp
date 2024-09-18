@@ -29,3 +29,4 @@ jobs:
     secrets: inherit
     with:
       deploy_env: ${{ needs.prepare-pipeline.outputs.deploy_env }}
+      package_version: ${{ needs.prepare-pipeline.outputs.package_version }}

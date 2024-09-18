@@ -11,6 +11,10 @@ on:
         description: Deployment environment (prod, stag or dev)
         value: ${{ jobs.prepare-pipeline-vars.outputs.deploy_env }}
 
+      package_version:
+        description: The version of the package
+        value: ${{ jobs.prepare-pipeline-vars.outputs.package_version }}
+
 jobs:
   prepare-pipeline-vars:
     runs-on: ubuntu-latest
@@ -18,11 +22,15 @@ jobs:
     outputs:
       deploy_platform: ${{ steps.pipeline-vars.outputs.DEPLOY_PLATFORM }}
       deploy_env: ${{ steps.pipeline-vars.outputs.DEPLOY_ENV }}
+      package_version: ${{ steps.pipeline-vars.outputs.PACKAGE_VERSION }}
 
     permissions:
       contents: write
 
     steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+
       - name: Get deployment variables
         id: pipeline-vars
         env:
@@ -51,6 +59,16 @@ jobs:
           echo "DEPLOY_ENV=$DEPLOY_ENV"
           echo "DEPLOY_ENV=$DEPLOY_ENV" >> $GITHUB_OUTPUT
 
+
+          if [[ $DEPLOY_ENV == "stag" ]]; then
+            PACKAGE_VERSION_SUFFIX="-dev"
+          else
+            PACKAGE_VERSION_SUFFIX=""
+          fi
+          PACKAGE_VERSION="$(sed -n 's/.*<PackageVersion>\(.*\)<\/PackageVersion>.*/\1/p' src/Chirp.CLI/Chirp.CLI.csproj)"
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION$(echo $PACKAGE_VERSION_SUFFIX)"
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION$(echo $PACKAGE_VERSION_SUFFIX)" >> $GITHUB_OUTPUT
+
       - name: Write pipeline vars summary
         run: |
           echo "### Prepare pipeline:               
@@ -62,5 +80,9 @@ jobs:
             <tr>
               <td>🎯 Deployment environment</td>
               <td>${{ steps.pipeline-vars.outputs.DEPLOY_ENV }}</td>
+            </tr>
+            <tr>
+              <td>📦 Package version</td>
+              <td>${{ steps.pipeline-vars.outputs.PACKAGE_VERSION }}</td>
             </tr>
           </table>" >> $GITHUB_STEP_SUMMARY
