@@ -9,7 +9,7 @@ public class IntegrationTests
     {
         //Arrange
         string filePath = "../../../../data/testData.csv";
-        var db = new CSVDatabase<TestRecord>(filePath);
+        var db = CSVDatabase<TestRecord>.GetInstance(filePath);
 
         //Act
         db.ResetTestDB();

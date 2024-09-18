@@ -32,14 +32,14 @@ Options:
 
         static void ReadCheeps()
         {
-            var db = new CSVDatabase<Cheep>(filePath);
+            var db = CSVDatabase<Cheep>.GetInstance(filePath);
             IEnumerable<Cheep> cheeps = db.Read();
             PrintCheeps(cheeps);
         }
 
         static void WriteCheep(string message)
         {
-            var db = new CSVDatabase<Cheep>(filePath);
+            var db = CSVDatabase<Cheep>.GetInstance(filePath);
             var date = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
             db.Store(new Cheep(Environment.UserName, message, date));
             Console.WriteLine("Cheeped: " + message);
