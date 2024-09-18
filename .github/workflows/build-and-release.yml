@@ -28,8 +28,16 @@ jobs:
 
       - name: Validate package version
         env:
+          DEPLOY_ENV: ${{ inputs.deploy_env }}
           PACKAGE_VERSION: ${{ inputs.package_version }}
         run: |
+          if [[ $DEPLOY_ENV == "prod" ]]; then
+              echo "Validating package version for production"
+          else
+              echo "Not validating package version for staging"
+              exit 0
+          fi
+
           if git rev-parse "refs/tags/$PACKAGE_VERSION" >/dev/null 2>&1; then
               echo "Tag $PACKAGE_VERSION already exists."
               exit 1
