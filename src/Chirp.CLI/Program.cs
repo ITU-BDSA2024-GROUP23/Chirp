@@ -28,6 +28,10 @@ Options:
             {
                 WriteCheep(string.Join(" ", args[1..]));
             }
+            else if (arguments["--help"].IsTrue || arguments["-h"].IsTrue)
+            {
+                Console.WriteLine(Usage);
+            }
         }
 
         static void ReadCheeps()
