@@ -5,15 +5,14 @@ namespace SimpleDB;
 
 public class CSVDatabase<T> : IDatabaseRepository<T>
 {
-    private readonly string filePath;
+    private readonly static string filePath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "SimpleDB", "data", "cheepDB.csv")); // Surely there is a better way to do this?
     private static CSVDatabase<T>? instance;
 
-    private CSVDatabase(string filePath)
+    private CSVDatabase()
     {
-        this.filePath = filePath;
     }
 
-    public static CSVDatabase<T> GetInstance(string filePath)
+    public static CSVDatabase<T> GetInstance()
     {
         if (!File.Exists(filePath))
         {
@@ -22,7 +21,7 @@ public class CSVDatabase<T> : IDatabaseRepository<T>
 
         if (instance == null)
         {
-            instance = new CSVDatabase<T>(filePath);
+            instance = new CSVDatabase<T>();
         }
         return instance;
     }
