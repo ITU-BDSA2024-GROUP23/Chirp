@@ -4,7 +4,7 @@ Chirp project, developed following the course Analysis, Design and Software Arch
 
 Create cheeps and list others cheeps.
 
-## Commiting not working code
+## Committing not working code
 
 If the code that you are working on breaks other services, it should never end up in
 the production environment. Instead use the `staging` branch until the code is working
