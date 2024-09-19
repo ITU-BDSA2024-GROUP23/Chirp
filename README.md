@@ -10,13 +10,13 @@ To get an overview of available commands
 chirp --help
 ```
 
-- List all cheeps
+List all cheeps
 
 ```bash
 chirp read
 ```
 
-- Create a new cheep
+Create a new cheep
 
 ```bash
 chirp cheep "Hello, World!"
