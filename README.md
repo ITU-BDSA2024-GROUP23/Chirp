@@ -12,7 +12,7 @@ All branches are all lowercase and uses `-` instead of spaces.
 
 What prefixes to use when creating a new branch.
 
-If the operation is not here, wait for group meeting or start a convesation in issue.
+If the operation is not here, wait for group meeting or start a conversation in issue.
 
 | Branch purpose | Prefix |
 |---|---|
