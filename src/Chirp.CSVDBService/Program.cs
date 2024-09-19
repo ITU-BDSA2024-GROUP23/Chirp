@@ -2,9 +2,8 @@ using SimpleDB;
 
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
-string filePath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "SimpleDB", "data", "cheepDB.csv")); // Surely there is a better way to do this?
 
-var db = CSVDatabase<Cheep>.GetInstance(filePath);
+var db = CSVDatabase<Cheep>.GetInstance();
 
 app.MapGet("/cheeps", () =>
 {
