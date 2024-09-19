@@ -2,8 +2,6 @@
 
 Chirp project, developed following the course Analysis, Design and Software Architecture (Autumn 2024).
 
-Create cheeps and list others cheeps.
-
 ## Example usage of Chirp CLI
 
 To get an overview of available commands
@@ -12,15 +10,11 @@ To get an overview of available commands
 chirp --help
 ```
 
----
-
 - List all cheeps
 
 ```bash
 chirp read
 ```
-
----
 
 - Create a new cheep
 
