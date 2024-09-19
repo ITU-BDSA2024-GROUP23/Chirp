@@ -10,9 +10,11 @@ All branches are all lowercase and uses `-` instead of spaces.
 
 #### Branches prefixes:
 
-What prefixes to use when creating a new branch for a feature
+What prefixes to use when creating a new branch.
 
-| Issue Operation | Prefix |
-|-----------|--------------|
-| Feature refactor | `refactor/` |
-| New feature | `feature/`|
+If the operation is not here, wait for group meeting or start a convesation in issue.
+
+| Branch purpose | Prefix |
+|---|---|
+| Refactor of feature | `refactor/` |
+| Creating new feature | `feature/`|
