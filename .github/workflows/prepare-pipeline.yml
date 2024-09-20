@@ -29,9 +29,7 @@ jobs:
       - name: Get deployment variables
         id: pipeline-vars
         env:
-          DEPLOY_PLATFORM: ${{ vars.DEPLOY_PLATFORM }}
           BRANCH: ${{ github.ref_name }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
           echo "Checking deployment environment..."
 
@@ -85,14 +83,15 @@ jobs:
 
     permissions:
       id-token: write
+      contents: read
 
     steps:
       - name: Validate login to Azure using OIDC
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
 
       - name: Azure CLI show account
         uses: azure/cli@v2
