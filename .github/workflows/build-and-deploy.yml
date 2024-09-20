@@ -1,0 +1,54 @@
+name: Deploy service to Azure
+
+on:
+  workflow_call:
+    inputs:
+      deploy_env:
+        description: Deployment environment (prod, stag or dev)
+        required: true
+        type: string
+
+jobs:
+  build-and-deploy-web-service:
+    if: inputs.deploy_env == 'prod'
+    runs-on: ubuntu-latest
+
+    environment: ${{ inputs.deploy_env }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 7.0.x
+
+      - name: Restore project dependencies
+        run: dotnet restore
+
+      - name: Build project in rlease mode
+        run: |
+          dotnet publish src/Chirp.CSVDBService -c Release chirp-remote-db-web-service
+          zip -r chirp-remote-db-web-service.zip chirp-remote-db-web-service
+
+      - name: Archive the CLI packages
+        uses: actions/upload-artifact@v4
+        with:
+          path: |
+            chirp-remote-db-web-service.zip
+
+      - name: Login to Azure using OIDC
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'chirp-remote-db'
+          slot-name: 'Production'
+          package: chirp-remote-db-web-service
