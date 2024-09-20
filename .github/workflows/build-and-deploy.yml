@@ -13,6 +13,10 @@ jobs:
     if: inputs.deploy_env == 'prod'
     runs-on: ubuntu-latest
 
+    permissions:
+      id-token: write
+      contents: read
+
     environment: ${{ inputs.deploy_env }}
 
     steps:
