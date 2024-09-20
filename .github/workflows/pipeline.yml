@@ -1,13 +1,14 @@
-name: CI/CD pipeline for a .NET project
+name: CI/CD pipeline our a .NET project
 
 on:
   workflow_dispatch:
   push:
+    paths:
+      - src/**
+      - test/**
+      - Chrip.sln
     branches:
       - '**'
-    paths-ignore:
-      - 'README.md'
-      - 'LICENSE'
 
 jobs:
   prepare-pipeline:
