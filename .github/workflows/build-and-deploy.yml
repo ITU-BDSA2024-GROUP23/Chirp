@@ -13,6 +13,10 @@ jobs:
     if: inputs.deploy_env == 'prod'
     runs-on: ubuntu-latest
 
+    permissions:
+      id-token: write
+      contents: read
+
     environment: ${{ inputs.deploy_env }}
 
     steps:
@@ -35,8 +39,8 @@ jobs:
       - name: Archive the CLI packages
         uses: actions/upload-artifact@v4
         with:
-          path: |
-            chirp-remote-db-web-service.zip
+          name: chirp-remote-db-web-service
+          path: chirp-remote-db-web-service.zip
 
       - name: Login to Azure using OIDC
         uses: azure/login@v2
