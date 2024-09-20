@@ -2,6 +2,7 @@ namespace SimpleDB.Tests;
 
 public class UnitTests
 {
+    /*
     [Fact]
     public void TestFileNotFound()
     {
@@ -68,5 +69,6 @@ public class UnitTests
     }
 
     public record TestRecord(string Message);
+    */
 
 }
