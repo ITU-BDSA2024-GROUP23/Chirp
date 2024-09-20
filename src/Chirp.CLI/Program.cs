@@ -6,7 +6,6 @@ namespace Chirp.CLI
 {
     class Program
     {
-        private readonly static string filePath = "cheepDB.csv";
         private const string Usage = @"Chirp CLI.
 
 Usage:
@@ -28,17 +27,22 @@ Options:
             {
                 WriteCheep(string.Join(" ", args[1..]));
             }
+            else if (arguments["--help"].IsTrue || arguments["-h"].IsTrue)
+            {
+                Console.WriteLine(Usage);
+            }
         }
 
         static void ReadCheeps()
         {
-            var db = new CSVDatabase<Cheep>(filePath);
+            var db = CSVDatabase<Cheep>.GetInstance();
             IEnumerable<Cheep> cheeps = db.Read();
             PrintCheeps(cheeps);
         }
+
         static void WriteCheep(string message)
         {
-            var db = new CSVDatabase<Cheep>(filePath);
+            var db = CSVDatabase<Cheep>.GetInstance();
             var date = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
             db.Store(new Cheep(Environment.UserName, message, date));
             Console.WriteLine("Cheeped: " + message);

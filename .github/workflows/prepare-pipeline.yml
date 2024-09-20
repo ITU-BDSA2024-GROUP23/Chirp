@@ -3,10 +3,6 @@ name: Prepare pipeline and set variables
 on:
   workflow_call:
     outputs:
-      deploy_platform:
-        description: Deployment platform (e.g. azure, flyio...)
-        value: ${{ jobs.prepare-pipeline-vars.outputs.deploy_platform }}
-        
       deploy_env:
         description: Deployment environment (prod, stag or dev)
         value: ${{ jobs.prepare-pipeline-vars.outputs.deploy_env }}
@@ -20,7 +16,6 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      deploy_platform: ${{ steps.pipeline-vars.outputs.DEPLOY_PLATFORM }}
       deploy_env: ${{ steps.pipeline-vars.outputs.DEPLOY_ENV }}
       package_version: ${{ steps.pipeline-vars.outputs.PACKAGE_VERSION }}
 
@@ -38,15 +33,7 @@ jobs:
           BRANCH: ${{ github.ref_name }}
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
-          echo "Checking deployment variables"
-
-          if [[ -z $DEPLOY_PLATFORM ]]; then
-            DEPLOY_PLATFORM="None"
-          fi
-
-          echo "DEPLOY_PLATFORM=$DEPLOY_PLATFORM"
-          echo "DEPLOY_PLATFORM=$DEPLOY_PLATFORM" >> $GITHUB_OUTPUT
-
+          echo "Checking deployment environment..."
 
           if [[ $BRANCH == "main" || $BRANCH == "master" ]]; then
             DEPLOY_ENV="prod"
@@ -60,11 +47,14 @@ jobs:
           echo "DEPLOY_ENV=$DEPLOY_ENV" >> $GITHUB_OUTPUT
 
 
+          echo "Checking package version..."
+
           if [[ $DEPLOY_ENV == "stag" ]]; then
             PACKAGE_VERSION_SUFFIX="-dev"
           else
             PACKAGE_VERSION_SUFFIX=""
           fi
+
           PACKAGE_VERSION="$(sed -n 's/.*<PackageVersion>\(.*\)<\/PackageVersion>.*/\1/p' src/Chirp.CLI/Chirp.CLI.csproj)"
           echo "PACKAGE_VERSION=$PACKAGE_VERSION$(echo $PACKAGE_VERSION_SUFFIX)"
           echo "PACKAGE_VERSION=$PACKAGE_VERSION$(echo $PACKAGE_VERSION_SUFFIX)" >> $GITHUB_OUTPUT
@@ -74,10 +64,6 @@ jobs:
           echo "### Prepare pipeline:               
           <table>
             <tr>
-              <td>🚀 Deployment platform</td>
-              <td>${{ steps.pipeline-vars.outputs.DEPLOY_PLATFORM }}</td>
-            </tr>
-            <tr>
               <td>🎯 Deployment environment</td>
               <td>${{ steps.pipeline-vars.outputs.DEPLOY_ENV }}</td>
             </tr>
@@ -86,3 +72,31 @@ jobs:
               <td>${{ steps.pipeline-vars.outputs.PACKAGE_VERSION }}</td>
             </tr>
           </table>" >> $GITHUB_STEP_SUMMARY
+
+  prepare-azure:
+    if: |
+      needs.prepare-pipeline-vars.outputs.deploy_env == 'prod' ||
+      needs.prepare-pipeline-vars.outputs.deploy_env == 'stag'
+    runs-on: ubuntu-latest
+
+    needs: prepare-pipeline-vars
+
+    environment: ${{ needs.prepare-pipeline-vars.outputs.deploy_env }}
+
+    permissions:
+      id-token: write
+
+    steps:
+      - name: Validate login to Azure using OIDC
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+
+      - name: Azure CLI show account
+        uses: azure/cli@v2
+        with:
+          azcliversion: latest
+          inlineScript: |
+            az account show
