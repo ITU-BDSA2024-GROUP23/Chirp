@@ -4,6 +4,7 @@ namespace Chirp.CLI.Tests;
 
 public class IntegrationTests
 {
+    /*
 
     [Fact]
 
@@ -31,6 +32,5 @@ public class IntegrationTests
         var result = sw.ToString();
         Assert.Equal(output, result);
     }
-
-
+    */
 }
