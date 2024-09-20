@@ -50,11 +50,7 @@ Options:
         static async Task GetCheeps()
         {
             var cheeps = await client.GetFromJsonAsync<List<Cheep>>("cheeps");
-
-            foreach (Cheep cheep in cheeps)
-            {
-                Console.WriteLine(cheep.ToString());
-            }
+            PrintCheeps(cheeps);
         }
 
         static async Task PostCheep(string message)
