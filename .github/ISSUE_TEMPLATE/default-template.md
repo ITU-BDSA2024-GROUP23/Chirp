@@ -1,13 +1,15 @@
 ---
 name: Default template
-about: Describe this issue template's purpose here.
+about: The template used for all issues
 title: ''
 labels: ''
 assignees: ''
 
 ---
 
-[comment]: <> (Issue description)
+Issue description, like why its created or what it fixes
 
 Acceptance criteria:
-- [ ] Creteria
+
+- [ ] Creteria 1
+- [ ] Creteria 2
