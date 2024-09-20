@@ -26,23 +26,18 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Validate package version
+      - name: Validate CLI package version
+        id: validate-version
         env:
           DEPLOY_ENV: ${{ inputs.deploy_env }}
           PACKAGE_VERSION: ${{ inputs.package_version }}
         run: |
-          if [[ $DEPLOY_ENV == "prod" ]]; then
-              echo "Validating package version for production"
-          else
-              echo "Not validating package version for staging"
-              exit 0
-          fi
-
           if git rev-parse "refs/tags/$PACKAGE_VERSION" >/dev/null 2>&1; then
               echo "Tag $PACKAGE_VERSION already exists."
-              exit 1
+              echo "VERSION_CHANGE=false" >> $GITHUB_OUTPUT
           else 
               echo "Tag $PACKAGE_VERSION does not exists."
+              echo "VERSION_CHANGE=true" >> $GITHUB_OUTPUT
           fi
         
       - name: Setup .NET
@@ -50,20 +45,20 @@ jobs:
         with:
           dotnet-version: 7.0.x
 
-      - name: Restore dependencies
+      - name: Restore project dependencies
         run: dotnet restore
 
-      - name: Build and zip the project for windows
+      - name: Build and zip the project for Windows
         run: |
           dotnet publish src/Chirp.CLI -c Release -r win-x64 --self-contained -o chirp-cli-win-x64
           zip -r chirp-cli-win-x64.zip chirp-cli-win-x64
 
-      - name: Build and zip the project for linux
+      - name: Build and zip the project for Linux
         run: |
           dotnet publish src/Chirp.CLI -c Release -r linux-x64 --self-contained -o chirp-cli-linux-x64
           zip -r chirp-cli-linux-x64.zip chirp-cli-linux-x64
 
-      - name: Build and zip the project for macos
+      - name: Build and zip the project for MacOS
         run: |
           dotnet publish src/Chirp.CLI -c Release -r osx-x64 --self-contained -o chirp-cli-osx-x64
           zip -r chirp-cli-osx-x64.zip chirp-cli-osx-x64
@@ -77,6 +72,7 @@ jobs:
             chirp-cli-osx-x64.zip 
       
       - name: Create a GitHub release
+        if: steps.validate-version.outputs.VERSION_CHANGE == 'true'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ inputs.package_version }}
