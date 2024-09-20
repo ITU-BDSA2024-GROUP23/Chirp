@@ -14,7 +14,7 @@ on:
         type: string
 
 jobs:
-  release-cli:
+  build-and-release-cli:
     if: inputs.deploy_env == 'prod' || inputs.deploy_env == 'stag'
     runs-on: ubuntu-latest
 
@@ -63,7 +63,7 @@ jobs:
           dotnet publish src/Chirp.CLI -c Release -r osx-x64 --self-contained -o chirp-cli-osx-x64
           zip -r chirp-cli-osx-x64.zip chirp-cli-osx-x64
 
-      - name: Archive the project
+      - name: Archive the CLI packages
         uses: actions/upload-artifact@v4
         with:
           path: |
