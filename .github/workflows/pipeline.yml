@@ -5,8 +5,6 @@ on:
   push:
     branches:
       - '**'
-    tags:
-      - 'v*.*.*'
     paths-ignore:
       - 'README.md'
       - 'LICENSE'
@@ -30,3 +28,10 @@ jobs:
     with:
       deploy_env: ${{ needs.prepare-pipeline.outputs.deploy_env }}
       package_version: ${{ needs.prepare-pipeline.outputs.package_version }}
+  
+  build-and-deploy:
+    uses: ./.github/workflows/build-and-deploy.yml
+    needs: [prepare-pipeline, lint-and-test]
+    secrets: inherit
+    with:
+      deploy_env: ${{ needs.prepare-pipeline.outputs.deploy_env }}
