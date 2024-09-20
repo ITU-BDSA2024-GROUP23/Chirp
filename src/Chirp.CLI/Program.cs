@@ -22,7 +22,8 @@ Usage:
 Options:
     -h --help     Show this screen.";
 
-        static Program() {
+        static Program()
+        {
             // Source: Session 04 slides (slide 30)
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
