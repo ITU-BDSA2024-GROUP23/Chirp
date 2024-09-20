@@ -1,4 +1,4 @@
-name: CI/CD pipeline our a .NET project
+name: CI/CD pipeline for our Chirp project
 
 on:
   workflow_dispatch:
