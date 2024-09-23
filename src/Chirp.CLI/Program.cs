@@ -8,9 +8,13 @@ namespace Chirp.CLI
 {
     class Program
     {
-        // Create a new HttpClient instance
+#if (DEBUG)
+        private const string DBWebServiceURL = "http://localhost:5000";
+#else
+        private const string DBWebServiceURL = "https://chirp-remote-db.azurewebsites.net";
+#endif
+
         private static HttpClient client = new();
-        private const string baseURL = "http://localhost:5141";
         private const string Usage = @"Chirp CLI.
         
 
@@ -24,15 +28,15 @@ Options:
 
         static Program()
         {
-            // Source: Session 04 slides (slide 30)
+
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            client.BaseAddress = new Uri(baseURL);
+            client.BaseAddress = new Uri(DBWebServiceURL);
         }
 
         static void Main(string[] args)
         {
-            var arguments = new Docopt().Apply(Usage, args, version: "Chirp CLI 0.1", exit: true);
+            var arguments = new Docopt().Apply(Usage, args, version: "Chirp CLI 0.1", exit: true)!;
 
             if (arguments["read"].IsTrue)
             {
@@ -51,6 +55,13 @@ Options:
         static async Task GetCheeps()
         {
             var cheeps = await client.GetFromJsonAsync<List<Cheep>>("cheeps");
+
+            if (cheeps == null)
+            {
+                Console.WriteLine("No cheeps found.");
+                return;
+            }
+
             PrintCheeps(cheeps);
         }
 
