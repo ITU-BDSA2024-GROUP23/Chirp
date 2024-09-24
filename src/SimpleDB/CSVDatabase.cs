@@ -5,7 +5,7 @@ namespace SimpleDB;
 
 public class CSVDatabase<T> : IDatabaseRepository<T>
 {
-    private readonly static string filePath = Path.GetFullPath(Path.GetTempPath(), "/simple-database.csv");
+    private readonly static string filePath = Path.Combine(Path.GetTempPath(), "simple-database.csv");
     private static CSVDatabase<T>? instance;
 
     public static CSVDatabase<T> GetInstance()
