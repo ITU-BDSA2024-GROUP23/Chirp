@@ -28,8 +28,8 @@ jobs:
     secrets: inherit
     with:
       deploy_env: ${{ needs.prepare-pipeline.outputs.deploy_env }}
-      package_version: ${{ needs.prepare-pipeline.outputs.package_version }}
-  
+      package_version_cli: ${{ needs.prepare-pipeline.outputs.package_version_cli }}
+
   build-and-deploy:
     uses: ./.github/workflows/build-and-deploy.yml
     needs: [prepare-pipeline, lint-and-test]

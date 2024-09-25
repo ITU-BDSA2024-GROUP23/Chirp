@@ -7,8 +7,8 @@ on:
         description: Deployment environment (prod, stag or dev)
         required: true
         type: string
-      
-      package_version:
+
+      package_version_cli:
         description: Package version
         required: true
         type: string
@@ -30,16 +30,16 @@ jobs:
         id: validate-version
         env:
           DEPLOY_ENV: ${{ inputs.deploy_env }}
-          PACKAGE_VERSION: ${{ inputs.package_version }}
+          PACKAGE_VERSION_CLI: ${{ inputs.package_version_cli }}
         run: |
-          if git rev-parse "refs/tags/$PACKAGE_VERSION" >/dev/null 2>&1; then
-              echo "Tag $PACKAGE_VERSION already exists."
+          if git rev-parse "refs/tags/$PACKAGE_VERSION_CLI" >/dev/null 2>&1; then
+              echo "Tag $PACKAGE_VERSION_CLI already exists."
               echo "VERSION_CHANGE=false" >> $GITHUB_OUTPUT
-          else 
-              echo "Tag $PACKAGE_VERSION does not exists."
+          else
+              echo "Tag $PACKAGE_VERSION_CLI does not exists."
               echo "VERSION_CHANGE=true" >> $GITHUB_OUTPUT
           fi
-        
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
@@ -50,17 +50,17 @@ jobs:
 
       - name: Build and zip the project for Windows
         run: |
-          dotnet publish src/Chirp.CLI -c Release -r win-x64 --self-contained -o chirp-cli-win-x64
+          dotnet publish src/Chirp.CLI -c Release -r win-x64 -p:PublishSingleFile=true --self-contained -o chirp-cli-win-x64
           zip -r chirp-cli-win-x64.zip chirp-cli-win-x64
 
       - name: Build and zip the project for Linux
         run: |
-          dotnet publish src/Chirp.CLI -c Release -r linux-x64 --self-contained -o chirp-cli-linux-x64
+          dotnet publish src/Chirp.CLI -c Release -r linux-x64 -p:PublishSingleFile=true --self-contained -o chirp-cli-linux-x64
           zip -r chirp-cli-linux-x64.zip chirp-cli-linux-x64
 
       - name: Build and zip the project for MacOS
         run: |
-          dotnet publish src/Chirp.CLI -c Release -r osx-x64 --self-contained -o chirp-cli-osx-x64
+          dotnet publish src/Chirp.CLI -c Release -r osx-x64 -p:PublishSingleFile=true --self-contained -o chirp-cli-osx-x64
           zip -r chirp-cli-osx-x64.zip chirp-cli-osx-x64
 
       - name: Archive the CLI packages
@@ -68,17 +68,17 @@ jobs:
         with:
           name: chirp-cli
           path: |
-            chirp-cli-win-x64.zip 
-            chirp-cli-linux-x64.zip 
-            chirp-cli-osx-x64.zip 
-      
+            chirp-cli-win-x64.zip
+            chirp-cli-linux-x64.zip
+            chirp-cli-osx-x64.zip
+
       - name: Create a GitHub release
         if: steps.validate-version.outputs.VERSION_CHANGE == 'true'
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ inputs.package_version }}
+          tag_name: ${{ inputs.package_version_cli }}
           prerelease: ${{ inputs.deploy_env == 'stag' }}
           files: |
-            chirp-cli-win-x64.zip 
-            chirp-cli-linux-x64.zip 
+            chirp-cli-win-x64.zip
+            chirp-cli-linux-x64.zip
             chirp-cli-osx-x64.zip
