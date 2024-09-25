@@ -14,7 +14,7 @@ public class CSVDatabase<T> : IDatabaseRepository<T>
         {
             FileStream file = new(filePath, FileMode.Create, FileAccess.Write);
             using StreamWriter sw = new(file);
-            sw.WriteLine("Author,Message,Timestamp\n");
+            sw.WriteLine("Author,Message,Timestamp");
         }
 
         instance ??= new CSVDatabase<T>();
@@ -41,7 +41,7 @@ public class CSVDatabase<T> : IDatabaseRepository<T>
         using var writer = new StreamWriter(filePath, true);
         using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
 
-        writer.WriteLine();
         csv.WriteRecord(record);
+        writer.WriteLine();
     }
 }
