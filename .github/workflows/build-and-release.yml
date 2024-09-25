@@ -50,17 +50,17 @@ jobs:
 
       - name: Build and zip the project for Windows
         run: |
-          dotnet publish src/Chirp.CLI -c Release -r win-x64 --self-contained -o chirp-cli-win-x64
+          dotnet publish src/Chirp.CLI -c Release -r win-x64 -p:PublishSingleFile=true --self-contained -o chirp-cli-win-x64
           zip -r chirp-cli-win-x64.zip chirp-cli-win-x64
 
       - name: Build and zip the project for Linux
         run: |
-          dotnet publish src/Chirp.CLI -c Release -r linux-x64 --self-contained -o chirp-cli-linux-x64
+          dotnet publish src/Chirp.CLI -c Release -r linux-x64 -p:PublishSingleFile=true --self-contained -o chirp-cli-linux-x64
           zip -r chirp-cli-linux-x64.zip chirp-cli-linux-x64
 
       - name: Build and zip the project for MacOS
         run: |
-          dotnet publish src/Chirp.CLI -c Release -r osx-x64 --self-contained -o chirp-cli-osx-x64
+          dotnet publish src/Chirp.CLI -c Release -r osx-x64 -p:PublishSingleFile=true --self-contained -o chirp-cli-osx-x64
           zip -r chirp-cli-osx-x64.zip chirp-cli-osx-x64
 
       - name: Archive the CLI packages
