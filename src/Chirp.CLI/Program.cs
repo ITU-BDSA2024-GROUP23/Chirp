@@ -1,4 +1,4 @@
-﻿using System.Net.Http.Headers;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using DocoptNet;
 using static Chirp.CLI.UserInterface;
@@ -28,7 +28,6 @@ Options:
 
         static Program()
         {
-
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             client.BaseAddress = new Uri(DBWebServiceURL);
