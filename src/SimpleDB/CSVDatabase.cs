@@ -12,7 +12,7 @@ public class CSVDatabase<T> : IDatabaseRepository<T>
     {
         if (!File.Exists(filePath))
         {
-            FileStream file = new (filePath, FileMode.Create, FileAccess.Write);
+            FileStream file = new(filePath, FileMode.Create, FileAccess.Write);
             using StreamWriter sw = new(file);
             sw.WriteLine("Author,Message,Timestamp\n");
         }
