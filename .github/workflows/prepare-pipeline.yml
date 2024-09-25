@@ -48,26 +48,34 @@ jobs:
           echo "Checking package version..."
 
           if [[ $DEPLOY_ENV == "stag" ]]; then
-            PACKAGE_VERSION_SUFFIX="-dev"
+            PACKAGE_VERSION_SUFFIX="-$(git rev-parse --short HEAD)"
           else
             PACKAGE_VERSION_SUFFIX=""
           fi
 
-          PACKAGE_VERSION="$(sed -n 's/.*<PackageVersion>\(.*\)<\/PackageVersion>.*/\1/p' src/Chirp.CLI/Chirp.CLI.csproj)"
-          echo "PACKAGE_VERSION=$PACKAGE_VERSION$(echo $PACKAGE_VERSION_SUFFIX)"
-          echo "PACKAGE_VERSION=$PACKAGE_VERSION$(echo $PACKAGE_VERSION_SUFFIX)" >> $GITHUB_OUTPUT
+          CLI_PACKAGE_VERSION="$(sed -n 's/.*<PackageVersion>\(.*\)<\/PackageVersion>.*/\1/p' src/Chirp.CLI/Chirp.CLI.csproj)"
+          echo "CLI_PACKAGE_VERSION=$CLI_PACKAGE_VERSION$(echo $PACKAGE_VERSION_SUFFIX)"
+          echo "CLI_PACKAGE_VERSION=$CLI_PACKAGE_VERSION$(echo $PACKAGE_VERSION_SUFFIX)" >> $GITHUB_OUTPUT
+
+          CSVDB_PACKAGE_VERSION="$(sed -n 's/.*<PackageVersion>\(.*\)<\/PackageVersion>.*/\1/p' src/Chirp.CSVDBService/Chirp.CSVDBService.csproj)"
+          echo "CSVDB_PACKAGE_VERSION=$CSVDB_PACKAGE_VERSION$(echo $PACKAGE_VERSION_SUFFIX)"
+          echo "CSVDB_PACKAGE_VERSION=$CSVDB_PACKAGE_VERSION$(echo $PACKAGE_VERSION_SUFFIX)" >> $GITHUB_OUTPUT
 
       - name: Write pipeline vars summary
         run: |
-          echo "### Prepare pipeline:               
+          echo "### Prepare pipeline:
           <table>
             <tr>
               <td>🎯 Deployment environment</td>
               <td>${{ steps.pipeline-vars.outputs.DEPLOY_ENV }}</td>
             </tr>
             <tr>
-              <td>📦 Package version</td>
-              <td>${{ steps.pipeline-vars.outputs.PACKAGE_VERSION }}</td>
+              <td>📦 CLI version</td>
+              <td>${{ steps.pipeline-vars.outputs.CLI_PACKAGE_VERSION }}</td>
+            </tr>
+            <tr>
+              <td>📦 CSVDB version</td>
+              <td>${{ steps.pipeline-vars.outputs.CSVDB_PACKAGE_VERSION }}</td>
             </tr>
           </table>" >> $GITHUB_STEP_SUMMARY
 
