@@ -48,3 +48,5 @@ If the operation is not here, wait for group meeting or start a conversation in 
 ## Development
 
 This project uses .NET 7.0 to run. Usage of other versions is not recommended.
+
+[![CodeFactor](https://www.codefactor.io/repository/github/itu-bdsa2024-group23/chirp/badge)](https://www.codefactor.io/repository/github/itu-bdsa2024-group23/chirp)
