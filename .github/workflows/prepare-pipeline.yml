@@ -76,11 +76,11 @@ jobs:
             </tr>
             <tr>
               <td>📦 CLI version</td>
-              <td>${{ steps.pipeline-vars.outputs.CLI_PACKAGE_VERSION }}</td>
+              <td>${{ steps.pipeline-vars.outputs.PACKAGE_VERSION_CLI }}</td>
             </tr>
             <tr>
               <td>📦 CSVDB version</td>
-              <td>${{ steps.pipeline-vars.outputs.CSVDB_PACKAGE_VERSION }}</td>
+              <td>${{ steps.pipeline-vars.outputs.PACKAGE_VERSION_CSVDB }}</td>
             </tr>
           </table>" >> $GITHUB_STEP_SUMMARY
 
