@@ -1,20 +1,18 @@
+using Chirp.DB;
+
 public class CheepService : ICheepService
 {
-    SqliteConnection con;
-
-    public CheepService(string sqlDBFilepath) {
-        this.con = new SqliteConnection($"Data Source={sqlDBFilePath}")
-    }
-
+    DBFacade db = new();
+    
     public List<CheepViewModel> GetCheeps()
     {
-        return _cheeps;
+        return db.GetCheeps(0);
     }
 
     public List<CheepViewModel> GetCheepsFromAuthor(string author)
     {
         // filter by the provided author name
-        return _cheeps.Where(x => x.Author == author).ToList();
+        return db.GetCheepsFromAuthor(0, author);
     }
 
     private static string UnixTimeStampToDateTimeString(double unixTimeStamp)
@@ -24,5 +22,4 @@ public class CheepService : ICheepService
         dateTime = dateTime.AddSeconds(unixTimeStamp);
         return dateTime.ToString("MM/dd/yy H:mm:ss");
     }
-
 }

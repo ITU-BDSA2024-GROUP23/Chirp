@@ -1,5 +1,4 @@
-public record CheepViewModel (string Author, string Message, long Timestamp);
-
+using Chirp.DB;
 public interface ICheepService {
     List<CheepViewModel> GetCheeps();
     List<CheepViewModel> GetCheepsFromAuthor(string author);
