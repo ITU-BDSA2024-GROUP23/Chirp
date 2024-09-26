@@ -3,6 +3,11 @@ name: Release dotnet project
 on:
   workflow_call:
     inputs:
+      dotnet_version:
+        description: The version of .NET to use
+        required: true
+        type: string
+
       deploy_env:
         description: Deployment environment (prod, stag or dev)
         required: true
@@ -43,7 +48,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 7.0.x
+          dotnet-version: ${{ inputs.dotnet_version }}
 
       - name: Restore project dependencies
         run: dotnet restore

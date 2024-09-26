@@ -3,6 +3,10 @@ name: Prepare pipeline and set variables
 on:
   workflow_call:
     outputs:
+      dotnet_version:
+        description: The version of .NET to use
+        value: ${{ jobs.prepare-pipeline-vars.outputs.dotnet_version }}
+
       deploy_env:
         description: Deployment environment (prod, stag or dev)
         value: ${{ jobs.prepare-pipeline-vars.outputs.deploy_env }}
@@ -20,6 +24,7 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
+      dotnet_version: ${{ steps.pipeline-vars.outputs.DOTNET_VERSION }}
       deploy_env: ${{ steps.pipeline-vars.outputs.DEPLOY_ENV }}
       package_version_cli: ${{ steps.pipeline-vars.outputs.PACKAGE_VERSION_CLI }}
       package_version_csvdb: ${{ steps.pipeline-vars.outputs.PACKAGE_VERSION_CSVDB }}
@@ -36,6 +41,13 @@ jobs:
         env:
           BRANCH: ${{ github.ref_name }}
         run: |
+          echo "Checking .NET version..."
+
+          DOTNET_VERSION="7.0.x"
+          echo "DOTNET_VERSION=$DOTNET_VERSION"
+          echo "DOTNET_VERSION=$DOTNET_VERSION" >> $GITHUB_OUTPUT
+
+
           echo "Checking deployment environment..."
 
           if [[ $BRANCH == "main" || $BRANCH == "master" ]]; then
@@ -70,6 +82,10 @@ jobs:
         run: |
           echo "### Prepare pipeline:
           <table>
+            <tr>
+              <td>👑 .NET version</td>
+              <td>${{ steps.pipeline-vars.outputs.DEPLOY_ENV }}</td>
+            </tr>
             <tr>
               <td>🎯 Deployment environment</td>
               <td>${{ steps.pipeline-vars.outputs.DEPLOY_ENV }}</td>
