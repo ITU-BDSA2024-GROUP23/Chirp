@@ -3,16 +3,19 @@ name: Lint and test a .NET project
 on:
   workflow_call:
     inputs:
-      deploy_env: 
+      dotnet_version:
+        description: The version of .NET to use
+        required: true
+        type: string
+
+      deploy_env:
         description: Deployment environment (prod, stag or dev)
         required: true
         type: string
 
 jobs:
-  lint-and-test:
+  test-linux:
     runs-on: ubuntu-latest
-
-    environment: ${{ inputs.deploy_env }}
 
     steps:
       - name: Checkout repository
@@ -21,19 +24,60 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 7.0.x
-      
-      - name: Install dotnet format
-        run: dotnet tool install -g dotnet-format
+          dotnet-version: ${{ inputs.dotnet_version }}
 
       - name: Restore dependencies
         run: dotnet restore
-      
+
       - name: Build the project
         run: dotnet build --no-restore
 
-      - name: Lint the project
-        run: dotnet format --verify-no-changes --no-restore
-      
       - name: Test the project
         run: dotnet test --no-build
+
+  test-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ inputs.dotnet_version }}
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build the project
+        run: dotnet build --no-restore
+
+      - name: Test the project
+        run: dotnet test --no-build
+
+  lint-project:
+    runs-on: ubuntu-latest
+
+    needs: [test-linux, test-windows]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ inputs.dotnet_version }}
+
+    - name: Install dotnet format
+      run: dotnet tool install -g dotnet-format
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build the project
+      run: dotnet build --no-restore
+
+    - name: Lint the project
+      run: dotnet format --verify-no-changes --no-restore
