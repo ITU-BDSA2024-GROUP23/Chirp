@@ -7,7 +7,7 @@ public class DBFacade
 {
     SqliteConnection connection;
     
-    // Establish connection
+    // Establish connection - remember to run the scripts in "Chirp.DB/scripts" to create the database
     public DBFacade() {
         string dbPath = Path.Combine(Path.GetTempPath(), "chirp.db");
         string? dbPathEnvVar = Environment.GetEnvironmentVariable("CHIRPDBPATH");
@@ -16,20 +16,6 @@ public class DBFacade
         {
             dbPath = dbPathEnvVar;
         }
-
-        // Execute init.sh in /scripts **TEMPORARY**
-        var initScriptPath = Path.Combine(Directory.GetCurrentDirectory(), "scripts", "init.sh");
-        var process = new Process
-        {
-            StartInfo = new ProcessStartInfo
-            {
-                FileName = "/bin/bash",
-                Arguments = initScriptPath,
-                RedirectStandardOutput = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            }
-        };
 
         connection = new SqliteConnection($"Data Source={dbPath}");
         connection.Open();

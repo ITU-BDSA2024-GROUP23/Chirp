@@ -2,7 +2,13 @@ using Chirp.DB;
 
 public class CheepService : ICheepService
 {
-    DBFacade db = new();
+    private readonly DBFacade db;
+
+    // Dependency injection of DBFacade
+    public CheepService(DBFacade db)
+    {
+        this.db = db;
+    }
     
     public List<CheepViewModel> GetCheeps()
     {
