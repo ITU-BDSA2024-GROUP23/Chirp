@@ -1,5 +1,6 @@
-﻿using System.Diagnostics;
-using Microsoft.Data.Sqlite;
+﻿using Microsoft.Data.Sqlite;
+using Microsoft.Extensions.FileProviders;
+using System.Reflection;
 
 namespace Chirp.DB;
 
@@ -12,13 +13,31 @@ public class DBFacade
         string dbPath = Path.Combine(Path.GetTempPath(), "chirp.db");
         string? dbPathEnvVar = Environment.GetEnvironmentVariable("CHIRPDBPATH");
 
-        if(!String.IsNullOrEmpty(dbPathEnvVar))
+        if(!string.IsNullOrEmpty(dbPathEnvVar))
         {
             dbPath = dbPathEnvVar;
         }
 
         connection = new SqliteConnection($"Data Source={dbPath}");
         connection.Open();
+
+        if (new FileInfo(dbPath).Length == 0) {
+            var embeddedProvider = new EmbeddedFileProvider(Assembly.GetExecutingAssembly());
+
+            // Create Schema
+            var schemaReader = embeddedProvider.GetFileInfo("scripts/schema.sql").CreateReadStream();
+            var schemaStream = new StreamReader(schemaReader);
+            var schemaCommand = connection.CreateCommand();
+            schemaCommand.CommandText = schemaStream.ReadToEnd();
+            schemaCommand.ExecuteNonQuery();
+
+            // Populate tables
+            var dumpReader = embeddedProvider.GetFileInfo("scripts/dump.sql").CreateReadStream();
+            var dumpStream = new StreamReader(dumpReader);
+            var dumpCommand = connection.CreateCommand();
+            dumpCommand.CommandText = dumpStream.ReadToEnd();
+            Console.WriteLine(dumpCommand.ExecuteNonQuery());
+        }
     }
 
     public List<CheepViewModel> GetCheeps(int limit, int offset)
