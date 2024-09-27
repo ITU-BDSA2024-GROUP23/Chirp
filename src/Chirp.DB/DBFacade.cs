@@ -6,37 +6,25 @@ namespace Chirp.DB;
 
 public class DBFacade
 {
-    SqliteConnection connection;
+    readonly SqliteConnection connection;
     
-    // Establish connection - remember to run the scripts in "Chirp.DB/scripts" to create the database
     public DBFacade() {
         string dbPath = Path.Combine(Path.GetTempPath(), "chirp.db");
-        string? dbPathEnvVar = Environment.GetEnvironmentVariable("CHIRPDBPATH");
+        string? customDBPath = Environment.GetEnvironmentVariable("CHIRPDBPATH");
 
-        if(!string.IsNullOrEmpty(dbPathEnvVar))
+        if(!string.IsNullOrEmpty(customDBPath))
         {
-            dbPath = dbPathEnvVar;
+            dbPath = customDBPath;
         }
 
         connection = new SqliteConnection($"Data Source={dbPath}");
         connection.Open();
 
+        // If database did not exist before connection.Open(),
+        // create schema and fill with dummy data
         if (new FileInfo(dbPath).Length == 0) {
-            var embeddedProvider = new EmbeddedFileProvider(Assembly.GetExecutingAssembly());
-
-            // Create Schema
-            var schemaReader = embeddedProvider.GetFileInfo("scripts/schema.sql").CreateReadStream();
-            var schemaStream = new StreamReader(schemaReader);
-            var schemaCommand = connection.CreateCommand();
-            schemaCommand.CommandText = schemaStream.ReadToEnd();
-            schemaCommand.ExecuteNonQuery();
-
-            // Populate tables
-            var dumpReader = embeddedProvider.GetFileInfo("scripts/dump.sql").CreateReadStream();
-            var dumpStream = new StreamReader(dumpReader);
-            var dumpCommand = connection.CreateCommand();
-            dumpCommand.CommandText = dumpStream.ReadToEnd();
-            Console.WriteLine(dumpCommand.ExecuteNonQuery());
+            ExecuteNonQueryFromEmbeddedScript("scripts/schema.sql");
+            ExecuteNonQueryFromEmbeddedScript("scripts/dump.sql");
         }
     }
 
@@ -94,6 +82,17 @@ public class DBFacade
             }
         }
         return cheeps;
+    }
+
+    private void ExecuteNonQueryFromEmbeddedScript(string scriptPath) 
+    {
+        var embeddedProvider = new EmbeddedFileProvider(Assembly.GetExecutingAssembly());
+        var scriptReader = embeddedProvider.GetFileInfo(scriptPath).CreateReadStream();
+        var scriptStream = new StreamReader(scriptReader);
+
+        var command = connection.CreateCommand();
+        command.CommandText = scriptStream.ReadToEnd();
+        command.ExecuteNonQuery();
     }
 
     private static string UnixTimeStampToDateTimeString(double unixTimeStamp)
