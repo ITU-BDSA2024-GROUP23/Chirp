@@ -6,7 +6,7 @@ namespace Chirp.DB;
 
 public class DBFacade
 {
-    readonly SqliteConnection connection;
+    private readonly SqliteConnection _connection;
     
     public DBFacade() {
         string dbPath = Path.Combine(Path.GetTempPath(), "chirp.db");
@@ -17,8 +17,8 @@ public class DBFacade
             dbPath = customDBPath;
         }
 
-        connection = new SqliteConnection($"Data Source={dbPath}");
-        connection.Open();
+        _connection = new SqliteConnection($"Data Source={dbPath}");
+        _connection.Open();
 
         // If database did not exist before connection.Open(),
         // create schema and fill with dummy data
@@ -38,7 +38,7 @@ public class DBFacade
             LIMIT @limit OFFSET @offset
         ";
 
-        var command = connection.CreateCommand();
+        var command = _connection.CreateCommand();
         command.CommandText = sqlQuery;
         command.Parameters.AddWithValue("@limit", limit);
         command.Parameters.AddWithValue("@offset", offset);
@@ -57,7 +57,7 @@ public class DBFacade
             LIMIT @limit OFFSET @offset
         ";
 
-        var command = connection.CreateCommand();
+        var command = _connection.CreateCommand();
         command.CommandText = sqlQuery;
         command.Parameters.AddWithValue("@limit", limit);
         command.Parameters.AddWithValue("@offset", offset);
@@ -90,7 +90,7 @@ public class DBFacade
         var scriptReader = embeddedProvider.GetFileInfo(scriptPath).CreateReadStream();
         var scriptStream = new StreamReader(scriptReader);
 
-        var command = connection.CreateCommand();
+        var command = _connection.CreateCommand();
         command.CommandText = scriptStream.ReadToEnd();
         command.ExecuteNonQuery();
     }
