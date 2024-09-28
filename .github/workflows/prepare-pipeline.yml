@@ -8,16 +8,16 @@ on:
         value: ${{ jobs.prepare-pipeline-vars.outputs.dotnet_version }}
 
       deploy_env:
-        description: Deployment environment (prod, stag or dev)
+        description: Deployment environment (prod, stag, or dev)
         value: ${{ jobs.prepare-pipeline-vars.outputs.deploy_env }}
 
-      package_version_cli:
-        description: The version of the package
-        value: ${{ jobs.prepare-pipeline-vars.outputs.package_version_CLI }}
+      package_version_db:
+        description: The version of the Chirp.DB package
+        value: ${{ jobs.prepare-pipeline-vars.outputs.package_version_DB }}
 
-      package_version_csvdb:
-        description: The version of the package
-        value: ${{ jobs.prepare-pipeline-vars.outputs.package_version_CLI }}
+      package_version_razor:
+        description: The version of the Chirp.Razor package
+        value: ${{ jobs.prepare-pipeline-vars.outputs.package_version_RAZOR }}
 
 jobs:
   prepare-pipeline-vars:
@@ -26,8 +26,8 @@ jobs:
     outputs:
       dotnet_version: ${{ steps.pipeline-vars.outputs.DOTNET_VERSION }}
       deploy_env: ${{ steps.pipeline-vars.outputs.DEPLOY_ENV }}
-      package_version_cli: ${{ steps.pipeline-vars.outputs.PACKAGE_VERSION_CLI }}
-      package_version_csvdb: ${{ steps.pipeline-vars.outputs.PACKAGE_VERSION_CSVDB }}
+      package_version_DB: ${{ steps.pipeline-vars.outputs.PACKAGE_VERSION_DB }}
+      package_version_RAZOR: ${{ steps.pipeline-vars.outputs.PACKAGE_VERSION_RAZOR }}
 
     permissions:
       contents: write
@@ -47,7 +47,6 @@ jobs:
           echo "DOTNET_VERSION=$DOTNET_VERSION"
           echo "DOTNET_VERSION=$DOTNET_VERSION" >> $GITHUB_OUTPUT
 
-
           echo "Checking deployment environment..."
 
           if [[ $BRANCH == "main" || $BRANCH == "master" ]]; then
@@ -61,8 +60,7 @@ jobs:
           echo "DEPLOY_ENV=$DEPLOY_ENV"
           echo "DEPLOY_ENV=$DEPLOY_ENV" >> $GITHUB_OUTPUT
 
-
-          echo "Checking package version..."
+          echo "Checking package versions..."
 
           if [[ $DEPLOY_ENV == "stag" ]]; then
             PACKAGE_VERSION_SUFFIX="-$(git rev-parse --short HEAD)"
@@ -70,13 +68,13 @@ jobs:
             PACKAGE_VERSION_SUFFIX=""
           fi
 
-          PACKAGE_VERSION_CLI="$(sed -n 's/.*<PackageVersion>\(.*\)<\/PackageVersion>.*/\1/p' src/Chirp.CLI/Chirp.CLI.csproj)"
-          echo "PACKAGE_VERSION_CLI=$PACKAGE_VERSION_CLI$(echo $PACKAGE_VERSION_SUFFIX)"
-          echo "PACKAGE_VERSION_CLI=$PACKAGE_VERSION_CLI$(echo $PACKAGE_VERSION_SUFFIX)" >> $GITHUB_OUTPUT
+          PACKAGE_VERSION_DB="$(sed -n 's/.*<PackageVersion>\(.*\)<\/PackageVersion>.*/\1/p' src/Chirp.DB/Chirp.DB.csproj)"
+          echo "PACKAGE_VERSION_DB=$PACKAGE_VERSION_DB$(echo $PACKAGE_VERSION_SUFFIX)"
+          echo "PACKAGE_VERSION_DB=$PACKAGE_VERSION_DB$(echo $PACKAGE_VERSION_SUFFIX)" >> $GITHUB_OUTPUT
 
-          PACKAGE_VERSION_CSVDB="$(sed -n 's/.*<PackageVersion>\(.*\)<\/PackageVersion>.*/\1/p' src/Chirp.CSVDBService/Chirp.CSVDBService.csproj)"
-          echo "PACKAGE_VERSION_CSVDB=$PACKAGE_VERSION_CSVDB$(echo $PACKAGE_VERSION_SUFFIX)"
-          echo "PACKAGE_VERSION_CSVDB=$PACKAGE_VERSION_CSVDB$(echo $PACKAGE_VERSION_SUFFIX)" >> $GITHUB_OUTPUT
+          PACKAGE_VERSION_RAZOR="$(sed -n 's/.*<PackageVersion>\(.*\)<\/PackageVersion>.*/\1/p' src/Chirp.Razor/Chirp.Razor.csproj)"
+          echo "PACKAGE_VERSION_RAZOR=$PACKAGE_VERSION_RAZOR$(echo $PACKAGE_VERSION_SUFFIX)"
+          echo "PACKAGE_VERSION_RAZOR=$PACKAGE_VERSION_RAZOR$(echo $PACKAGE_VERSION_SUFFIX)" >> $GITHUB_OUTPUT
 
       - name: Write pipeline vars summary
         run: |
@@ -84,19 +82,19 @@ jobs:
           <table>
             <tr>
               <td>👑 .NET version</td>
-              <td>${{ steps.pipeline-vars.outputs.DEPLOY_ENV }}</td>
+              <td>${{ steps.pipeline-vars.outputs.DOTNET_VERSION }}</td>
             </tr>
             <tr>
               <td>🎯 Deployment environment</td>
               <td>${{ steps.pipeline-vars.outputs.DEPLOY_ENV }}</td>
             </tr>
             <tr>
-              <td>📦 CLI version</td>
-              <td>${{ steps.pipeline-vars.outputs.PACKAGE_VERSION_CLI }}</td>
+              <td>📦 Chirp.DB version</td>
+              <td>${{ steps.pipeline-vars.outputs.PACKAGE_VERSION_DB }}</td>
             </tr>
             <tr>
-              <td>📦 CSVDB version</td>
-              <td>${{ steps.pipeline-vars.outputs.PACKAGE_VERSION_CSVDB }}</td>
+              <td>📦 Chirp.Razor version</td>
+              <td>${{ steps.pipeline-vars.outputs.PACKAGE_VERSION_RAZOR }}</td>
             </tr>
           </table>" >> $GITHUB_STEP_SUMMARY
 
