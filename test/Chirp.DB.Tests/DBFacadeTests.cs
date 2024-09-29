@@ -2,7 +2,7 @@ namespace Chirp.DB.Tests;
 
 public abstract class InitializationTestsBase : IDisposable
 {
-    protected readonly string dbCustomPath = Path.Combine(Path.GetTempPath(), "chirp2.db");
+    protected readonly string dbCustomPath = Path.Combine(Path.GetTempPath(), "chirpInit.db");
 
     protected InitializationTestsBase()
     {
@@ -19,6 +19,7 @@ public abstract class InitializationTestsBase : IDisposable
     }
 }
 
+[Collection("Sequential")]
 public class DBFacadeInitializationTests : InitializationTestsBase
 {
     [Fact]
@@ -49,8 +50,9 @@ public class DBFacadeInitializationTests : InitializationTestsBase
 
 public class QueryTestsFixture : IDisposable
 {
-    readonly DBFacade testDB;
-    public QueryTestsFixture ()
+    public DBFacade testDB;
+    
+    public QueryTestsFixture()
     {
         testDB = new();
     }
@@ -61,7 +63,20 @@ public class QueryTestsFixture : IDisposable
     }
 }
 
+[Collection("Sequential")]
 public class DBFacadeQueryTests : IClassFixture<QueryTestsFixture>
 {
-    
+    DBFacade testDB;
+
+    public DBFacadeQueryTests(QueryTestsFixture fixture)
+    {
+        testDB = fixture.testDB;
+    }
+
+    [Fact]
+    public void GetCheepsReturnsCheeps()
+    {
+        List<CheepViewModel> cheeps = testDB.GetCheeps(10, 0);
+        Assert.True(cheeps.Any());
+    }
 }
