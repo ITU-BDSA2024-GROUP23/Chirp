@@ -12,7 +12,7 @@ public class DBFacade
     public DBFacade() 
     {
         string? customDBPath = Environment.GetEnvironmentVariable("CHIRPDBPATH");
-        var dbPath = customDBPath == null ? DEFAULT_DB_PATH : customDBPath;
+        var dbPath = customDBPath ?? DEFAULT_DB_PATH;
 
         _connection = new SqliteConnection($"Data Source={dbPath}");
         _connection.Open();
