@@ -63,7 +63,7 @@ jobs:
           dotnet publish Chirp.sln -c Release -r linux-x64 --self-contained -o chirp-linux-x64
           zip -r chirp-linux-x64.zip chirp-linux-x64
 
-      - name: Build and zip the project for MacOS
+      - name: Build and zip the solution for MacOS
         run: |
           dotnet publish Chirp.sln -c Release -r osx-x64 --self-contained -o chirp-osx-x64
           zip -r chirp-osx-x64.zip chirp-osx-x64
@@ -82,7 +82,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ inputs.solution_version }}
-          prerelease: ${{ inputs.deploy_env == 'stag' }}
+          prerelease: ${{ inputs.deploy_env != 'prod' }}
           files: |
             chirp-win-x64.zip
             chirp-linux-x64.zip

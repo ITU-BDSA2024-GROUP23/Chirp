@@ -13,7 +13,7 @@ on:
 
       solution_version:
         description: The version of the solution
-        value: ${{ jobs.prepare-pipeline-vars.outputs.package_version_CLI }}
+        value: ${{ jobs.prepare-pipeline-vars.outputs.solution_version }}
 
 jobs:
   prepare-pipeline-vars:
@@ -22,8 +22,7 @@ jobs:
     outputs:
       dotnet_version: ${{ steps.pipeline-vars.outputs.DOTNET_VERSION }}
       deploy_env: ${{ steps.pipeline-vars.outputs.DEPLOY_ENV }}
-      package_version_cli: ${{ steps.pipeline-vars.outputs.PACKAGE_VERSION_CLI }}
-      package_version_csvdb: ${{ steps.pipeline-vars.outputs.PACKAGE_VERSION_CSVDB }}
+      solution_version: ${{ steps.pipeline-vars.outputs.SOLUTION_VERSION }}
 
     permissions:
       contents: write
