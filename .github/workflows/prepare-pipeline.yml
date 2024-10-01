@@ -64,7 +64,7 @@ jobs:
             VERSION_SUFFIX="-$(git rev-parse --short HEAD)"
           fi
 
-          SOLUTION_VERSION="$(cat VERSION)""
+          SOLUTION_VERSION="$(cat VERSION)"
           echo "SOLUTION_VERSION=$SOLUTION_VERSION$VERSION_SUFFIX"
           echo "SOLUTION_VERSION=$SOLUTION_VERSION$VERSION_SUFFIX" >> $GITHUB_OUTPUT
 
