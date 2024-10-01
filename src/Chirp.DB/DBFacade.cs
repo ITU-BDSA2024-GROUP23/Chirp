@@ -1,6 +1,7 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using System.Reflection;
+
+using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.FileProviders;
-using System.Reflection;
 
 namespace Chirp.DB;
 
@@ -12,14 +13,15 @@ public class DBFacade
     public DBFacade() 
     {
         string? customDBPath = Environment.GetEnvironmentVariable("CHIRPDBPATH");
-        var dbPath = customDBPath ?? DEFAULT_DB_PATH;
+        var dbPath = customDBPath ?? DEFAULT_DB_PATH
 
         _connection = new SqliteConnection($"Data Source={dbPath}");
         _connection.Open();
 
         // If database did not exist before connection.Open(),
         // create schema and fill with dummy data
-        if (new FileInfo(dbPath).Length == 0) {
+        if (new FileInfo(dbPath).Length == 0)
+        {
             ExecuteNonQueryFromEmbeddedScript("scripts/schema.sql");
             ExecuteNonQueryFromEmbeddedScript("scripts/dump.sql");
         }
@@ -63,25 +65,27 @@ public class DBFacade
         return CheepsFromCommand(command);
     }
 
-    private static List<CheepViewModel> CheepsFromCommand(SqliteCommand command) 
+    private static List<CheepViewModel> CheepsFromCommand(SqliteCommand command)
     {
         List<CheepViewModel> cheeps = new();
+
         using (var reader = command.ExecuteReader())
         {
             while (reader.Read())
             {
-                string author = reader.GetString(0);
-                string message = reader.GetString(1);
-                string timestamp = UnixTimeStampToDateTimeString(reader.GetInt64(2));
+                var author = reader.GetString(0);
+                var message = reader.GetString(1);
+                var timestamp = UnixTimeStampToDateTimeString(reader.GetInt64(2));
 
-                CheepViewModel cheep = new(author, message, timestamp);
+                var cheep = new CheepViewModel(author, message, timestamp);
                 cheeps.Add(cheep);
             }
         }
+
         return cheeps;
     }
 
-    private void ExecuteNonQueryFromEmbeddedScript(string scriptPath) 
+    private void ExecuteNonQueryFromEmbeddedScript(string scriptPath)
     {
         var embeddedProvider = new EmbeddedFileProvider(Assembly.GetExecutingAssembly());
         var scriptReader = embeddedProvider.GetFileInfo(scriptPath).CreateReadStream();
@@ -100,5 +104,3 @@ public class DBFacade
         return dateTime.ToString("MM/dd/yy H:mm:ss");
     }
 }
-
-public record CheepViewModel(string Author, string Message, string Timestamp);
