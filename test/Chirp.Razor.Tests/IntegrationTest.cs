@@ -15,7 +15,7 @@ public class IntegrationTest : IClassFixture<WebApplicationFactory<Program>>
             AllowAutoRedirect = true,
             HandleCookies = true,
         });
-    }   
+    }
 
     [Fact]
     public async void PublicTimelineAvailable()

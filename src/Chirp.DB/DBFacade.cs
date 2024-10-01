@@ -9,8 +9,8 @@ public class DBFacade
 {
     public static readonly string DEFAULT_DB_PATH = Path.Combine(Path.GetTempPath(), "chirp.db");
     private readonly SqliteConnection _connection;
-    
-    public DBFacade() 
+
+    public DBFacade()
     {
         string? customDBPath = Environment.GetEnvironmentVariable("CHIRPDBPATH");
         var dbPath = customDBPath ?? DEFAULT_DB_PATH;
