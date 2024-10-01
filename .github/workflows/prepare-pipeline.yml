@@ -11,12 +11,8 @@ on:
         description: Deployment environment (prod, stag or dev)
         value: ${{ jobs.prepare-pipeline-vars.outputs.deploy_env }}
 
-      package_version_cli:
-        description: The version of the package
-        value: ${{ jobs.prepare-pipeline-vars.outputs.package_version_CLI }}
-
-      package_version_csvdb:
-        description: The version of the package
+      solution_version:
+        description: The version of the solution
         value: ${{ jobs.prepare-pipeline-vars.outputs.package_version_CLI }}
 
 jobs:
@@ -64,19 +60,13 @@ jobs:
 
           echo "Checking package version..."
 
-          if [[ $DEPLOY_ENV == "stag" ]]; then
-            PACKAGE_VERSION_SUFFIX="-$(git rev-parse --short HEAD)"
-          else
-            PACKAGE_VERSION_SUFFIX=""
+          if [[ $DEPLOY_ENV != "prod" ]]; then
+            VERSION_SUFFIX="-$(git rev-parse --short HEAD)"
           fi
 
-          PACKAGE_VERSION_CLI="$(sed -n 's/.*<PackageVersion>\(.*\)<\/PackageVersion>.*/\1/p' src/Chirp.CLI/Chirp.CLI.csproj)"
-          echo "PACKAGE_VERSION_CLI=$PACKAGE_VERSION_CLI$(echo $PACKAGE_VERSION_SUFFIX)"
-          echo "PACKAGE_VERSION_CLI=$PACKAGE_VERSION_CLI$(echo $PACKAGE_VERSION_SUFFIX)" >> $GITHUB_OUTPUT
-
-          PACKAGE_VERSION_CSVDB="$(sed -n 's/.*<PackageVersion>\(.*\)<\/PackageVersion>.*/\1/p' src/Chirp.CSVDBService/Chirp.CSVDBService.csproj)"
-          echo "PACKAGE_VERSION_CSVDB=$PACKAGE_VERSION_CSVDB$(echo $PACKAGE_VERSION_SUFFIX)"
-          echo "PACKAGE_VERSION_CSVDB=$PACKAGE_VERSION_CSVDB$(echo $PACKAGE_VERSION_SUFFIX)" >> $GITHUB_OUTPUT
+          SOLUTION_VERSION="$(cat VERSION)""
+          echo "SOLUTION_VERSION=$SOLUTION_VERSION$VERSION_SUFFIX"
+          echo "SOLUTION_VERSION=$SOLUTION_VERSION$VERSION_SUFFIX" >> $GITHUB_OUTPUT
 
       - name: Write pipeline vars summary
         run: |
@@ -91,12 +81,8 @@ jobs:
               <td>${{ steps.pipeline-vars.outputs.DEPLOY_ENV }}</td>
             </tr>
             <tr>
-              <td>📦 CLI version</td>
-              <td>${{ steps.pipeline-vars.outputs.PACKAGE_VERSION_CLI }}</td>
-            </tr>
-            <tr>
-              <td>📦 CSVDB version</td>
-              <td>${{ steps.pipeline-vars.outputs.PACKAGE_VERSION_CSVDB }}</td>
+              <td>🚀 Solution version</td>
+              <td>${{ steps.pipeline-vars.outputs.SOLUTION_VERSION }}</td>
             </tr>
           </table>" >> $GITHUB_STEP_SUMMARY
 
