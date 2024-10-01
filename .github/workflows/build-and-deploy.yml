@@ -36,12 +36,12 @@ jobs:
       - name: Restore project dependencies
         run: dotnet restore
 
-      - name: Build project in rlease mode
+      - name: Build project in release mode
         run: |
           dotnet publish src/Chirp.Razor -c Release -o chirp-razor
           zip -r chirp-razor.zip chirp-razor
 
-      - name: Archive the CLI packages
+      - name: Archive the Razor packages
         uses: actions/upload-artifact@v4
         with:
           name: chirp-razor

@@ -31,7 +31,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Validate CLI package version
+      - name: Validate the solution version
         id: validate-version
         env:
           DEPLOY_ENV: ${{ inputs.deploy_env }}
@@ -68,7 +68,7 @@ jobs:
           dotnet publish Chirp.sln -c Release -r osx-x64 --self-contained -o chirp-osx-x64
           zip -r chirp-osx-x64.zip chirp-osx-x64
 
-      - name: Archive the CLI packages
+      - name: Archive the solution packages
         uses: actions/upload-artifact@v4
         with:
           name: chirp
@@ -83,6 +83,8 @@ jobs:
         with:
           tag_name: ${{ inputs.solution_version }}
           prerelease: ${{ inputs.deploy_env != 'prod' }}
+          generate_release_notes: false
+          make_latest: true
           files: |
             chirp-win-x64.zip
             chirp-linux-x64.zip
