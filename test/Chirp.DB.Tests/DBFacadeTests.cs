@@ -4,10 +4,10 @@ These tests doesn't work when running other tests with shared resources.
 TODO: I don't know how to fix it yet, but maybe one of you can figure it out.
 */
 
-/*
+
 public abstract class InitializationTestsBase : IDisposable
 {
-    protected readonly string dbCustomPath = Path.Combine(Path.GetTempPath(), "chirpInit.db");
+    protected readonly string dbCustomPath = Path.Combine(Path.GetTempPath(), "InitializationTests.db");
 
     protected InitializationTestsBase()
     {
@@ -85,4 +85,4 @@ public class DBFacadeQueryTests : IClassFixture<QueryTestsFixture>
         Assert.True(cheeps.Any());
     }
 }
-*/
+
