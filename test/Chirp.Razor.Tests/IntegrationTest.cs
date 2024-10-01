@@ -9,9 +9,6 @@ public class IntegrationTest : IClassFixture<WebApplicationFactory<Program>>
 
     public IntegrationTest(WebApplicationFactory<Program> fixture)
     {
-        string dbPath = Path.Combine(Path.GetTempPath(), "integrationTests.db");
-        Environment.SetEnvironmentVariable("CHIRPDBPATH", dbPath);
-
         _fixture = fixture;
         _client = _fixture.CreateClient(new WebApplicationFactoryClientOptions
         {
