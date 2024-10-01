@@ -30,7 +30,7 @@ jobs:
     with:
       dotnet_version: ${{ needs.prepare-pipeline.outputs.dotnet_version }}
       deploy_env: ${{ needs.prepare-pipeline.outputs.deploy_env }}
-      package_version_cli: ${{ needs.prepare-pipeline.outputs.package_version_cli }}
+      solution_version: ${{ needs.prepare-pipeline.outputs.package_version_cli }}
 
   build-and-deploy:
     uses: ./.github/workflows/build-and-deploy.yml
