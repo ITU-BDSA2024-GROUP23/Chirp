@@ -18,7 +18,6 @@ public class CheepService : ICheepService
 
     public List<CheepViewModel> GetCheepsFromAuthor(string author, int page)
     {
-        int offset = (page - 1) * _pageSize;
-        return _db.GetCheepsFromAuthor(_pageSize, offset, author);
+        return _db.GetCheepsFromAuthor(_pageSize, page, author);
     }
 }
