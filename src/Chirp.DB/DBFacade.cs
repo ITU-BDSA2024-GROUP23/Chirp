@@ -7,11 +7,13 @@ namespace Chirp.DB;
 
 public class DBFacade
 {
+    public static readonly string DEFAULT_DB_PATH = Path.Combine(Path.GetTempPath(), "chirp.db");
     private readonly SqliteConnection _connection;
 
     public DBFacade()
     {
-        string dbPath = Environment.GetEnvironmentVariable("CHIRPDBPATH") ?? Path.Combine(Path.GetTempPath(), "chirp.db");
+        string? customDBPath = Environment.GetEnvironmentVariable("CHIRPDBPATH");
+        var dbPath = customDBPath ?? DEFAULT_DB_PATH;
 
         _connection = new SqliteConnection($"Data Source={dbPath}");
         _connection.Open();
