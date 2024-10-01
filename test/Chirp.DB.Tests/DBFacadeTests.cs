@@ -82,7 +82,7 @@ public class DBFacadeQueryTests : IClassFixture<QueryTestsFixture>
     public void GetCheepsReturnsCheeps()
     {
         List<CheepViewModel> cheeps = testDB.GetCheeps(10, 0);
-        Assert.True(cheeps.Any());
+        Assert.True(cheeps.Count != 0);
     }
 }
 
