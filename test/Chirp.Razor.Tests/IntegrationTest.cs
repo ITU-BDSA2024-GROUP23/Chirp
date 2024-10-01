@@ -2,22 +2,45 @@ using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Chirp.Razor.Tests;
 
-public class IntegrationTest : IClassFixture<WebApplicationFactory<Program>>
+public class TestsFixture : IDisposable
 {
-    private readonly WebApplicationFactory<Program> _fixture;
-    private readonly HttpClient _client;
+    public readonly HttpClient client;
+    private readonly string? _envBefore; // Dont know if necessary
+    private readonly string _dbCustomPath;
+    private readonly WebApplicationFactory<Program> _waf;
 
-    public IntegrationTest(WebApplicationFactory<Program> fixture)
+    public TestsFixture() 
     {
-        string dbPath = Path.Combine(Path.GetTempPath(), "integrationTests.db");
-        Environment.SetEnvironmentVariable("CHIRPDBPATH", dbPath);
+        _envBefore = Environment.GetEnvironmentVariable("CHIRPDBPATH");
+        _dbCustomPath = Path.Combine(Path.GetTempPath(), "integrationTests.db");
+        _waf = new();
 
-        _fixture = fixture;
-        _client = _fixture.CreateClient(new WebApplicationFactoryClientOptions
+        Environment.SetEnvironmentVariable("CHIRPDBPATH", _dbCustomPath);
+        File.Delete(_dbCustomPath);
+
+        client = _waf.CreateClient(new WebApplicationFactoryClientOptions
         {
             AllowAutoRedirect = true,
             HandleCookies = true,
         });
+    }
+
+    public void Dispose() 
+    {
+        Environment.SetEnvironmentVariable("CHIRPDBPATH", _envBefore);
+        client.Dispose();
+        _waf.Dispose();
+        File.Delete(_dbCustomPath);
+    }
+}
+
+public class IntegrationTest : IClassFixture<TestsFixture>
+{
+    private readonly HttpClient _client;
+
+    public IntegrationTest(TestsFixture fixture)
+    {
+        _client = fixture.client;
     }
 
     [Fact]

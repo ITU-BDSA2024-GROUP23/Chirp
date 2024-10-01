@@ -1,36 +1,45 @@
 namespace Chirp.DB.Tests;
-/*
-These tests doesn't work when running other tests with shared resources.
-TODO: I don't know how to fix it yet, but maybe one of you can figure it out.
-*/
 
-
-public abstract class InitializationTestsBase : IDisposable
+public class TestsFixture : IDisposable
 {
-    protected readonly string dbCustomPath = Path.Combine(Path.GetTempPath(), "InitializationTests.db");
-
-    protected InitializationTestsBase()
+    public DBFacade testDB;
+    public readonly string dbCustomPath;
+    private readonly string? _envBefore; // Dont know if necessary
+    
+    public TestsFixture()
     {
+        dbCustomPath = Path.Combine(Path.GetTempPath(), "initializationTests.db");
+        _envBefore = Environment.GetEnvironmentVariable("CHIRPDBPATH");
+
         Environment.SetEnvironmentVariable("CHIRPDBPATH", null);
         File.Delete(DBFacade.DEFAULT_DB_PATH);
         File.Delete(dbCustomPath);
+
+        testDB = new();
     }
 
     public void Dispose()
     {
-        Environment.SetEnvironmentVariable("CHIRPDBPATH", null);
+        Environment.SetEnvironmentVariable("CHIRPDBPATH", _envBefore);
         File.Delete(DBFacade.DEFAULT_DB_PATH);
         File.Delete(dbCustomPath);
     }
 }
 
-[Collection("Sequential")]
-public class DBFacadeInitializationTests : InitializationTestsBase
+public class DBFacadeTests : IClassFixture<TestsFixture>
 {
+    private readonly DBFacade _testDB;
+    private readonly string _dbCustomPath;
+
+    public DBFacadeTests(TestsFixture fixture)
+    {
+        _testDB = fixture.testDB;
+        _dbCustomPath = fixture.dbCustomPath;
+    }
+
     [Fact]
-    public void DBCreatedInTempIfEnvironmentVariableNotSet()
+    public void DBCreatedInTempIf_CHIRPDBPATH_NotSet()
     {   
-        DBFacade db = new();
         long dbSize = new FileInfo(DBFacade.DEFAULT_DB_PATH).Length;
 
         Assert.Multiple(
@@ -40,48 +49,22 @@ public class DBFacadeInitializationTests : InitializationTestsBase
     }
 
     [Fact]
-    public void DBCreatedAtEnvironmentVariableIfSet() 
+    public void DBCreatedAt_CHIRPDBPATH_IfSet() 
     {
-        Environment.SetEnvironmentVariable("CHIRPDBPATH", dbCustomPath);
+        Environment.SetEnvironmentVariable("CHIRPDBPATH", _dbCustomPath);
         DBFacade db = new();
-        long dbSize = new FileInfo(dbCustomPath).Length;
+        long dbSize = new FileInfo(_dbCustomPath).Length;
 
         Assert.Multiple(
-            () => Assert.True(File.Exists(dbCustomPath)),
+            () => Assert.True(File.Exists(_dbCustomPath)),
             () => Assert.True(dbSize > 0)
         );
-    }
-}
-
-public class QueryTestsFixture : IDisposable
-{
-    public DBFacade testDB;
-    
-    public QueryTestsFixture()
-    {
-        testDB = new();
-    }
-
-    public void Dispose()
-    {
-        File.Delete(DBFacade.DEFAULT_DB_PATH);
-    }
-}
-
-[Collection("Sequential")]
-public class DBFacadeQueryTests : IClassFixture<QueryTestsFixture>
-{
-    DBFacade testDB;
-
-    public DBFacadeQueryTests(QueryTestsFixture fixture)
-    {
-        testDB = fixture.testDB;
     }
 
     [Fact]
     public void GetCheepsReturnsCheeps()
     {
-        List<CheepViewModel> cheeps = testDB.GetCheeps(10, 0);
+        List<CheepViewModel> cheeps = _testDB.GetCheeps(10, 0);
         Assert.True(cheeps.Any());
     }
 }
