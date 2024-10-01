@@ -35,13 +35,13 @@ jobs:
         id: validate-version
         env:
           DEPLOY_ENV: ${{ inputs.deploy_env }}
-          PACKAGE_VERSION_CLI: ${{ inputs.solution_version }}
+          SOLUTION_VERSION: ${{ inputs.solution_version }}
         run: |
-          if git rev-parse "refs/tags/$PACKAGE_VERSION" >/dev/null 2>&1; then
-              echo "Tag $PACKAGE_VERSION already exists."
+          if git rev-parse "refs/tags/$SOLUTION_VERSION" >/dev/null 2>&1; then
+              echo "Tag $SOLUTION_VERSION already exists."
               echo "VERSION_CHANGE=false" >> $GITHUB_OUTPUT
           else
-              echo "Tag $PACKAGE_VERSION does not exists."
+              echo "Tag $SOLUTION_VERSION does not exists."
               echo "VERSION_CHANGE=true" >> $GITHUB_OUTPUT
           fi
 
