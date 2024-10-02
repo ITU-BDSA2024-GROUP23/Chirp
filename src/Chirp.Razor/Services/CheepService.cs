@@ -3,7 +3,7 @@ using Chirp.DB;
 public class CheepService : ICheepService
 {
     private readonly DBFacade _db;
-    private readonly int _pageSize = 10;
+    private readonly int _pageSize = 32;
 
     // Dependency injection of DBFacade
     public CheepService(DBFacade db)
