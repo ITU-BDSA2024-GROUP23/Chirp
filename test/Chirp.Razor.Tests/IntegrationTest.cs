@@ -54,11 +54,11 @@ public class IntegrationTest : IClassFixture<WebApplicationFactory<Program>>
     [Fact]
     public async void DifferentPages()
     {
-        var response = await _client.GetAsync("/?page=0");
+        var response = await _client.GetAsync("/?page=1");
         response.EnsureSuccessStatusCode();
         var content1 = await response.Content.ReadAsStringAsync();
 
-        response = await _client.GetAsync("/?page=1");
+        response = await _client.GetAsync("/?page=2");
         response.EnsureSuccessStatusCode();
         var content2 = await response.Content.ReadAsStringAsync();
 
