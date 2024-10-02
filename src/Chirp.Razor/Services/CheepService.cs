@@ -13,11 +13,13 @@ public class CheepService : ICheepService
 
     public List<CheepViewModel> GetCheeps(int page)
     {
-        return _db.GetCheeps(_pageSize, page);
+        int offset = (page - 1) * _pageSize;
+        return _db.GetCheeps(_pageSize, offset);
     }
 
     public List<CheepViewModel> GetCheepsFromAuthor(string author, int page)
     {
-        return _db.GetCheepsFromAuthor(_pageSize, page, author);
+        int offset = (page - 1) * _pageSize;
+        return _db.GetCheepsFromAuthor(_pageSize, offset, author);
     }
 }
