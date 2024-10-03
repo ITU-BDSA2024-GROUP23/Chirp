@@ -12,7 +12,7 @@ public class Program
 
         builder.Services.AddRazorPages();
         builder.Services.AddScoped<ICheepRepository, CheepRepository>();
-    
+
         var app = builder.Build();
 
         if (!app.Environment.IsDevelopment())

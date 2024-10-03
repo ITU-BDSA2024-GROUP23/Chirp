@@ -16,7 +16,7 @@ public class CheepRepository : ICheepRepository
             .OrderByDescending(cheep => cheep.TimeStamp)
             .Skip(page * pageSize)
             .Take(pageSize)
-            .Select(cheep => new CheepDTO (
+            .Select(cheep => new CheepDTO(
                 cheep.Author.Name,
                 cheep.Text,
                 cheep.TimeStamp.ToString("dd/MM/yyyy HH:mm:ss")
@@ -32,7 +32,7 @@ public class CheepRepository : ICheepRepository
             .Skip(page * pageSize)
             .Take(pageSize)
             .Where(cheep => cheep.Author.Name == author)
-            .Select(cheep => new CheepDTO (
+            .Select(cheep => new CheepDTO(
                 cheep.Author.Name,
                 cheep.Text,
                 cheep.TimeStamp.ToString("dd/MM/yyyy HH:mm:ss")
