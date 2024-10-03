@@ -10,7 +10,7 @@ public class Program
 
         // Load database connection via configuration
         string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-        builder.Services.AddDbContext<ChirpContext>(options => options.UseSqlite(connectionString));
+        builder.Services.AddDbContext<ChirpDBContext>(options => options.UseSqlite(connectionString));
 
         builder.Services.AddRazorPages();
         builder.Services.AddSingleton<DBFacade>();
