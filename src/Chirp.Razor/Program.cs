@@ -13,7 +13,6 @@ public class Program
         builder.Services.AddDbContext<ChirpDBContext>(options => options.UseSqlite(connectionString));
 
         builder.Services.AddRazorPages();
-        builder.Services.AddSingleton<DBFacade>();
         builder.Services.AddSingleton<ICheepService, CheepService>();
 
         var app = builder.Build();

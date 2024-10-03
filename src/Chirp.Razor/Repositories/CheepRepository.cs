@@ -1,19 +1,43 @@
+using Microsoft.EntityFrameworkCore;
+
 public class CheepRepository : ICheepRepository
 {
     private readonly ChirpDBContext _context;
+    private readonly int pageSize = 32;
 
     public CheepRepository(ChirpDBContext context)
     {
         _context = context;
     }
 
-    public async Task GetCheeps(int page = 0)
+    public async Task<List<CheepDTO>> GetCheeps(int page = 0)
     {
-        
+        var query = _context.Cheeps
+            .OrderBy(cheep => cheep.TimeStamp)
+            .Skip(page * pageSize)
+            .Take(pageSize)
+            .Select(cheep => new CheepDTO (
+                cheep.Author.Name,
+                cheep.Text,
+                cheep.TimeStamp.ToString("dd-MM-yyyy HH:mm:ss")
+            ));
+        var result = await query.ToListAsync();
+        return result;
     }
 
-    public async Task GetCheepsFromAuthor(Author author, int page = 0)
+    public async Task<List<CheepDTO>> GetCheepsFromAuthor(Author author, int page = 0)
     {
-        throw new NotImplementedException();
+        var query = _context.Cheeps
+            .OrderBy(cheep => cheep.TimeStamp)
+            .Skip(page * pageSize)
+            .Take(pageSize)
+            .Where(cheep => cheep.Author == author)
+            .Select(cheep => new CheepDTO (
+                cheep.Author.Name,
+                cheep.Text,
+                cheep.TimeStamp.ToString("dd-MM-yyyy HH:mm:ss")
+            ));
+        var result = await query.ToListAsync();
+        return result;
     }
 }
