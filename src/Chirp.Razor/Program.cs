@@ -1,5 +1,3 @@
-using Chirp.DB;
-
 using Microsoft.EntityFrameworkCore;
 
 public class Program
