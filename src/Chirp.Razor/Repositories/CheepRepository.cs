@@ -13,29 +13,29 @@ public class CheepRepository : ICheepRepository
     public async Task<List<CheepDTO>> GetCheeps(int page = 0)
     {
         var query = _context.Cheeps
-            .OrderBy(cheep => cheep.TimeStamp)
+            .OrderByDescending(cheep => cheep.TimeStamp)
             .Skip(page * pageSize)
             .Take(pageSize)
             .Select(cheep => new CheepDTO (
                 cheep.Author.Name,
                 cheep.Text,
-                cheep.TimeStamp.ToString("dd-MM-yyyy HH:mm:ss")
+                cheep.TimeStamp.ToString("dd/MM/yyyy HH:mm:ss")
             ));
         var result = await query.ToListAsync();
         return result;
     }
 
-    public async Task<List<CheepDTO>> GetCheepsFromAuthor(Author author, int page = 0)
+    public async Task<List<CheepDTO>> GetCheepsFromAuthor(string author, int page = 0)
     {
         var query = _context.Cheeps
-            .OrderBy(cheep => cheep.TimeStamp)
+            .OrderByDescending(cheep => cheep.TimeStamp)
             .Skip(page * pageSize)
             .Take(pageSize)
-            .Where(cheep => cheep.Author == author)
+            .Where(cheep => cheep.Author.Name == author)
             .Select(cheep => new CheepDTO (
                 cheep.Author.Name,
                 cheep.Text,
-                cheep.TimeStamp.ToString("dd-MM-yyyy HH:mm:ss")
+                cheep.TimeStamp.ToString("dd/MM/yyyy HH:mm:ss")
             ));
         var result = await query.ToListAsync();
         return result;
