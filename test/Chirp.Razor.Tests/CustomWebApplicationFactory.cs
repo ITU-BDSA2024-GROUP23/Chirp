@@ -1,9 +1,10 @@
 using System.Data.Common;
-using Microsoft.Extensions.DependencyInjection;
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 /// <summary>
 /// This class overrides the default database configuration of the application to use an 
