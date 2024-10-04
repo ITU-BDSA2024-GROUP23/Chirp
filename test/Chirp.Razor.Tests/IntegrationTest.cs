@@ -2,12 +2,12 @@ using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Chirp.Razor.Tests;
 
-public class IntegrationTest : IClassFixture<WebApplicationFactory<Program>>
+public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program>>
 {
-    private readonly WebApplicationFactory<Program> _fixture;
+    private readonly CustomWebApplicationFactory<Program> _fixture;
     private readonly HttpClient _client;
 
-    public IntegrationTest(WebApplicationFactory<Program> fixture)
+    public IntegrationTest(CustomWebApplicationFactory<Program> fixture)
     {
         _fixture = fixture;
         _client = _fixture.CreateClient(new WebApplicationFactoryClientOptions
