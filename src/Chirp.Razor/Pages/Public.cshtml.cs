@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Chirp.Razor.Pages;
@@ -12,7 +12,6 @@ public class PublicModel : PageModel
     {
         _repository = repository;
         Cheeps = new();
-
     }
 
     public ActionResult OnGet([FromQuery] int page = 1)
