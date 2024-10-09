@@ -58,13 +58,41 @@ public class CheepRepository : ICheepRepository
         return result;
     }
 
-    public Task<bool> AddUser(UserDTO newUser)
+    public async Task<bool> CreateUser(string name, string email)
     {
-        
+        // Check if user already exists
+        bool userExists = await _context.Authors.AnyAsync(author => author.Email == email || author.Name == name);
+        if(userExists)
+        {
+            return false;
+        }
+
+        // Create new user
+        Author newAuthor = new Author
+        {
+            AuthorId = Guid.NewGuid().GetHashCode(), 
+            Name = name,
+            Email = email,
+            Cheeps = new List<Cheep>()
+        };
+        await _context.Authors.AddAsync(newAuthor);
+        await _context.SaveChangesAsync();
+        return true;
     }
 
-    public Task<bool> AddCheep(CheepDTO newCheep)
+    // Author will probably be replaced by a user session token
+    public async Task<bool> CreateCheep(Author author, string message)
     {
-        throw new NotImplementedException();
+        Cheep newCheep = new Cheep
+        {
+            CheepId = Guid.NewGuid().GetHashCode(),
+            Author = author,
+            AuthorId = author.AuthorId,
+            Text = message,
+            TimeStamp = DateTime.Now
+        };
+        await _context.Cheeps.AddAsync(newCheep);
+        await _context.SaveChangesAsync();
+        return true;
     }
 }
