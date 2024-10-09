@@ -1,4 +1,4 @@
-using Chirp.DB;
+using Microsoft.EntityFrameworkCore;
 
 public class Program
 {
@@ -6,9 +6,12 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        // Load database connection via configuration
+        string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+        builder.Services.AddDbContext<ChirpDBContext>(options => options.UseSqlite(connectionString));
+
         builder.Services.AddRazorPages();
-        builder.Services.AddSingleton<DBFacade>();
-        builder.Services.AddSingleton<ICheepService, CheepService>();
+        builder.Services.AddScoped<ICheepRepository, CheepRepository>();
 
         var app = builder.Build();
 
