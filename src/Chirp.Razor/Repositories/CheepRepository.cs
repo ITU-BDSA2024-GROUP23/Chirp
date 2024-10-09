@@ -57,4 +57,14 @@ public class CheepRepository : ICheepRepository
         var result = await query.ToListAsync();
         return result;
     }
+
+    public Task<bool> AddUser(UserDTO newUser)
+    {
+        
+    }
+
+    public Task<bool> AddCheep(CheepDTO newCheep)
+    {
+        throw new NotImplementedException();
+    }
 }
