@@ -58,13 +58,13 @@ public class CheepRepository : ICheepRepository
         return result;
     }
 
-    public async Task<bool> CreateUser(string name, string email)
+    public async void CreateUser(string name, string email)
     {
         // Check if user already exists
         bool userExists = await _context.Authors.AnyAsync(author => author.Email == email || author.Name == name);
         if(userExists)
         {
-            return false;
+            throw new Exception("User already exists"); // should be handled somewhere
         }
 
         // Create new user
@@ -77,22 +77,21 @@ public class CheepRepository : ICheepRepository
         };
         await _context.Authors.AddAsync(newAuthor);
         await _context.SaveChangesAsync();
-        return true;
     }
 
-    // Author will probably be replaced by a user session token
-    public async Task<bool> CreateCheep(Author author, string message)
+    // authorid will probably be replaced with a session token
+    public async void CreateCheep(int authorId, string message)
     {
+        Author author = await _context.Authors.FindAsync(authorId) ?? throw new Exception("User not found"); // should be handled somewhere
         Cheep newCheep = new Cheep
         {
             CheepId = Guid.NewGuid().GetHashCode(),
             Author = author,
-            AuthorId = author.AuthorId,
+            AuthorId = authorId,
             Text = message,
             TimeStamp = DateTime.Now
         };
         await _context.Cheeps.AddAsync(newCheep);
         await _context.SaveChangesAsync();
-        return true;
     }
 }

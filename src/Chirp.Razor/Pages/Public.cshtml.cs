@@ -17,6 +17,8 @@ public class PublicModel : PageModel
     public ActionResult OnGet([FromQuery] int page = 1)
     {
         int offset = page - 1;
+        //_repository.CreateUser("Test User", "test@testingchirp.com");
+        //_repository.CreateCheep(807521746, "This is a test cheep");
         Cheeps = _repository.GetCheeps(offset).Result.ToList();
         return Page();
     }
