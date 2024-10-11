@@ -17,9 +17,14 @@ public class PublicModel : PageModel
     public ActionResult OnGet([FromQuery] int page = 1)
     {
         int offset = page - 1;
-        //_repository.CreateUser("Test User", "test@testingchirp.com");
-        //_repository.CreateCheep(807521746, "This is a test cheep");
         Cheeps = _repository.GetCheeps(offset).Result.ToList();
         return Page();
+    }
+
+    public IActionResult OnPost(string cheep)
+    {
+        // for now we will just hardcode the author id, until we implement user auth
+        _repository.CreateCheep(13, cheep);
+        return RedirectToPage("Public");
     }
 }

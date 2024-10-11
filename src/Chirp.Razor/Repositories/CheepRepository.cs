@@ -58,6 +58,25 @@ public class CheepRepository : ICheepRepository
         return result;
     }
 
+    public int getNextAuthorId()
+    {
+        var query = _context.Authors
+            .OrderByDescending(author => author.AuthorId)
+            .Select(author => author.AuthorId);
+        var result = query.FirstOrDefault();
+        return result + 1;
+    }
+    
+    public int getNextCheepId()
+    {
+        var query = _context.Cheeps
+            .OrderByDescending(cheep => cheep.CheepId)
+            .Select(cheep => cheep.CheepId);
+        var result = query.FirstOrDefault();
+        return result + 1;
+    }
+
+
     public async void CreateUser(string name, string email)
     {
         // Check if user already exists
@@ -70,7 +89,7 @@ public class CheepRepository : ICheepRepository
         // Create new user
         Author newAuthor = new Author
         {
-            AuthorId = Guid.NewGuid().GetHashCode(), 
+            AuthorId = getNextAuthorId(),
             Name = name,
             Email = email,
             Cheeps = new List<Cheep>()
@@ -85,7 +104,7 @@ public class CheepRepository : ICheepRepository
         Author author = await _context.Authors.FindAsync(authorId) ?? throw new Exception("User not found"); // should be handled somewhere
         Cheep newCheep = new Cheep
         {
-            CheepId = Guid.NewGuid().GetHashCode(),
+            CheepId = getNextCheepId(),
             Author = author,
             AuthorId = authorId,
             Text = message,
