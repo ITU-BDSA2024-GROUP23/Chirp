@@ -3,7 +3,7 @@
 while read local_ref local_sha remote_ref remote_sha
 do
     echo "Verifying no changes with dotnet format for $remote_ref"
-    dotnet format --vertify-no-changes --no-restore
+    dotnet format --verify-no-changes --no-restore
 
     FORMAT_EXIT_CODE=$?
 
