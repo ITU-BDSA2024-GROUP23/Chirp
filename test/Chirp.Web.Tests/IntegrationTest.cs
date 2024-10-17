@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 
-namespace Chirp.Razor.Tests;
+namespace Chirp.Web.Tests;
 
 public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program>>
 {
