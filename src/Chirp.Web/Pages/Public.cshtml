@@ -1,5 +1,5 @@
 ﻿@page "/"
-@model Chirp.Razor.Pages.PublicModel
+@model Chirp.Web.Pages.PublicModel
 @{
     ViewData["Title"] = "Chirp!";
     Layout = "Shared/_Layout";
@@ -7,6 +7,13 @@
 
 <div>
     <h2> Public Timeline </h2>
+    <form method="post">
+        @Html.AntiForgeryToken()
+        <div>
+            <input type="text" id="cheep" name="cheep" placeholder="Cheep something..."/>
+        </div>
+        <button type="submit">Cheep</button>
+    </form>
 
     @if (Model.Cheeps.Any())
     {

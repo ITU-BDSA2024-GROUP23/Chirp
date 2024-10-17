@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Chirp.Razor.Pages;
+namespace Chirp.Web.Pages;
 
 public class PublicModel : PageModel
 {
@@ -19,5 +19,12 @@ public class PublicModel : PageModel
         int offset = page - 1;
         Cheeps = _repository.GetCheeps(offset).Result.ToList();
         return Page();
+    }
+
+    public IActionResult OnPost(string cheep)
+    {
+        // for now we will just hardcode the author id, until we implement user auth
+        _repository.CreateCheep(13, cheep);
+        return RedirectToPage("Public");
     }
 }

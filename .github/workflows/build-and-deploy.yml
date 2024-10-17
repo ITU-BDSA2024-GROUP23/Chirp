@@ -14,7 +14,7 @@ on:
         type: string
 
 jobs:
-  build-and-deploy-razor:
+  build-and-deploy-web:
     if: inputs.deploy_env == 'prod'
     runs-on: ubuntu-latest
 
@@ -38,14 +38,14 @@ jobs:
 
       - name: Build project in release mode
         run: |
-          dotnet publish src/Chirp.Razor -c Release -o chirp-razor
-          zip -r chirp-razor.zip chirp-razor
+          dotnet publish src/Chirp.Web -c Release -o chirp-web
+          zip -r chirp-web.zip chirp-web
 
-      - name: Archive the Razor packages
+      - name: Archive the web packages
         uses: actions/upload-artifact@v4
         with:
-          name: chirp-razor
-          path: chirp-razor.zip
+          name: chirp-web
+          path: chirp-web.zip
 
       - name: Login to Azure using OIDC
         uses: azure/login@v2
@@ -58,6 +58,6 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: bdsagroup23chirprazor
+          app-name: bdsagroup23chirpweb
           slot-name: Production
-          package: chirp-razor
+          package: chirp-web

@@ -1,0 +1,22 @@
+@page "/createuser"
+@model Chirp.Web.Pages.CreateUserModel
+@{
+    ViewData["Title"] = "Chirp!";
+    Layout = "Shared/_Layout";
+}
+
+<div>
+    <h2>Create a user on Chirp</h2>
+    <form method="post">
+        @Html.AntiForgeryToken()
+        <div>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" />
+        </div>
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" />
+        </div>
+        <button type="submit">Create User</button>
+    </form>
+</div>
