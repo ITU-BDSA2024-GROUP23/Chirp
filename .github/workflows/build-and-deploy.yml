@@ -58,6 +58,6 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: bdsagroup23chirpweb
+          app-name: bdsagroup23chirprazor
           slot-name: Production
           package: chirp-web
