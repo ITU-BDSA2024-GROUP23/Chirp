@@ -1,0 +1,16 @@
+#!/bin/sh
+
+while read local_ref local_sha remote_ref remote_sha
+do
+    echo "Verifying no changes with dotnet format for $remote_ref"
+    dotnet format --vertify-no-changes --no-restore
+
+    FORMAT_EXIT_CODE=$?
+
+    if [ $FORMAT_EXIT_CODE -ne 0 ]; then
+        echo "dotnet format reported issues on branch $remote_ref"
+        exit $CLIPPY_EXIT_CODE
+    fi
+done
+
+exit 0
