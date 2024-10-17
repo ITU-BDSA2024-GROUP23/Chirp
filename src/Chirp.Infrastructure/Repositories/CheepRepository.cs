@@ -66,7 +66,7 @@ public class CheepRepository : ICheepRepository
         var result = query.FirstOrDefault();
         return result + 1;
     }
-    
+
     public int getNextCheepId()
     {
         var query = _context.Cheeps
@@ -81,7 +81,7 @@ public class CheepRepository : ICheepRepository
     {
         // Check if user already exists
         bool userExists = await _context.Authors.AnyAsync(author => author.Email == email || author.Name == name);
-        if(userExists)
+        if (userExists)
         {
             throw new Exception("User already exists"); // should be handled somewhere
         }

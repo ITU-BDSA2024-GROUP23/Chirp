@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -17,14 +18,14 @@ public class UserTimelineModel : PageModel
 
     public ActionResult OnGet(string user, [FromQuery(Name = "page")] int page = 1)
     {
-        page = Math.Max(0, page-1);
+        page = Math.Max(0, page - 1);
         string emailPattern = @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$";
         Regex regex = new(emailPattern);
-        if(regex.IsMatch(user))
+        if (regex.IsMatch(user))
         {
             Cheeps = _repository.GetCheepsFromEmail(user, page).Result.ToList();
-        } 
-        else 
+        }
+        else
         {
             Cheeps = _repository.GetCheepsFromName(user, page).Result.ToList();
         }
