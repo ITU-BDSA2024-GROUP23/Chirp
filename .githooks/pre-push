@@ -9,7 +9,7 @@ do
 
     if [ $FORMAT_EXIT_CODE -ne 0 ]; then
         echo "dotnet format reported issues on branch $remote_ref"
-        exit $CLIPPY_EXIT_CODE
+        exit $FORMAT_EXIT_CODE
     fi
 done
 
