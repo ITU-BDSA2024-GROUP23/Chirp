@@ -11,6 +11,7 @@ public class CheepRepository : ICheepRepository
         _context = context;
     }
 
+    #region Queries
     public async Task<List<CheepDTO>> GetCheeps(int page = 0)
     {
         var query = _context.Cheeps
@@ -58,26 +59,28 @@ public class CheepRepository : ICheepRepository
         return result;
     }
 
-    public int getNextAuthorId()
+    public int GetNextAuthorId()
     {
         var query = _context.Authors
             .OrderByDescending(author => author.AuthorId)
             .Select(author => author.AuthorId);
-        var result = query.FirstOrDefault();
-        return result + 1;
+        var result = query.FirstOrDefault() + 1;
+        return result;
     }
 
-    public int getNextCheepId()
+    public int GetNextCheepId()
     {
         var query = _context.Cheeps
             .OrderByDescending(cheep => cheep.CheepId)
             .Select(cheep => cheep.CheepId);
-        var result = query.FirstOrDefault();
-        return result + 1;
+        var result = query.FirstOrDefault() + 1;
+        return result;
     }
+    #endregion
 
+    #region Commands
 
-    public async void CreateUser(string name, string email)
+    public async Task CreateUser(string name, string email)
     {
         // Check if user already exists
         bool userExists = await _context.Authors.AnyAsync(author => author.Email == email || author.Name == name);
@@ -89,7 +92,7 @@ public class CheepRepository : ICheepRepository
         // Create new user
         Author newAuthor = new Author
         {
-            AuthorId = getNextAuthorId(),
+            AuthorId = GetNextAuthorId(), // not sure if this is adhering to the Command Query Separation principle - but it will be replaced anyway
             Name = name,
             Email = email,
             Cheeps = new List<Cheep>()
@@ -99,12 +102,12 @@ public class CheepRepository : ICheepRepository
     }
 
     // authorid will probably be replaced with a session token
-    public async void CreateCheep(int authorId, string message)
+    public async Task CreateCheep(int authorId, string message)
     {
         Author author = await _context.Authors.FindAsync(authorId) ?? throw new Exception("User not found"); // should be handled somewhere
         Cheep newCheep = new Cheep
         {
-            CheepId = getNextCheepId(),
+            CheepId = GetNextCheepId(),
             Author = author,
             AuthorId = authorId,
             Text = message,
@@ -113,4 +116,6 @@ public class CheepRepository : ICheepRepository
         await _context.Cheeps.AddAsync(newCheep);
         await _context.SaveChangesAsync();
     }
+
+    #endregion
 }
