@@ -25,6 +25,7 @@ public class PublicModel : PageModel
     {
         // for now we will just hardcode the author id, until we implement user auth
         _repository.CreateCheep(13, cheep);
+        TempData["alert-success"] = "Cheep posted successfully!";
         return RedirectToPage("Public");
     }
 }
