@@ -1,15 +1,13 @@
-using System.Security.Claims;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Chirp.Web.Pages;
 
-public class CreateUserModel : PageModel
+public class RegisterModel : PageModel
 {
     private readonly ICheepRepository _repository;
 
-    public CreateUserModel(ICheepRepository repository)
+    public RegisterModel(ICheepRepository repository)
     {
         _repository = repository;
     }

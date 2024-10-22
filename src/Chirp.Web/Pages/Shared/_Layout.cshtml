@@ -7,7 +7,7 @@
 </head>
 <body>
 <div class=page>
-    <h1><img src="~/images/icon1.png" alt="Icon1"/>Chirp!</h1>
+    <h1><a href="/"><img src="~/images/icon1.png" alt="Icon1"/></a>Chirp!</h1>
     <div class=navigation>
         @if (User.Identity != null && User.Identity.IsAuthenticated)
         {
@@ -21,7 +21,7 @@
         {
             <div>
                 <a href="/">public timeline</a> |
-                <a href="/createUser">register</a> |
+                <a href="/account/register">register</a> |
                 <a ... >login</a>
             </div>
         }
