@@ -8,6 +8,35 @@
 <body>
 <div class=page>
     <h1><img src="~/images/icon1.png" alt="Icon1"/>Chirp!</h1>
+    <div class=navigation>
+        @if (User.Identity != null && User.Identity.IsAuthenticated)
+        {
+            <div>
+                <a href="/@(User.Identity.Name)">my timeline</a> |
+                <a href="/">public timeline</a> |
+                <a ... >logout [@(User.Identity.Name)]</a>
+            </div>
+        }
+        else
+        {
+            <div>
+                <a href="/">public timeline</a> |
+                <a href="/createUser">register</a> |
+                <a ... >login</a>
+            </div>
+        }
+    </div>
+    @if (TempData["alert-success"] != null)
+    {
+    <div class="alert alert-success">
+        @TempData["alert-success"]
+    </div>
+    } else if (TempData["alert-error"] != null) 
+    {
+    <div class="alert alert-error">
+        @TempData["alert-error"]
+    </div>
+    }
 
     <div class=body>
             @RenderBody()

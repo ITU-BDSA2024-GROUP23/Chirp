@@ -80,13 +80,13 @@ public class CheepRepository : ICheepRepository
 
     #region Commands
 
-    public async Task CreateUser(string name, string email)
+    public async Task<bool> CreateUser(string name, string email)
     {
         // Check if user already exists
         bool userExists = await _context.Authors.AnyAsync(author => author.Email == email || author.Name == name);
         if (userExists)
         {
-            throw new Exception("User already exists"); // should be handled somewhere
+            return false;
         }
 
         // Create new user
@@ -99,6 +99,7 @@ public class CheepRepository : ICheepRepository
         };
         await _context.Authors.AddAsync(newAuthor);
         await _context.SaveChangesAsync();
+        return true;
     }
 
     // authorid will probably be replaced with a session token
