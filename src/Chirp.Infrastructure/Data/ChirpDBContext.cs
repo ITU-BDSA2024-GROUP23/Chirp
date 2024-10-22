@@ -7,9 +7,6 @@ public class ChirpDBContext : DbContext
 
     public ChirpDBContext(DbContextOptions<ChirpDBContext> options) : base(options)
     {
-        if (Database.EnsureCreated())
-        {
-            DbInitializer.SeedDatabase(this);
-        }
+        DbInitializer.SeedDatabase(this); // TODO: This will be removed soon
     }
 }
