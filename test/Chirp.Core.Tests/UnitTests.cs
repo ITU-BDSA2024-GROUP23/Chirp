@@ -32,12 +32,13 @@ public class UnitTests
     public void CheepTextCannotBeEmpty()
     {
         //Arrange
-        Cheep cheep = new Cheep {
+        Cheep cheep = new Cheep
+        {
             CheepId = 1,
-            Author = new Author { AuthorId = 1, Name = "Victor", Email = "vmem@itu.dk"},
+            Author = new Author { AuthorId = 1, Name = "Victor", Email = "vmem@itu.dk" },
             AuthorId = 1,
-            Text = "", 
-            TimeStamp = DateTime.Now 
+            Text = "",
+            TimeStamp = DateTime.Now
         };
 
         ValidationContext validationContext = new ValidationContext(cheep);
@@ -54,9 +55,10 @@ public class UnitTests
     public void CheepTextCannotBeLongerThan160Characters()
     {
         //Arrange
-        Cheep cheep = new Cheep {
+        Cheep cheep = new Cheep
+        {
             CheepId = 1,
-            Author = new Author { AuthorId = 1, Name = "Victor", Email = "vmem@itu.dk"},
+            Author = new Author { AuthorId = 1, Name = "Victor", Email = "vmem@itu.dk" },
             AuthorId = 1,
             Text = new('a', 161),
             TimeStamp = DateTime.Now
