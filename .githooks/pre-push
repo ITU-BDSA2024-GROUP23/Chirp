@@ -13,4 +13,5 @@ do
     fi
 done
 
+echo "No format issues detected"
 exit 0
