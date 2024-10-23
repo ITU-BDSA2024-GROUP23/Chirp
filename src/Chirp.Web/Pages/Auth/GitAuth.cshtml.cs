@@ -10,7 +10,7 @@ public class GitAuth : PageModel
     {
         if (User.Identity?.IsAuthenticated == true)
         {
-            TempData["alert-error"] = "You are already logged in as " + User.Identity.Name;
+            TempData["alert-success"] = "Signed in as " + User.Identity.Name;
             Response.Redirect("/");
         }
         return;
