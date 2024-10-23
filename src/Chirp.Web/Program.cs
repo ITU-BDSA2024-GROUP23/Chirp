@@ -17,7 +17,6 @@ public class Program
         //session
         builder.Services.AddDistributedMemoryCache();
         builder.Services.AddSession(options => {
-            options.Cookie.Name = "Chirp.Session";
             options.IdleTimeout = TimeSpan.FromMinutes(20);
             options.Cookie.HttpOnly = true;
             options.Cookie.IsEssential = true;
