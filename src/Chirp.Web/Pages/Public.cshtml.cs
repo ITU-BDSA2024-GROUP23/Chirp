@@ -23,7 +23,12 @@ public class PublicModel : PageModel
 
     public IActionResult OnPost(string cheep)
     {
-        string author = User.Identity.Name;
+        string? author = User.Identity?.Name;
+        if (string.IsNullOrEmpty(author))
+        {
+            TempData["alert-error"] = "You must be logged in to post a cheep!";
+            return RedirectToPage("Public");
+        }
         _repository.CreateCheep(author, cheep);
         TempData["alert-success"] = "Cheep posted successfully!";
         return RedirectToPage("Public");

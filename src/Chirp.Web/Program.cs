@@ -32,8 +32,8 @@ public class Program
         .AddCookie()
         .AddGitHub(options =>
         {
-            options.ClientId = builder.Configuration["GitHub:ClientId"];
-            options.ClientSecret = builder.Configuration["GitHub:ClientSecret"];
+            options.ClientId = builder.Configuration["GitHub:ClientId"] ?? throw new Exception("GitHub ClientId is not configured..");
+            options.ClientSecret = builder.Configuration["GitHub:ClientSecret"] ?? throw new Exception("GitHub ClientSecret is not configured..");
             options.CallbackPath = "/auth/github/";
         });
 
