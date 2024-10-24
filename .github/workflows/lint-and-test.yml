@@ -36,6 +36,8 @@ jobs:
         run: |
           export GitHub__ClientId="${{ secrets.GITHUBCLIENTID }}"
           export GitHub__ClientSecret="${{ secrets.GITHUBCLIENTSECRET }}"
+          echo "Client ID is=${{ secrets.GITHUBCLIENTID }}"
+          echo "Client Secret is=${{ secrets.GITHUBCLIENTSECRET }}"
           echo "Environment variables are set for oAuth"
 
       - name: Test the project
@@ -61,8 +63,10 @@ jobs:
 
       - name: Export oAuth secrets
         run: |
-          export GitHub__ClientId="${{ secrets.GITHUBCLIENTID }}"
-          export GitHub__ClientSecret="${{ secrets.GITHUBCLIENTSECRET }}"
+          setx GitHub__ClientId="${{ secrets.GITHUBCLIENTID }}"
+          setx GitHub__ClientSecret="${{ secrets.GITHUBCLIENTSECRET }}"
+          echo "Client ID is=${{ secrets.GITHUBCLIENTID }}"
+          echo "Client Secret is=${{ secrets.GITHUBCLIENTSECRET }}"
           echo "Environment variables are set for oAuth"
 
       - name: Test the project
