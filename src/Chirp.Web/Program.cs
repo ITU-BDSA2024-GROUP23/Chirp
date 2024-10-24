@@ -32,8 +32,16 @@ public class Program
         .AddCookie()
         .AddGitHub(options =>
         {
-            options.ClientId = builder.Configuration["GitHub:ClientId"] ?? throw new Exception("GitHub ClientId is not configured..");
-            options.ClientSecret = builder.Configuration["GitHub:ClientSecret"] ?? throw new Exception("GitHub ClientSecret is not configured..");
+            if(builder.Environment.IsDevelopment())
+            {
+                options.ClientId = builder.Configuration["GitHub:ClientId"] ?? throw new Exception("GitHub:ClientId not found in configuration");
+                options.ClientSecret = builder.Configuration["GitHub:ClientSecret"] ?? throw new Exception("GitHub:ClientSecret not found in configuration");
+            }
+            else
+            {
+                options.ClientId = Environment.GetEnvironmentVariable("GitHub_ClientId") ?? throw new Exception("GitHub_ClientId not found in environment variables");
+                options.ClientSecret = Environment.GetEnvironmentVariable("GitHub_ClientSecret") ?? throw new Exception("GitHub_ClientSecret not found in environment variables");
+            }
             options.CallbackPath = "/auth/github/";
         });
 
@@ -48,7 +56,7 @@ public class Program
         {
             app.UseExceptionHandler("/Error");
             app.UseHsts();
-        }
+        } 
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
