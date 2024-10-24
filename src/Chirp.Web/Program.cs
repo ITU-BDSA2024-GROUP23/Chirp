@@ -34,8 +34,8 @@ public class Program
         {
             if(builder.Environment.IsDevelopment())
             {
-                options.ClientId = builder.Configuration["GitHub:ClientId"] ?? throw new Exception("GitHub:ClientId not found in configuration");
-                options.ClientSecret = builder.Configuration["GitHub:ClientSecret"] ?? throw new Exception("GitHub:ClientSecret not found in configuration");
+                options.ClientId = builder.Configuration["GitHub_ClientId"] ?? throw new Exception("GitHub:ClientId not found in configuration");
+                options.ClientSecret = builder.Configuration["GitHub_ClientSecret"] ?? throw new Exception("GitHub:ClientSecret not found in configuration");
             }
             else
             {
