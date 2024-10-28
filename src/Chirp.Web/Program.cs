@@ -16,12 +16,13 @@ public class Program
 
         //session
         builder.Services.AddDistributedMemoryCache();
-        builder.Services.AddSession(options => {
+        builder.Services.AddSession(options =>
+        {
             options.IdleTimeout = TimeSpan.FromMinutes(20);
             options.Cookie.HttpOnly = true;
             options.Cookie.IsEssential = true;
         });
-        
+
         //auth
         builder.Services.AddAuthentication(options =>
         {
@@ -32,7 +33,7 @@ public class Program
         .AddCookie()
         .AddGitHub(options =>
         {
-            if(builder.Environment.IsDevelopment())
+            if (builder.Environment.IsDevelopment())
             {
                 options.ClientId = builder.Configuration["GitHub_ClientId"] ?? throw new Exception("GitHub:ClientId not found in configuration");
                 options.ClientSecret = builder.Configuration["GitHub_ClientSecret"] ?? throw new Exception("GitHub:ClientSecret not found in configuration");
@@ -56,13 +57,13 @@ public class Program
         {
             app.UseExceptionHandler("/Error");
             app.UseHsts();
-        } 
+        }
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
         app.UseRouting();
 
-        
+
         //auth
         app.UseAuthentication();
         app.UseAuthorization();
