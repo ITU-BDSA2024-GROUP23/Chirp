@@ -32,14 +32,12 @@ jobs:
       - name: Build the project
         run: dotnet build --no-restore
 
-      - name: Export oAuth secrets
-        run: |
-          export GitHub__ClientId="${{ secrets.GITHUBCLIENTID }}"
-          export GitHub__ClientSecret="${{ secrets.GITHUBCLIENTSECRET }}"
-          echo "Environment variables are set for oAuth"
-
       - name: Test the project
         run: dotnet test --no-build
+        env:
+          GitHub_ClientId: ${{ secrets.GITHUBCLIENTID }}
+          GitHub_ClientSecret: ${{ secrets.GITHUBCLIENTSECRET }}
+          ASPNETCORE_ENVIRONMENT: Production
 
   test-windows:
     runs-on: windows-latest
@@ -59,14 +57,12 @@ jobs:
       - name: Build the project
         run: dotnet build --no-restore
 
-      - name: Export oAuth secrets
-        run: |
-          setx GitHub__ClientId="${{ secrets.GITHUBCLIENTID }}"
-          setx GitHub__ClientSecret="${{ secrets.GITHUBCLIENTSECRET }}"
-          echo "Environment variables are set for oAuth"
-
       - name: Test the project
         run: dotnet test --no-build
+        env:
+          GitHub_ClientId: ${{ secrets.GITHUBCLIENTID }}
+          GitHub_ClientSecret: ${{ secrets.GITHUBCLIENTSECRET }}
+          ASPNETCORE_ENVIRONMENT: Production
 
   lint-solution:
     runs-on: ubuntu-latest
