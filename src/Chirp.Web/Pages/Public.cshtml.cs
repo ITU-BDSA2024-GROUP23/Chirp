@@ -23,8 +23,14 @@ public class PublicModel : PageModel
 
     public IActionResult OnPost(string cheep)
     {
-        // for now we will just hardcode the author id, until we implement user auth
-        _repository.CreateCheep(13, cheep);
+        string? author = User.Identity?.Name;
+        if (string.IsNullOrEmpty(author))
+        {
+            TempData["alert-error"] = "You must be logged in to post a cheep!";
+            return RedirectToPage("Public");
+        }
+        _repository.CreateCheep(author, cheep);
+        TempData["alert-success"] = "Cheep posted successfully!";
         return RedirectToPage("Public");
     }
 }

@@ -20,7 +20,7 @@ public class UnitTests
     public void CheepCanBeInstantiated()
     {
         // Arrange
-        Author author = new Author { Name = "Victor", Email = "vmem@itu.dk" };
+        Author author = new Author { Name = "Kasper", Email = "kasjo@itu.dk" };
         Cheep cheep = new Cheep { CheepId = 1, Author = author, AuthorId = author.AuthorId, Text = "test", TimeStamp = DateTime.Now };
 
         // Assert
@@ -35,7 +35,7 @@ public class UnitTests
         Cheep cheep = new Cheep
         {
             CheepId = 1,
-            Author = new Author { AuthorId = 1, Name = "Victor", Email = "vmem@itu.dk" },
+            Author = new Author { AuthorId = 1, Name = "Philip", Email = "phro@itu.dk" },
             AuthorId = 1,
             Text = "",
             TimeStamp = DateTime.Now
@@ -58,7 +58,7 @@ public class UnitTests
         Cheep cheep = new Cheep
         {
             CheepId = 1,
-            Author = new Author { AuthorId = 1, Name = "Victor", Email = "vmem@itu.dk" },
+            Author = new Author { AuthorId = 1, Name = "Axel", Email = "axlu@itu.dk" },
             AuthorId = 1,
             Text = new('a', 161),
             TimeStamp = DateTime.Now
