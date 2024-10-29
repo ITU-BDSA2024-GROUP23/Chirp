@@ -32,13 +32,13 @@ public class Program
         {
             if (builder.Environment.IsDevelopment())
             {
-                options.ClientId = builder.Configuration["GitHub__ClientId"] ?? throw new Exception("GitHub_ClientId not found in configuration");
-                options.ClientSecret = builder.Configuration["GitHub__ClientSecret"] ?? throw new Exception("GitHub_ClientSecret not found in configuration");
+                options.ClientId = builder.Configuration["GITHUB_CLIENT_ID"] ?? throw new Exception("GITHUB_CLIENT_ID not found in configuration");
+                options.ClientSecret = builder.Configuration["GITHUB_CLIENT_SECRET"] ?? throw new Exception("GITHUB_CLIENT_SECRET not found in configuration");
             }
             else
             {
-                options.ClientId = Environment.GetEnvironmentVariable("GitHub_ClientId") ?? throw new Exception("GitHub__CLIENT_ID not found in environment variables");
-                options.ClientSecret = Environment.GetEnvironmentVariable("GitHub_ClientSecret") ?? throw new Exception("GitHub__CLIENT_SECRET not found in environment variables");
+                options.ClientId = Environment.GetEnvironmentVariable("GITHUB_CLIENT_ID") ?? throw new Exception("GITHUB_CLIENT_ID not found in environment variables");
+                options.ClientSecret = Environment.GetEnvironmentVariable("GITHUB_CLIENT_SECRET") ?? throw new Exception("GITHUB_CLIENT_SECRET not found in environment variables");
             }
             options.CallbackPath = "/auth/github/";
             // options.Scope.Add("user:email"); TODO: Implement

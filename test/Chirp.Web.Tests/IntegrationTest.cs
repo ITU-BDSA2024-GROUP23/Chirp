@@ -17,6 +17,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
         });
     }
 
+
     [Fact]
     public async void PublicTimelineAvailable()
     {
