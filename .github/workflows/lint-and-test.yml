@@ -35,8 +35,8 @@ jobs:
       - name: Test the project
         run: dotnet test --no-build --environment Prodction
         env:
-          GH_CLIENT_ID: ${{ secrets.GH_CLIENT_ID }}
-          GH_CLIENT_SECRET: ${{ secrets.GH_CLIENT_SECRET }}
+          GitHub_CLIENT_ID: ${{ secrets.GH_CLIENT_ID }}
+          GitHub_CLIENT_SECRET: ${{ secrets.GH_CLIENT_SECRET }}
 
   test-windows:
     runs-on: windows-latest
@@ -59,8 +59,8 @@ jobs:
       - name: Test the project
         run: dotnet test --no-build --environment Prodction
         env:
-          GH_CLIENT_ID: ${{ secrets.GH_CLIENT_ID }}
-          GH_CLIENT_SECRET: ${{ secrets.GH_CLIENT_SECRET }}
+          GitHub_CLIENT_ID: ${{ secrets.GH_CLIENT_ID }}
+          GitHub_CLIENT_SECRET: ${{ secrets.GH_CLIENT_SECRET }}
 
   lint-solution:
     runs-on: ubuntu-latest
