@@ -37,8 +37,8 @@ public class Program
             }
             else
             {
-                options.ClientId = Environment.GetEnvironmentVariable("GitHub__ClientId") ?? throw new Exception("GitHub__CLIENT_ID not found in environment variables");
-                options.ClientSecret = Environment.GetEnvironmentVariable("GitHub__ClientSecret") ?? throw new Exception("GitHub__CLIENT_SECRET not found in environment variables");
+                options.ClientId = Environment.GetEnvironmentVariable("GitHub_ClientId") ?? throw new Exception("GitHub__CLIENT_ID not found in environment variables");
+                options.ClientSecret = Environment.GetEnvironmentVariable("GitHub_ClientSecret") ?? throw new Exception("GitHub__CLIENT_SECRET not found in environment variables");
             }
             options.CallbackPath = "/auth/github/";
             // options.Scope.Add("user:email"); TODO: Implement
