@@ -33,17 +33,18 @@ public class Program
         .AddCookie()
         .AddGitHub(options =>
         {
-            if (builder.Environment.IsDevelopment())
-            {
-                options.ClientId = builder.Configuration["GitHub_ClientId"] ?? throw new Exception("GitHub:ClientId not found in configuration");
-                options.ClientSecret = builder.Configuration["GitHub_ClientSecret"] ?? throw new Exception("GitHub:ClientSecret not found in configuration");
-            }
-            else
-            {
-                options.ClientId = Environment.GetEnvironmentVariable("GitHub_ClientId") ?? throw new Exception("GitHub_ClientId not found in environment variables");
-                options.ClientSecret = Environment.GetEnvironmentVariable("GitHub_ClientSecret") ?? throw new Exception("GitHub_ClientSecret not found in environment variables");
-            }
+            var clientId = builder.Environment.IsDevelopment()
+                ? builder.Configuration["GitHub_ClientId"]
+                : Environment.GetEnvironmentVariable("GitHub_ClientId");
+                
+            var clientSecret = builder.Environment.IsDevelopment()
+                ? builder.Configuration["GitHub_ClientSecret"]
+                : Environment.GetEnvironmentVariable("GitHub_ClientSecret");
+
+            options.ClientId = clientId ?? throw new Exception("GitHub ClientId not found");
+            options.ClientSecret = clientSecret ?? throw new Exception("GitHub ClientSecret not found");
             options.CallbackPath = "/auth/github/";
+            options.Scope.Add("user:email");
         });
 
         var app = builder.Build();

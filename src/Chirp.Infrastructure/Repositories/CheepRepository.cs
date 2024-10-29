@@ -104,21 +104,8 @@ public class CheepRepository : ICheepRepository
 
     public async Task CreateCheep(string name, string message)
     {
-        // get author by name if not found create new author - author name is probably not the best way to identify an author, but i wanted to test it.
-        // TODO: please replace this with a proper way to identify authors
         Author? author = await _context.Authors.FirstOrDefaultAsync(author => author.Name == name);
-        if (author == null)
-        {
-            author = new Author
-            {
-                AuthorId = GetNextAuthorId(),
-                Email = "nomail@gmail.com", //TODO: What do we do if the user has no email (which he won't have if signing in with GitHub)?
-                Name = name,
-                Cheeps = new List<Cheep>()
-            };
-            await _context.Authors.AddAsync(author);
-            await _context.SaveChangesAsync();
-        }
+        //TODO: add error handling if author is not found
 
         // create new cheep
         Cheep newCheep = new Cheep
