@@ -33,10 +33,10 @@ jobs:
         run: dotnet build --no-restore
 
       - name: Test the project
-        run: dotnet test --no-build --environment Prodction
+        run: dotnet test --no-build --environment Production
         env:
-          GitHub_CLIENT_ID: ${{ secrets.GH_CLIENT_ID }}
-          GitHub_CLIENT_SECRET: ${{ secrets.GH_CLIENT_SECRET }}
+          GitHub__CLIENT_ID: ${{ secrets.GH_CLIENT_ID }}
+          GitHub__CLIENT_SECRET: ${{ secrets.GH_CLIENT_SECRET }}
 
   test-windows:
     runs-on: windows-latest
@@ -57,10 +57,10 @@ jobs:
         run: dotnet build --no-restore
 
       - name: Test the project
-        run: dotnet test --no-build --environment Prodction
+        run: dotnet test --no-build --environment Production
         env:
-          GitHub_CLIENT_ID: ${{ secrets.GH_CLIENT_ID }}
-          GitHub_CLIENT_SECRET: ${{ secrets.GH_CLIENT_SECRET }}
+          GitHub__CLIENT_ID: ${{ secrets.GH_CLIENT_ID }}
+          GitHub__CLIENT_SECRET: ${{ secrets.GH_CLIENT_SECRET }}
 
   lint-solution:
     runs-on: ubuntu-latest
