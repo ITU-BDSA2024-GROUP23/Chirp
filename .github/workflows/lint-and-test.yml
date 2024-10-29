@@ -35,8 +35,8 @@ jobs:
       - name: Test the project
         run: dotnet test --no-build --environment Production
         env:
-          GitHub__CLIENT_ID: ${{ secrets.GITHUBCLIENTID }}
-          GitHub__CLIENT_SECRET: ${{ secrets.GITHUBCLIENTSECRET }}
+          GitHub__ClientId: ${{ secrets.GITHUBCLIENTID }}
+          GitHub__ClientSecret: ${{ secrets.GITHUBCLIENTSECRET }}
 
   test-windows:
     runs-on: windows-latest
