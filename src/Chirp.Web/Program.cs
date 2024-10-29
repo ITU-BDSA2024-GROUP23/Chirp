@@ -8,13 +8,11 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Load database connection via configuration
         string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
         builder.Services.AddDbContext<ChirpDBContext>(options => options.UseSqlite(connectionString));
         builder.Services.AddRazorPages();
         builder.Services.AddScoped<ICheepRepository, CheepRepository>();
 
-        //session
         builder.Services.AddDistributedMemoryCache();
         builder.Services.AddSession(options =>
         {
@@ -23,7 +21,6 @@ public class Program
             options.Cookie.IsEssential = true;
         });
 
-        //auth
         builder.Services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -40,17 +37,17 @@ public class Program
             }
             else
             {
-                options.ClientId = Environment.GetEnvironmentVariable("GitHub_ClientId") ?? throw new Exception("GitHub_ClientId not found in environment variables");
-                options.ClientSecret = Environment.GetEnvironmentVariable("GitHub_ClientSecret") ?? throw new Exception("GitHub_ClientSecret not found in environment variables");
+                options.ClientId = Environment.GetEnvironmentVariable("GITHUB_CLIENT_ID") ?? throw new Exception("GITHUB_CLIENT_ID not found in environment variables");
+                options.ClientSecret = Environment.GetEnvironmentVariable("GITHUB_CLIENT_SECRET") ?? throw new Exception("GITHUB_CLIENT_SECRET not found in environment variables");
             }
             options.CallbackPath = "/auth/github/";
+            // options.Scope.Add("user:email"); TODO: Implement
         });
 
         var app = builder.Build();
 
-        app.UseCookiePolicy(new CookiePolicyOptions
-        {
-            MinimumSameSitePolicy = SameSiteMode.Lax // TODO: not sure if this is the best option but maybe look into it
+        app.UseCookiePolicy(new CookiePolicyOptions {
+            MinimumSameSitePolicy = SameSiteMode.Lax
         });
 
         if (!app.Environment.IsDevelopment())
@@ -63,13 +60,10 @@ public class Program
         app.UseStaticFiles();
         app.UseRouting();
 
-
-        //auth
         app.UseAuthentication();
         app.UseAuthorization();
         app.UseSession();
 
-        //run
         app.MapRazorPages();
         app.Run();
     }

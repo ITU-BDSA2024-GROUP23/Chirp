@@ -3,8 +3,8 @@ using Microsoft.EntityFrameworkCore;
 public class CheepRepository : ICheepRepository
 {
     private readonly ChirpDBContext _context;
-    private readonly int pageSize = 32;
-    private readonly string defaultTimeStampFormat = "dd/MM/yyyy HH:mm:ss";
+    private const int pageSize = 32;
+    private const string defaultTimeStampFormat = "dd/MM/yyyy HH:mm:ss";
 
     public CheepRepository(ChirpDBContext context)
     {
@@ -82,14 +82,12 @@ public class CheepRepository : ICheepRepository
 
     public async Task<bool> CreateUser(string name, string email)
     {
-        // Check if user already exists
         bool userExists = await _context.Authors.AnyAsync(author => author.Email == email || author.Name == name);
         if (userExists)
         {
             return false;
         }
 
-        // Create new user
         Author newAuthor = new Author
         {
             AuthorId = GetNextAuthorId(), // not sure if this is adhering to the Command Query Separation principle - but it will be replaced anyway
@@ -120,7 +118,6 @@ public class CheepRepository : ICheepRepository
             await _context.SaveChangesAsync();
         }
 
-        // create new cheep
         Cheep newCheep = new Cheep
         {
             CheepId = GetNextCheepId(),
