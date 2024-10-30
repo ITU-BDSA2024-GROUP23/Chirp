@@ -84,32 +84,3 @@ jobs:
               <td>${{ steps.pipeline-vars.outputs.SOLUTION_VERSION }}</td>
             </tr>
           </table>" >> $GITHUB_STEP_SUMMARY
-
-  prepare-azure:
-    if: |
-      needs.prepare-pipeline-vars.outputs.deploy_env == 'prod' ||
-      needs.prepare-pipeline-vars.outputs.deploy_env == 'stag'
-    runs-on: ubuntu-latest
-
-    needs: prepare-pipeline-vars
-
-    environment: ${{ needs.prepare-pipeline-vars.outputs.deploy_env }}
-
-    permissions:
-      id-token: write
-      contents: read
-
-    steps:
-      - name: Validate login to Azure using OIDC
-        uses: azure/login@v2
-        with:
-          client-id: ${{ vars.AZURE_CLIENT_ID }}
-          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
-          tenant-id: ${{ vars.AZURE_TENANT_ID }}
-
-      - name: Azure CLI show account
-        uses: azure/cli@v2
-        with:
-          azcliversion: latest
-          inlineScript: |
-            az account show
