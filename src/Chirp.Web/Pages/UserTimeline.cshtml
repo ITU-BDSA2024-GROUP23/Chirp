@@ -8,7 +8,17 @@
 
 <div>
     <h2> @routeName's Timeline </h2>
-
+    @if(User.Identity != null && User.Identity.IsAuthenticated)
+    {
+        <div class="cheepbox">
+            <h3>Whats on your mind @(User.Identity.Name)?</h3>
+            <form method="post">
+            @Html.AntiForgeryToken()
+                <input type="text" id="cheep" name="cheep" placeholder="Cheep something..."/>
+                <input type="submit" value="Cheep"/>
+            </form>
+        </div>
+    }
     @if (Model.Cheeps.Any())
     {
         <ul id="messagelist" class="cheeps">
