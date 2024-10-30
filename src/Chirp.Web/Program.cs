@@ -1,6 +1,7 @@
+using Chirp.Infrastructure.Data;
+
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 public class Program
 {
@@ -22,6 +23,9 @@ public class Program
             options.Cookie.HttpOnly = true;
             options.Cookie.IsEssential = true;
         });
+
+        builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
+            .AddEntityFrameworkStores<ChirpDBContext>();
 
         //auth
         builder.Services.AddAuthentication(options =>
