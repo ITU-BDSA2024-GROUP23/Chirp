@@ -9,13 +9,14 @@
     <h2> Public Timeline </h2>
     @if(User.Identity != null && User.Identity.IsAuthenticated)
     {
-        <form method="post">
+        <div class="cheepbox">
+            <h3>Whats on your mind @(User.Identity.Name)?</h3>
+            <form method="post">
             @Html.AntiForgeryToken()
-            <div>
                 <input type="text" id="cheep" name="cheep" placeholder="Cheep something..."/>
-            </div>
-            <button type="submit">Cheep</button>
-        </form>
+                <input type="submit" value="Cheep"/>
+            </form>
+        </div>
     }
     @if (Model.Cheeps.Any())
     {
