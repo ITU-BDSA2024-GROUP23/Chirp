@@ -17,7 +17,6 @@ public class Program
         builder.Services.AddScoped<ICheepRepository, CheepRepository>();
 
         //session
-        /*
         builder.Services.AddDistributedMemoryCache();
         builder.Services.AddSession(options =>
         {
@@ -25,21 +24,12 @@ public class Program
             options.Cookie.HttpOnly = true;
             options.Cookie.IsEssential = true;
         });
-        */
 
-        builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
+        builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false)
             .AddEntityFrameworkStores<ChirpDBContext>();
 
         //auth
-        /*
-        builder.Services.AddAuthentication(options =>
-        {
-            options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = "GitHub";
-        })
-        .AddCookie()
-        .AddGitHub(options =>
+        builder.Services.AddAuthentication().AddCookie().AddGitHub(options =>
         {
             var clientId = builder.Environment.IsDevelopment()
                 ? builder.Configuration["GitHub_ClientId"]
@@ -54,15 +44,13 @@ public class Program
             options.CallbackPath = "/auth/github/";
             options.Scope.Add("user:email");
         });
-        */
 
         var app = builder.Build();
-        /*
+
         app.UseCookiePolicy(new CookiePolicyOptions
         {
             MinimumSameSitePolicy = SameSiteMode.Lax // TODO: not sure if this is the best option but maybe look into it
         });
-        */
 
         if (!app.Environment.IsDevelopment())
         {
@@ -78,7 +66,7 @@ public class Program
         //auth
         app.UseAuthentication();
         app.UseAuthorization();
-        //app.UseSession();
+        app.UseSession();
 
         //run
         app.MapRazorPages();
