@@ -21,9 +21,8 @@ public class GitAuth : PageModel
         if (User.Identity?.IsAuthenticated == true)
         {
             //TODO: handle these exceptions
-            var email = User.FindFirst(ClaimTypes.Email)?.Value ?? throw new Exception("Email not found");
-            var name = User.FindFirst(ClaimTypes.Name)?.Value ?? throw new Exception("Name not found");
-            _repository.CreateUser(name, email);
+            _ = User.FindFirst(ClaimTypes.Email)?.Value ?? throw new Exception("Email not found");
+            _ = User.FindFirst(ClaimTypes.Name)?.Value ?? throw new Exception("Name not found");
             TempData["alert-success"] = "Signed in as " + User.Identity.Name;
             Response.Redirect("/");
         }

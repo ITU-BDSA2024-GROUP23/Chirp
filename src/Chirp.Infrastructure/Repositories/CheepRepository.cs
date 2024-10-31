@@ -71,39 +71,9 @@ public class CheepRepository : ICheepRepository
 
     #region Commands
 
-    /*
-
-    public async Task<bool> CreateUser(string userName, string email)
+    public async Task CreateCheep(string userName, string message)
     {
-        // Check if user already exists
-        bool userExists = await _context.Users.AnyAsync(user => user.Email == email || user.UserName == userName);
-        if (userExists)
-        {
-            return false;
-        }
-
-        // Create new user
-        User newAuthor = new User
-        {
-            AuthorId = GetNextAuthorId(), // not sure if this is adhering to the Command Query Separation principle - but it will be replaced anyway
-            Name = name,
-            Email = email,
-            Cheeps = new List<Cheep>()
-        };
-        await _context.Authors.AddAsync(newAuthor);
-        await _context.SaveChangesAsync();
-        return true;
-    }
-
-    public async Task CreateCheep(string name, string message)
-    {
-        throw new NotImplementedException();
-    }
-
-    
-    public async Task CreateCheep(string name, string message)
-    {
-        Author? author = await _context.Authors.FirstOrDefaultAsync(author => author.Name == name);
+        User? author = await _context.Users.FirstOrDefaultAsync(author => author.UserName == userName);
         //TODO: add error handling if author is not found
 
         // create new cheep
@@ -111,14 +81,12 @@ public class CheepRepository : ICheepRepository
         {
             CheepId = GetNextCheepId(),
             Author = author,
-            AuthorId = author.AuthorId,
             Text = message,
             TimeStamp = DateTime.Now
         };
         await _context.Cheeps.AddAsync(newCheep);
         await _context.SaveChangesAsync();
     }
-    */
 
     #endregion
 }
