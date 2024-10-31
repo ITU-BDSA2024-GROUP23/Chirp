@@ -19,7 +19,7 @@ public class CheepRepository : ICheepRepository
             .Skip(page * pageSize)
             .Take(pageSize)
             .Select(cheep => new CheepDTO(
-                cheep.Author.Name,
+                cheep.Author.UserName,
                 cheep.Text,
                 cheep.TimeStamp.ToString(defaultTimeStampFormat)
             ));
@@ -27,15 +27,15 @@ public class CheepRepository : ICheepRepository
         return result;
     }
 
-    public async Task<List<CheepDTO>> GetCheepsFromName(string name, int page)
+    public async Task<List<CheepDTO>> GetCheepsFromUserName(string userName, int page)
     {
         var query = _context.Cheeps
-            .Where(cheep => cheep.Author.Name == name)
+            .Where(cheep => cheep.Author.UserName == userName)
             .OrderByDescending(cheep => cheep.TimeStamp)
             .Skip(page * pageSize)
             .Take(pageSize)
             .Select(cheep => new CheepDTO(
-                cheep.Author.Name,
+                cheep.Author.UserName,
                 cheep.Text,
                 cheep.TimeStamp.ToString(defaultTimeStampFormat)
             ));
@@ -51,20 +51,11 @@ public class CheepRepository : ICheepRepository
             .Skip(page * pageSize)
             .Take(pageSize)
             .Select(cheep => new CheepDTO(
-                cheep.Author.Name,
+                cheep.Author.UserName,
                 cheep.Text,
                 cheep.TimeStamp.ToString(defaultTimeStampFormat)
             ));
         var result = await query.ToListAsync();
-        return result;
-    }
-
-    public int GetNextAuthorId()
-    {
-        var query = _context.Authors
-            .OrderByDescending(author => author.AuthorId)
-            .Select(author => author.AuthorId);
-        var result = query.FirstOrDefault() + 1;
         return result;
     }
 
@@ -80,17 +71,19 @@ public class CheepRepository : ICheepRepository
 
     #region Commands
 
-    public async Task<bool> CreateUser(string name, string email)
+    /*
+
+    public async Task<bool> CreateUser(string userName, string email)
     {
         // Check if user already exists
-        bool userExists = await _context.Authors.AnyAsync(author => author.Email == email || author.Name == name);
+        bool userExists = await _context.Users.AnyAsync(user => user.Email == email || user.UserName == userName);
         if (userExists)
         {
             return false;
         }
 
         // Create new user
-        Author newAuthor = new Author
+        User newAuthor = new User
         {
             AuthorId = GetNextAuthorId(), // not sure if this is adhering to the Command Query Separation principle - but it will be replaced anyway
             Name = name,
@@ -107,7 +100,7 @@ public class CheepRepository : ICheepRepository
         throw new NotImplementedException();
     }
 
-    /*
+    
     public async Task CreateCheep(string name, string message)
     {
         Author? author = await _context.Authors.FirstOrDefaultAsync(author => author.Name == name);

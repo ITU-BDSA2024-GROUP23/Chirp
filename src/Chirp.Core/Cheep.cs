@@ -1,10 +1,10 @@
 using System.ComponentModel.DataAnnotations;
+using Chirp.Infrastructure.Data;
 
 public class Cheep
 {
     public int CheepId { get; set; }
-    public required Author Author { get; set; }
-    public required int AuthorId { get; set; }
+    public required User Author { get; set; }
 
     // Make sure that the text is not empty and not longer than 160 characters
     [Required]
