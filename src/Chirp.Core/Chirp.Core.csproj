@@ -10,8 +10,4 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.20" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Chirp.Infrastructure\Chirp.Infrastructure.csproj" />
-  </ItemGroup>
-
 </Project>

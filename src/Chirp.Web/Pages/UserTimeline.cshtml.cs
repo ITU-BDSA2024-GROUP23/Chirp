@@ -27,7 +27,7 @@ public class UserTimelineModel : PageModel
         }
         else
         {
-            Cheeps = _repository.GetCheepsFromName(user, page).Result.ToList();
+            Cheeps = _repository.GetCheepsFromUserName(user, page).Result.ToList();
         }
         return Page();
     }

@@ -17,18 +17,8 @@ public class RegisterModel : PageModel
         return Page();
     }
 
-    public async Task<IActionResult> OnPost(string name, string email)
+    public IActionResult OnPost(string name, string email)
     {
-        var result = await _repository.CreateUser(name, email);
-
-        //if the user was created successfully, redirect to the public page
-        if (result)
-        {
-            TempData["alert-success"] = "Account created successfully!";
-            return RedirectToPage("Public");
-        }
-
-        TempData["alert-error"] = "The name or email is already in use..";
         return Page();
     }
 }
