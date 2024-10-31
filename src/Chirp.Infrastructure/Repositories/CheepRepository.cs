@@ -104,6 +104,12 @@ public class CheepRepository : ICheepRepository
 
     public async Task CreateCheep(string name, string message)
     {
+        throw new NotImplementedException();
+    }
+
+    /*
+    public async Task CreateCheep(string name, string message)
+    {
         Author? author = await _context.Authors.FirstOrDefaultAsync(author => author.Name == name);
         //TODO: add error handling if author is not found
 
@@ -119,6 +125,7 @@ public class CheepRepository : ICheepRepository
         await _context.Cheeps.AddAsync(newCheep);
         await _context.SaveChangesAsync();
     }
+    */
 
     #endregion
 }
