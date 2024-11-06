@@ -14,6 +14,8 @@ public class Program
         builder.Services.AddRazorPages();
         builder.Services.AddScoped<ICheepRepository, CheepRepository>();
 
+        builder.Services.AddHsts(options => options.MaxAge = TimeSpan.FromDays(365));
+
         //session
         builder.Services.AddDistributedMemoryCache();
         builder.Services.AddSession(options =>
