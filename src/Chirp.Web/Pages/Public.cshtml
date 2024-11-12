@@ -7,16 +7,9 @@
 
 <div>
     <h2> Public Timeline </h2>
-    @if(User.Identity != null && User.Identity.IsAuthenticated)
-    {
-        <form method="post">
-            @Html.AntiForgeryToken()
-            <div>
-                <input type="text" id="cheep" name="cheep" placeholder="Cheep something..."/>
-            </div>
-            <button type="submit">Cheep</button>
-        </form>
-    }
+    
+    <partial name="_CheepBox" model="Model.CheepBox" />
+    
     @if (Model.Cheeps.Any())
     {
         <ul id="messagelist" class="cheeps">
