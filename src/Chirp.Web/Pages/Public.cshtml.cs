@@ -41,7 +41,7 @@ public class PublicModel : PageModel
             TempData["alert-error"] = errors;
             return RedirectToPage("Public");
         }
-        _repository.CreateCheep(user, CheepBox.Message ?? throw new InvalidOperationException("Cheep message is null!")); // we should never get to the exception
+        _repository.CreateCheep(user, CheepBox.Message ?? throw new InvalidOperationException("Cheep message is null!")); // we should never get to the exception because of the validation
         TempData["alert-success"] = "Cheep posted successfully!";
         return RedirectToPage("Public");
     }
