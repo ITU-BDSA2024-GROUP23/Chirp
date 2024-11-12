@@ -71,10 +71,11 @@ public class CheepRepository : ICheepRepository
 
     #region Commands
 
-    public async Task CreateCheep(string userName, string message)
+    public async Task CreateCheep(User user, string message)
     {
-        User? author = await _context.Users.FirstOrDefaultAsync(author => author.UserName == userName);
-        //TODO: add error handling if author is not found
+        User author = await _context.Users
+            .Where(u => u.UserName == user.UserName)
+            .FirstOrDefaultAsync();
 
         // create new cheep
         Cheep newCheep = new Cheep
