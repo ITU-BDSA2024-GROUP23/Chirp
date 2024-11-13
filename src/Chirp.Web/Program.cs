@@ -28,7 +28,7 @@ public class Program
         builder.Services.AddAuthentication().AddCookie().AddGitHub(options =>
         {
             options.ClientId = builder.Configuration["GH_CLIENT_ID"] ?? throw new Exception("GitHub client ID not found");
-            options.ClientSecret = builder.Configuration["GH_CLIENT_ID"] ?? throw new Exception("GitHub client secret not found");
+            options.ClientSecret = builder.Configuration["GH_CLIENT_SECRET"] ?? throw new Exception("GitHub client secret not found");
             options.CallbackPath = "/auth/github/";
             options.Scope.Add("user:email");
         });
