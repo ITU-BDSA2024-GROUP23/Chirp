@@ -22,7 +22,9 @@ jobs:
       id-token: write
       contents: read
 
-    environment: ${{ inputs.deploy_env }}
+    environment:
+        name: ${{ inputs.deploy_env }}
+        url: https://bdsagroup23chirprazor.azurewebsites.net
 
     steps:
       - name: Checkout repository
