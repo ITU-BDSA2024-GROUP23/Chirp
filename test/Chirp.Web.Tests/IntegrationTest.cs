@@ -51,7 +51,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
 
         Assert.Contains("There are no cheeps so far.", content);
     }
-
+    /* TODO: This is deprecated due to our db not being seeded with data anymore
     [Fact]
     public async void DifferentPages()
     {
@@ -65,5 +65,6 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
 
         Assert.NotEqual(content1, content2);
     }
+    */
 
 }

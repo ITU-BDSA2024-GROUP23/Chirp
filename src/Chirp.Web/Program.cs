@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Identity;
 
 public class Program
 {
@@ -13,6 +13,9 @@ public class Program
         builder.Services.AddRazorPages();
         builder.Services.AddScoped<ICheepRepository, CheepRepository>();
 
+        builder.Services.AddHsts(options => options.MaxAge = TimeSpan.FromDays(365));
+
+        //session
         builder.Services.AddDistributedMemoryCache();
         builder.Services.AddSession(options =>
         {
@@ -21,19 +24,24 @@ public class Program
             options.Cookie.IsEssential = true;
         });
 
-        builder.Services.AddAuthentication(options =>
+        builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false)
+            .AddEntityFrameworkStores<ChirpDBContext>();
+
+        //auth
+        builder.Services.AddAuthentication().AddCookie().AddGitHub(options =>
         {
-            options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = "GitHub";
-        })
-        .AddCookie()
-        .AddGitHub(options =>
-        {
-            options.ClientId = builder.Configuration["GitHub:ClientId"] ?? throw new Exception("GitHub:ClientId not found in configuration");
-            options.ClientSecret = builder.Configuration["GitHub:ClientSecret"] ?? throw new Exception("GitHub:ClientSecret not found in configuration");
+            var clientId = builder.Environment.IsDevelopment()
+                ? builder.Configuration["GitHub_ClientId"]
+                : Environment.GetEnvironmentVariable("GitHub_ClientId");
+
+            var clientSecret = builder.Environment.IsDevelopment()
+                ? builder.Configuration["GitHub_ClientSecret"]
+                : Environment.GetEnvironmentVariable("GitHub_ClientSecret");
+
+            options.ClientId = clientId ?? throw new Exception("GitHub ClientId not found");
+            options.ClientSecret = clientSecret ?? throw new Exception("GitHub ClientSecret not found");
             options.CallbackPath = "/auth/github/";
-            // options.Scope.Add("user:email"); TODO: Implement
+            options.Scope.Add("user:email");
         });
 
         var app = builder.Build();
