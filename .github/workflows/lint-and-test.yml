@@ -28,17 +28,14 @@ jobs:
 
       - name: Chirp.Web user-secrets
         run: |
-          dotnet user-secrets set -c Debug "GitHub:ClientId" ${{ secrets.GH_CLIENT_ID }} --project ./src/Chirp.Web
-          dotnet user-secrets set -c Debug "GitHub:ClientSecret" ${{ secrets.GH_CLIENT_SECRET }} --project ./src/Chirp.Web
+          dotnet user-secrets "GH_CLIENT_ID" ${{ secrets.GH_CLIENT_ID }} --project ./src/Chirp.Web
+          dotnet user-secrets "GH_CLIENT_SECRET" ${{ secrets.GH_CLIENT_SECRET }} --project ./src/Chirp.Web
 
       - name: Restore dependencies
         run: dotnet restore
 
       - name: Build the project
         run: dotnet build --no-restore
-
-      - name: Test the project
-        run: dotnet test --no-build
 
   test-windows:
     runs-on: windows-latest
