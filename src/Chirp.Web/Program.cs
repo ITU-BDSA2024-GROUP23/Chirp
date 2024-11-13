@@ -5,7 +5,6 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        builder.Configuration.AddEnvironmentVariables("GH_");
 
         string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
         builder.Services.AddDbContext<ChirpDBContext>(options => options.UseSqlite(connectionString));
