@@ -31,6 +31,14 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Validate version against official SemVer Regex
+        env:
+          SOLUTION_VERSION: ${{ inputs.solution_version }}
+        run: |
+          echo "Validating solution version $SOLUTION_VERSION"
+          echo "$SOLUTION_VERSION" | grep -Pq '^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$'
+
+
       - name: Validate the solution version
         id: validate-version
         env:
