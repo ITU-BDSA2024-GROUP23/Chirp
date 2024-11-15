@@ -10,4 +10,6 @@ public class Follower
     public required string FolloweeId { get; set; }
     [Required]
     public required User FolloweeUser { get; set; }
+    [Required]
+    public required DateTime FollowDate { get; set; }
 }
