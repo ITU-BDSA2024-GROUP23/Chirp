@@ -16,7 +16,7 @@ public class UserTimelineModel : TimelineModel
         string emailPattern = @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$";
         Regex regex = new(emailPattern);
 
-        if (User.Identity.IsAuthenticated && User.Identity.Name == user)
+        if (User.Identity!.IsAuthenticated && User.Identity.Name == user)
         {
             await GetFollowedCheeps(page);
         }
@@ -31,25 +31,19 @@ public class UserTimelineModel : TimelineModel
         return Page();
     }
 
-    // maybe use getfollowedusers from timelinemodel
     private async Task GetFollowedCheeps(int page)
     {
-        User currentUser = await _signInManager.UserManager.GetUserAsync(User);
-
-        // Fetch the list of followed users
-        Following = await _repository.GetFollowing(currentUser);
-
-        // Get the user's own cheeps
+        User currentUser = await _signInManager.UserManager.GetUserAsync(User) ?? throw new Exception("User not found"); // User is authenticated, so this should never be null
         var userCheeps = await _repository.GetCheepsFromUserName(currentUser.UserName, page);
 
-        // Get cheeps from followed users
+        Following = await _repository.GetFollowing(currentUser);
         var followedCheeps = new List<CheepDTO>();
+        
         foreach (User followee in Following)
         {
             followedCheeps.AddRange(await _repository.GetCheepsFromUserName(followee.UserName, page));
         }
 
-        // Combine and sort by timestamp
         Cheeps = userCheeps
             .Concat(followedCheeps)
             .OrderByDescending(cheep => cheep.TimeStamp)

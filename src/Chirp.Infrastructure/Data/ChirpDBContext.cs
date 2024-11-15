@@ -30,5 +30,11 @@ public class ChirpDBContext : IdentityDbContext<User>
             .HasOne(f => f.FolloweeUser)
             .WithMany(u => u.Followers)
             .HasForeignKey(f => f.FolloweeId);
+
+        modelBuilder.Entity<User>()
+            .Property(u => u.UserName).IsRequired();
+
+        modelBuilder.Entity<User>()
+            .Property(u => u.Email).IsRequired();
     }
 }
