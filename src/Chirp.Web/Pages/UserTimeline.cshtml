@@ -13,28 +13,7 @@
     
     @if (Model.Cheeps.Any())
     {
-        <ul id="messagelist" class="cheeps">
-            @foreach (var cheep in Model.Cheeps)
-            {
-                <li>
-                    <p>
-                        <strong>
-                            <a href="/@cheep.Author">@cheep.Author</a>
-                        </strong>
-                        <!-- TODO: Please help me find out how we check if a user already follows the user... -->
-                        @if (cheep.Author != User.Identity.Name)
-                        {
-                            <form method="post" asp-page-handler="Follow" style="display:inline;">
-                                <input type="hidden" name="followee" value="@cheep.Author" />
-                                <button type="submit">Follow</button>
-                            </form>
-                        }
-                        @cheep.Text
-                        <small>&mdash; @cheep.TimeStamp</small>
-                    </p>
-                </li>
-            }
-        </ul>
+        <partial name="_CheepList" model="Model" />
     }
     else
     {
