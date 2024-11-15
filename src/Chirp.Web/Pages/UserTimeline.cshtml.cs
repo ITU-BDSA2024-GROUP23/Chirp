@@ -12,6 +12,7 @@ public class UserTimelineModel : PageModel
 {
     private readonly ICheepRepository _repository;
     public List<CheepDTO> Cheeps { get; set; } = new();
+    public List<User> Following { get; set; } = new();
     private readonly SignInManager<User> _signInManager;
     [BindProperty]
     public CheepBoxModel CheepBox { get; set; } = new();
@@ -22,33 +23,37 @@ public class UserTimelineModel : PageModel
         _signInManager = signInManager;
     }
 
-    public ActionResult OnGet(string user, [FromQuery(Name = "page")] int page = 1)
+    public async Task<IActionResult> OnGetAsync(string user, [FromQuery(Name = "page")] int page = 1)
     {
         page = Math.Max(0, page - 1);
         string emailPattern = @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$";
         Regex regex = new(emailPattern);
-        //not very beautiful, but im just gonna test this out - feel free to refactor!!
+
         if(User.Identity.IsAuthenticated && User.Identity.Name == user)
         {
-            User? currentUser = _signInManager.UserManager.GetUserAsync(User).Result;
-            Cheeps = _repository.GetCheepsFromUserName(currentUser.UserName, page).Result.ToList();
-            List<User> following = _repository.GetFollowing(currentUser).Result;
-            foreach (User followee in following)
-            {
-                Cheeps.AddRange(_repository.GetCheepsFromUserName(followee.UserName, page).Result.ToList());
-            }
-            Cheeps = Cheeps.OrderByDescending(cheep => cheep.TimeStamp).ToList();
-            return Page();
+            await GetFollowedCheeps(page);
         }
         else if (regex.IsMatch(user))
         {
-            Cheeps = _repository.GetCheepsFromEmail(user, page).Result.ToList();
+            Cheeps = await _repository.GetCheepsFromEmail(user, page);
         }
         else
         {
-            Cheeps = _repository.GetCheepsFromUserName(user, page).Result.ToList();
+            Cheeps = await _repository.GetCheepsFromUserName(user, page);
         }
         return Page();
+    }
+
+    private async Task GetFollowedCheeps(int page)
+    {
+        User currentUser = await _signInManager.UserManager.GetUserAsync(User);
+        Cheeps = await _repository.GetCheepsFromUserName(currentUser.UserName, page);
+        Following = await _repository.GetFollowing(currentUser);
+        foreach (User followee in Following)
+        {
+            Cheeps.AddRange(await _repository.GetCheepsFromUserName(followee.UserName, page));
+        }
+        Cheeps = Cheeps.OrderByDescending(cheep => cheep.TimeStamp).ToList();
     }
 
     public IActionResult OnPost()
