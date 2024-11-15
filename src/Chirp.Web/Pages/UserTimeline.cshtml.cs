@@ -27,7 +27,7 @@ public class UserTimelineModel : PageModel
         page = Math.Max(0, page - 1);
         string emailPattern = @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$";
         Regex regex = new(emailPattern);
-        //not very beautiful, but im just gonna test this out
+        //not very beautiful, but im just gonna test this out - feel free to refactor!!
         if(User.Identity.IsAuthenticated && User.Identity.Name == user)
         {
             User? currentUser = _signInManager.UserManager.GetUserAsync(User).Result;
@@ -75,7 +75,7 @@ public class UserTimelineModel : PageModel
         User? follower = _signInManager.UserManager.GetUserAsync(User).Result;
         User? followeeUser = _repository.GetUserByString(followee).Result;
         _repository.FollowUser(follower, followeeUser);
-        TempData["alert-success"] = $"You are now following {followee}";
+        TempData["alert-success"] = "User followed successfully!";
         return RedirectToPage();
     }
 }
