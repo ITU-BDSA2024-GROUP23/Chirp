@@ -27,7 +27,21 @@ public class UserTimelineModel : PageModel
         page = Math.Max(0, page - 1);
         string emailPattern = @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$";
         Regex regex = new(emailPattern);
-        if (regex.IsMatch(user))
+        //not very beautiful, but im just gonna test this out
+        if(User.Identity.IsAuthenticated && User.Identity.Name == user)
+        {
+            Console.WriteLine("User is authenticated and is the same as the user in the URL");
+            User? currentUser = _signInManager.UserManager.GetUserAsync(User).Result;
+            Cheeps = _repository.GetCheepsFromUserName(currentUser.UserName, page).Result.ToList();
+            List<User> following = _repository.GetFollowing(currentUser).Result;
+            foreach (User followee in following)
+            {
+                Cheeps.AddRange(_repository.GetCheepsFromUserName(followee.UserName, page).Result.ToList());
+            }
+            Cheeps = Cheeps.OrderByDescending(cheep => cheep.TimeStamp).ToList();
+            return Page();
+        }
+        else if (regex.IsMatch(user))
         {
             Cheeps = _repository.GetCheepsFromEmail(user, page).Result.ToList();
         }

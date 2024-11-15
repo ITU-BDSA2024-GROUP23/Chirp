@@ -79,6 +79,24 @@ public class CheepRepository : ICheepRepository
         }
         return result;
     }
+
+    public async Task<List<User>> GetFollowers(User user)
+    {
+        var query = _context.Followers
+            .Where(f => f.FolloweeId == user.Id)
+            .Select(f => f.FollowerUser);
+        var result = await query.ToListAsync();
+        return result;
+    }
+
+    public async Task<List<User>> GetFollowing(User user)
+    {
+        var query = _context.Followers
+            .Where(f => f.FollowerId == user.Id)
+            .Select(f => f.FolloweeUser);
+        var result = await query.ToListAsync();
+        return result;
+    }
     #endregion
 
     #region Commands
