@@ -6,6 +6,7 @@ namespace Chirp.Web.Pages;
 
 public class UserTimelineModel : TimelineModel
 {
+    public UserDTO? userInfo;
     public UserTimelineModel(ICheepRepository repository, SignInManager<User> signInManager) : base(repository, signInManager)
     {
     }
@@ -30,7 +31,25 @@ public class UserTimelineModel : TimelineModel
         {
             Cheeps = await _repository.GetCheepsFromUserName(user, page);
         }
+
+        await PrepareUserInfo(user);
+
         return Page();
+    }
+
+    private async Task PrepareUserInfo(string user)
+    {
+        User targetUser = await _repository.GetUserByString(user);
+        if (targetUser != null)
+        {
+            userInfo = new UserDTO
+            {
+                UserName = targetUser.UserName,
+                //find better way to do this - i imagine we need the list so you can click on followers/following and see who they are
+                FollowersCount = (await _repository.GetFollowers(targetUser)).Count,
+                FollowingCount = (await _repository.GetFollowing(targetUser)).Count,
+            };
+        }
     }
 
     private async Task GetFollowedCheeps(int page)

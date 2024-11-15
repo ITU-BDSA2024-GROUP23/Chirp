@@ -8,7 +8,7 @@
 
 <div>
     <h2> @routeName's Timeline </h2>
-
+    <partial name="_ProfileInfo" model="Model" />
     <partial name="_CheepBox" model="Model.CheepBox" />
     
     @if (Model.Cheeps.Any())
