@@ -11,5 +11,4 @@ public class User : IdentityUser
     public override required string UserName { get; set; }
     [Required]
     public override required string Email { get; set; }
-
 }
