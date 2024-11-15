@@ -1,0 +1,20 @@
+﻿@page 
+@model LogoutModel
+@{
+    ViewData["Title"] = "Log out | Chirp"; 
+}
+
+<header class="text-center my-5">
+    <h1>Log out of Chirp</h1>
+    <hr />
+
+    @if (User.Identity?.IsAuthenticated ?? false)
+    {
+        <div class="alert alert-warning">
+            <p>Are you sure you want to log out?</p>
+            <form asp-area="Identity" asp-page="/Account/Logout" method="post">
+                <button type="submit" class="btn btn-lg btn-danger">Click here to log out</button>
+            </form>
+        </div>
+    }
+</header>

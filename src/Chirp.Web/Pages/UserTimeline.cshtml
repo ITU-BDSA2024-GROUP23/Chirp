@@ -1,9 +1,9 @@
 ﻿@page "/{user}"
 @model Chirp.Web.Pages.UserTimelineModel
 @{
-    ViewData["Title"] = "Chirp!";
     Layout = "Shared/_Layout";
     var routeName = HttpContext.GetRouteValue("user");
+    ViewData["Title"] = $"{routeName} | Chirp";
 }
 
 <div>
