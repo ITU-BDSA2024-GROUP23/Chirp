@@ -30,7 +30,6 @@ public class UserTimelineModel : PageModel
         //not very beautiful, but im just gonna test this out
         if(User.Identity.IsAuthenticated && User.Identity.Name == user)
         {
-            Console.WriteLine("User is authenticated and is the same as the user in the URL");
             User? currentUser = _signInManager.UserManager.GetUserAsync(User).Result;
             Cheeps = _repository.GetCheepsFromUserName(currentUser.UserName, page).Result.ToList();
             List<User> following = _repository.GetFollowing(currentUser).Result;
@@ -68,6 +67,15 @@ public class UserTimelineModel : PageModel
         }
         _repository.CreateCheep(user, CheepBox.Message ?? throw new InvalidOperationException("Cheep message is null!")); // we should never get to the exception because of the validation
         TempData["alert-success"] = "Cheep posted successfully!";
+        return RedirectToPage();
+    }
+
+    public IActionResult OnPostFollow(string followee)
+    {
+        User? follower = _signInManager.UserManager.GetUserAsync(User).Result;
+        User? followeeUser = _repository.GetUserByString(followee).Result;
+        _repository.FollowUser(follower, followeeUser);
+        TempData["alert-success"] = $"You are now following {followee}";
         return RedirectToPage();
     }
 }

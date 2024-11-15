@@ -21,6 +21,13 @@
                         <strong>
                             <a href="/@cheep.Author">@cheep.Author</a>
                         </strong>
+                        <!-- Follow/Unfollow button -->
+                        @if (cheep.Author != User.Identity.Name)
+                        {
+                            <form method="post" action="/@cheep.Author/follow">
+                                <button type="submit">Follow</button>
+                            </form>
+                        }
                         @cheep.Text
                         <small>&mdash; @cheep.TimeStamp</small>
                     </p>
