@@ -6,7 +6,7 @@
                 <strong>
                     <a href="/@cheep.Author">@cheep.Author</a>
                 </strong>
-                @if(cheep.Author != User.Identity.Name)
+                @if(cheep.Author != User.Identity.Name && User.Identity.IsAuthenticated)
                 {
                     @if(Model.IsFollowing(cheep.Author))
                     {
