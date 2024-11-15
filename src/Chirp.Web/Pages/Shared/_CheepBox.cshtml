@@ -4,12 +4,18 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-    <div class="cheepbox">
-        <h3>Whats on your mind @User.Identity!.Name?</h3>
+    <div class="card mb-4">
+    <div class="card-body">
+        <h6> Whats on your mind @User.Identity!.Name?</h6>
         <form method="post">
             @Html.AntiForgeryToken()
-            <input style="float: left" type="text" asp-for="Message" placeholder="Cheep something..">
-            <input type="submit" value="Share">
+            <textarea class="form-control" rows="2" style="float: left" type="text" asp-for="Message"
+                placeholder="Cheep something.." required></textarea>
+            <button type="submit" class="btn btn-primary" style="float: right; margin-top: 10px;">Cheep</button>
         </form>
+        <div class="d-flex justify-content-between align-items-center">
+            <small class="text-muted">160 characters max</small>
+        </div>
     </div>
+</div>
 }
