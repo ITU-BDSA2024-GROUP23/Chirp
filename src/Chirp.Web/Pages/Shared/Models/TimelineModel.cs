@@ -11,6 +11,7 @@ public abstract class TimelineModel : PageModel
     [BindProperty]
     public CheepBoxModel CheepBox { get; set; } = new();
     protected readonly SignInManager<User> _signInManager;
+    protected User CurrentUser;
 
     public TimelineModel(ICheepRepository repository, SignInManager<User> signInManager)
     {
@@ -41,7 +42,7 @@ public abstract class TimelineModel : PageModel
         User? follower = _signInManager.UserManager.GetUserAsync(User).Result;
         User? followeeUser = _repository.GetUserByString(followee).Result;
         await _repository.FollowUser(follower, followeeUser);
-        TempData["alert-success"] = "User followed successfully!";
+        TempData["alert-success"] = $"You are now following {followeeUser.UserName}!";
         return RedirectToPage();
     }
 
@@ -50,7 +51,7 @@ public abstract class TimelineModel : PageModel
         User? follower = _signInManager.UserManager.GetUserAsync(User).Result;
         User? followeeUser = _repository.GetUserByString(followee).Result;
         await _repository.UnfollowUser(follower, followeeUser);
-        TempData["alert-success"] = "User unfollowed successfully!";
+        TempData["alert-success"] = $"You are no longer following {followeeUser.UserName}!";
         return RedirectToPage();
     }
 
@@ -61,9 +62,9 @@ public abstract class TimelineModel : PageModel
 
     protected async Task GetFollowedUsers()
     {
-        if (User.Identity.IsAuthenticated)
+        if (User.Identity!.IsAuthenticated)
         {
-            User currentUser = await _signInManager.UserManager.GetUserAsync(User);
+            User currentUser = await _signInManager.UserManager.GetUserAsync(User) ?? throw new Exception("User not found");
             Following = _repository.GetFollowing(currentUser).Result.ToList();
         }
     }

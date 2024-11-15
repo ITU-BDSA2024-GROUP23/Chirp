@@ -16,6 +16,8 @@ public class UserTimelineModel : TimelineModel
         string emailPattern = @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$";
         Regex regex = new(emailPattern);
 
+        await GetFollowedUsers();
+
         if (User.Identity!.IsAuthenticated && User.Identity.Name == user)
         {
             await GetFollowedCheeps(page);
@@ -36,9 +38,7 @@ public class UserTimelineModel : TimelineModel
         User currentUser = await _signInManager.UserManager.GetUserAsync(User) ?? throw new Exception("User not found"); // User is authenticated, so this should never be null
         var userCheeps = await _repository.GetCheepsFromUserName(currentUser.UserName, page);
 
-        Following = await _repository.GetFollowing(currentUser);
         var followedCheeps = new List<CheepDTO>();
-        
         foreach (User followee in Following)
         {
             followedCheeps.AddRange(await _repository.GetCheepsFromUserName(followee.UserName, page));
