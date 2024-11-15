@@ -3,7 +3,8 @@
 public class CheepRepoTests
 {
     [Fact]
-    public void test1(){
+    public void test1()
+    {
 
     }
 

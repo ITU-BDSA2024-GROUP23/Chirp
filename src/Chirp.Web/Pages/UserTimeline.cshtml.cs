@@ -12,7 +12,7 @@ public class UserTimelineModel : PageModel
 {
     private readonly ICheepRepository _repository;
     public List<CheepDTO> Cheeps { get; set; } = new();
-    private readonly SignInManager<User>  _signInManager;
+    private readonly SignInManager<User> _signInManager;
     [BindProperty]
     public CheepBoxModel CheepBox { get; set; } = new();
 
@@ -40,7 +40,7 @@ public class UserTimelineModel : PageModel
 
     public IActionResult OnPost()
     {
-        User ?user = _signInManager.UserManager.GetUserAsync(User).Result;
+        User? user = _signInManager.UserManager.GetUserAsync(User).Result;
         if (user == null)
         {
             TempData["alert-error"] = "You must be logged in to post a cheep!";

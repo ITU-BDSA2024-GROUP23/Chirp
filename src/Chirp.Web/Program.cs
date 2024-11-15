@@ -34,7 +34,8 @@ public class Program
 
         var app = builder.Build();
 
-        app.UseCookiePolicy(new CookiePolicyOptions {
+        app.UseCookiePolicy(new CookiePolicyOptions
+        {
             MinimumSameSitePolicy = SameSiteMode.Lax
         });
 
