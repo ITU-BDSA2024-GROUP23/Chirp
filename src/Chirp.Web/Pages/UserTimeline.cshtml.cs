@@ -56,8 +56,9 @@ public class UserTimelineModel : TimelineModel
             userInfo = new UserDTO
             {
                 UserName = targetUser.UserName,
-                FollowersCount = targetUser.Followers.Count,
-                FollowingCount = targetUser.Following.Count
+                //find better way to do this - i imagine we need the list so you can click on followers/following and see who they are
+                FollowersCount = (await _repository.GetFollowers(targetUser)).Count,
+                FollowingCount = (await _repository.GetFollowing(targetUser)).Count,
             };
         }
     }
