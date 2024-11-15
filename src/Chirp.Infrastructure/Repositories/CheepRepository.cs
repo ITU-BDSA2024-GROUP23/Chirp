@@ -73,10 +73,6 @@ public class CheepRepository : ICheepRepository
         var query = _context.Users
             .Where(u => u.UserName == userString || u.Email == userString);
         var result = await query.FirstOrDefaultAsync();
-        if(result == null)
-        {
-            throw new Exception("User not found");
-        }
         return result;
     }
 
