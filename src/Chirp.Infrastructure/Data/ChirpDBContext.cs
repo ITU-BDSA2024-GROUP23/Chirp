@@ -8,11 +8,10 @@ public class ChirpDBContext : IdentityDbContext<User>
 
     public ChirpDBContext(DbContextOptions<ChirpDBContext> options) : base(options)
     {
-        /*if (Database.EnsureCreated())
+        if (Database.EnsureCreated())
         {
-            DbInitializer.SeedDatabase(this);
+            //DbInitializer.SeedDatabase(this);
         }
-        */
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

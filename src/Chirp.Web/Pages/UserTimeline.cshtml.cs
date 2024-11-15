@@ -78,4 +78,13 @@ public class UserTimelineModel : PageModel
         TempData["alert-success"] = "User followed successfully!";
         return RedirectToPage();
     }
+
+    public IActionResult OnPostUnfollow(string followee)
+    {
+        User? follower = _signInManager.UserManager.GetUserAsync(User).Result;
+        User? followeeUser = _repository.GetUserByString(followee).Result;
+        _repository.UnfollowUser(follower, followeeUser);
+        TempData["alert-success"] = "User unfollowed successfully!";
+        return RedirectToPage();
+    }
 }
