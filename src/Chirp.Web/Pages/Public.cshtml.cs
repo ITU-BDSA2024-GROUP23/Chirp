@@ -10,6 +10,7 @@ public class PublicModel : PageModel
 {
     private readonly ICheepRepository _repository;
     public List<CheepDTO> Cheeps { get; set; } = new();
+    public List<User> Following { get; set; } = new();
     [BindProperty]
     public CheepBoxModel CheepBox { get; set; } = new();
     private readonly SignInManager<User> _signInManager;
@@ -44,5 +45,10 @@ public class PublicModel : PageModel
         _repository.CreateCheep(user, CheepBox.Message ?? throw new InvalidOperationException("Cheep message is null!")); // we should never get to the exception because of the validation
         TempData["alert-success"] = "Cheep posted successfully!";
         return RedirectToPage("Public");
+    }
+
+    public bool IsFollowing(string author)
+    {
+        return Following.Any(f => f.UserName == author);
     }
 }

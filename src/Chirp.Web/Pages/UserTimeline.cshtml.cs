@@ -47,14 +47,27 @@ public class UserTimelineModel : PageModel
     private async Task GetFollowedCheeps(int page)
     {
         User currentUser = await _signInManager.UserManager.GetUserAsync(User);
-        Cheeps = await _repository.GetCheepsFromUserName(currentUser.UserName, page);
+        
+        // Fetch the list of followed users
         Following = await _repository.GetFollowing(currentUser);
+
+        // Get the user's own cheeps
+        var userCheeps = await _repository.GetCheepsFromUserName(currentUser.UserName, page);
+
+        // Get cheeps from followed users
+        var followedCheeps = new List<CheepDTO>();
         foreach (User followee in Following)
         {
-            Cheeps.AddRange(await _repository.GetCheepsFromUserName(followee.UserName, page));
+            followedCheeps.AddRange(await _repository.GetCheepsFromUserName(followee.UserName, page));
         }
-        Cheeps = Cheeps.OrderByDescending(cheep => cheep.TimeStamp).ToList();
+
+        // Combine and sort by timestamp
+        Cheeps = userCheeps
+            .Concat(followedCheeps)
+            .OrderByDescending(cheep => cheep.TimeStamp)
+            .ToList();
     }
+
 
     public IActionResult OnPost()
     {
@@ -91,5 +104,10 @@ public class UserTimelineModel : PageModel
         _repository.UnfollowUser(follower, followeeUser);
         TempData["alert-success"] = "User unfollowed successfully!";
         return RedirectToPage();
+    }
+
+    public bool IsFollowing(string author)
+    {
+        return Following.Any(f => f.UserName == author);
     }
 }
