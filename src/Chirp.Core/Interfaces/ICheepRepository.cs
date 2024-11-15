@@ -7,5 +7,8 @@ public interface ICheepRepository
     public Task<List<CheepDTO>> GetCheepsFromEmail(string email, int page);
     public Task CreateCheep(User user, string message);
     public int GetNextCheepId();
+    public Task GetUserByString(string userString);
+    public Task FollowUser(User follower, User followee);
+    public Task UnfollowUser(User follower, User followee);
 }
 
