@@ -2,7 +2,11 @@
 @model CheepBoxModel
 @inject SignInManager<User> SignInManager
 
-@if (SignInManager.IsSignedIn(User))
+@{
+    var user = (string)ViewContext.RouteData.Values["user"];
+}
+
+@if (SignInManager.IsSignedIn(User) && user == User.Identity!.Name)
 {
     <div class="card mb-4">
     <div class="card-body">
