@@ -11,7 +11,6 @@ public abstract class TimelineModel : PageModel
     [BindProperty]
     public CheepBoxModel CheepBox { get; set; } = new();
     protected readonly SignInManager<User> _signInManager;
-    protected User CurrentUser;
 
     public TimelineModel(ICheepRepository repository, SignInManager<User> signInManager)
     {
@@ -40,7 +39,7 @@ public abstract class TimelineModel : PageModel
     public async Task<IActionResult> OnPostFollow(string followee)
     {
         User? follower = _signInManager.UserManager.GetUserAsync(User).Result;
-        User? followeeUser = _repository.GetUserByString(followee).Result;
+        User followeeUser = _repository.GetUserByString(followee).Result;
         await _repository.FollowUser(follower, followeeUser);
         TempData["alert-success"] = $"You are now following {followeeUser.UserName}!";
         return RedirectToPage();
@@ -49,7 +48,7 @@ public abstract class TimelineModel : PageModel
     public async Task<IActionResult> OnPostUnfollow(string followee)
     {
         User? follower = _signInManager.UserManager.GetUserAsync(User).Result;
-        User? followeeUser = _repository.GetUserByString(followee).Result;
+        User followeeUser = _repository.GetUserByString(followee).Result;
         await _repository.UnfollowUser(follower, followeeUser);
         TempData["alert-success"] = $"You are no longer following {followeeUser.UserName}!";
         return RedirectToPage();
