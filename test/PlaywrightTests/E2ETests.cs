@@ -7,26 +7,26 @@ namespace PlaywrightTests;
 [TestFixture]
 public class E2ETests : PageTest
 {
-    private CustomWebApplicationFactory<Program> _factory;
-    private Process _serverProcess;
+    private PlaywrightWebApplicationFactory<Program> _factory;
 
     [SetUp]
-    public void Setup()
+    public async Task Init()
     {
-        _factory = new CustomWebApplicationFactory<Program>();
+        _factory = new PlaywrightWebApplicationFactory<Program>();
+        _factory.CreateClient();
     }
 
 
     [Test]
     public async Task CanAccessHomePage()
     {
-        await Page.GotoAsync("localhost:5273");
-        Assert.AreEqual("Playwright .NET", await Page.TitleAsync());
+        await Page.GotoAsync("localhost:5000");
+        Assert.AreEqual("Public Timeline | Chirp", await Page.TitleAsync());
     }
 
     [TearDown]
     public void TearDown()
     {
-        _serverProcess.Dispose();
+        _factory.Dispose();
     }
 }
