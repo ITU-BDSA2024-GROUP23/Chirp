@@ -5,6 +5,7 @@ using Microsoft.Playwright;
 
 namespace PlaywrightTests;
 
+[Parallelizable(ParallelScope.Self)]
 [TestFixture]
 public class E2ETests : PageTest
 {
@@ -22,31 +23,27 @@ public class E2ETests : PageTest
     public async Task Test_Layout()
     {
         await Page.GotoAsync("http://localhost:5273/");
-        await Page.GetByRole(AriaRole.Contentinfo).ClickAsync();
-        await Page.GetByRole(AriaRole.Navigation).ClickAsync();
-        await Page.GetByRole(AriaRole.Heading, new() { Name = "Public Timeline" }).ClickAsync();
-        await Page.GetByRole(AriaRole.Link, new() { Name = "Chirp Logo" }).ClickAsync();
-        await Page.GetByRole(AriaRole.Link, new() { Name = "Chirp!" }).ClickAsync();
-        await Page.Locator("#navbarNav").ClickAsync();
-        await Page.GetByRole(AriaRole.Navigation).ClickAsync();
-        await Page.GetByRole(AriaRole.Link, new() { Name = "public timeline" }).ClickAsync();
-        await Page.GetByRole(AriaRole.Link, new() { Name = "register" }).ClickAsync();
-        await Page.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
+        await Expect(Page.GetByRole(AriaRole.Heading)).ToContainTextAsync("Public Timeline");
+        await Expect(Page.GetByRole(AriaRole.Navigation)).ToContainTextAsync("Chirp!");
+        await Expect(Page.GetByRole(AriaRole.List)).ToContainTextAsync("public timeline");
+        await Expect(Page.GetByRole(AriaRole.List)).ToContainTextAsync("register");
+        await Expect(Page.GetByRole(AriaRole.List)).ToContainTextAsync("login");
+        await Expect(Page.GetByRole(AriaRole.Contentinfo)).ToContainTextAsync("Chirp — An ASP.NET Application");
     }
 
     [Test]
-    public async Task RegisterPageLoads()
+    public async Task Test_Register()
     {
         await Page.GotoAsync("http://localhost:5273/Identity/Account/Register");
-        await Page.GetByRole(AriaRole.Heading, new() { Name = "Register a new account on" }).ClickAsync();
-        await Page.GetByRole(AriaRole.Heading, new() { Name = "Create a new account" }).ClickAsync();
-        await Page.Locator("#registerForm div").Filter(new() { HasText = "Username" }).ClickAsync();
-        await Page.GetByPlaceholder("Email").ClickAsync();
-        await Page.Locator("#registerForm div").Filter(new() { HasText = "Email" }).ClickAsync();
-        await Page.Locator("#registerForm div").Nth(2).ClickAsync();
-        await Page.GetByPlaceholder("Password", new() { Exact = true }).ClickAsync();
-        await Page.Locator("#registerForm div").Filter(new() { HasText = "Confirm Password" }).ClickAsync();
-        await Page.GetByRole(AriaRole.Button, new() { Name = "Register", Exact = true }).ClickAsync();
+        await Expect(Page.Locator("h2")).ToContainTextAsync("Create a new account");
+        await Expect(Page.Locator("#registerForm")).ToContainTextAsync("Username");
+        await Expect(Page.Locator("#registerForm")).ToContainTextAsync("Email");
+        await Expect(Page.Locator("#registerForm")).ToContainTextAsync("Password");
+        await Expect(Page.Locator("#registerForm")).ToContainTextAsync("Confirm Password");
+        await Expect(Page.Locator("#registerSubmit")).ToContainTextAsync("Register");
+        await Expect(Page.Locator("h3")).ToContainTextAsync("Use another service to register");
+        await Expect(Page.Locator("button[name=\"provider\"]")).ToContainTextAsync("Register with GitHub");
+
     }
 
     [TearDown]
