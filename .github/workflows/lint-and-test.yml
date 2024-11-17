@@ -60,6 +60,9 @@ jobs:
       - name: Build the project
         run: dotnet build --no-restore
 
+      - name: Ensure browsers are installed
+        run: pwsh bin/Debug/net8.0/playwright.ps1 install --with-deps
+
       - name: Test the project
         run: dotnet test --no-build
 
@@ -85,6 +88,9 @@ jobs:
 
     - name: Build the project
       run: dotnet build --no-restore
+
+    - name: Ensure browsers are installed
+      run: pwsh bin/Debug/net8.0/playwright.ps1 install --with-deps
 
     - name: Lint the project
       run: dotnet format --no-restore
