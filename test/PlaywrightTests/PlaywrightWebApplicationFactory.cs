@@ -66,7 +66,7 @@ public class PlaywrightWebApplicationFactory<TProgram> : WebApplicationFactory<T
         var kestrelBuilder = builder.ConfigureWebHost(webBuilder => 
         {
             webBuilder.UseKestrel()
-                     .UseUrls("http://localhost:5000"); 
+                     .UseUrls("http://localhost:5273"); 
         });
 
         host = kestrelBuilder.Build();
