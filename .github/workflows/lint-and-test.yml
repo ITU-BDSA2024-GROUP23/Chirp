@@ -37,6 +37,12 @@ jobs:
       - name: Build the project
         run: dotnet build --no-restore
 
+      - name: Ensure browsers are installed
+        run: pwsh test/PlaywrightTests/bin/Debug/net7.0/playwright.ps1 install --with-deps
+
+      - name: Test the project
+        run: dotnet test --no-build
+
   test-windows:
     runs-on: windows-latest
 
@@ -59,6 +65,9 @@ jobs:
 
       - name: Build the project
         run: dotnet build --no-restore
+
+      - name: Ensure browsers are installed
+        run: pwsh test/PlaywrightTests/bin/Debug/net7.0/playwright.ps1 install --with-deps
 
       - name: Test the project
         run: dotnet test --no-build
