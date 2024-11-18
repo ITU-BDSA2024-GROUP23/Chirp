@@ -18,6 +18,14 @@ public class ChirpDBContext : IdentityDbContext<User>
     {
         base.OnModelCreating(modelBuilder);
 
+        modelBuilder.Entity<User>()
+            .HasIndex(u => u.Email)
+            .IsUnique();
+
+        modelBuilder.Entity<User>()
+            .HasIndex(u => u.UserName)
+            .IsUnique();
+
         modelBuilder.Entity<Follower>()
             .HasKey(f => new { f.FollowerId, f.FolloweeId });
 

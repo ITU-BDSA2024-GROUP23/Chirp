@@ -14,8 +14,7 @@ public class UserTimelineModel : TimelineModel
     public async Task<IActionResult> OnGetAsync(string user, [FromQuery(Name = "page")] int page = 1)
     {
         page = Math.Max(0, page - 1);
-        string emailPattern = @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$";
-        Regex regex = new(emailPattern);
+        Regex emailRegex = new(@"^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$");
 
         await GetFollowedUsers();
 
@@ -23,7 +22,7 @@ public class UserTimelineModel : TimelineModel
         {
             await GetFollowedCheeps(page);
         }
-        else if (regex.IsMatch(user))
+        else if (emailRegex.IsMatch(user))
         {
             Cheeps = await _repository.GetCheepsFromEmail(user, page);
         }
