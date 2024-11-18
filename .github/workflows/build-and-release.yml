@@ -23,8 +23,6 @@ jobs:
     if: inputs.deploy_env == 'prod' || inputs.deploy_env == 'stag'
     runs-on: ubuntu-latest
 
-    environment: ${{ inputs.deploy_env }}
-
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
