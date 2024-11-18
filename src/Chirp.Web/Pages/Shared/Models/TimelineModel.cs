@@ -39,6 +39,12 @@ public abstract class TimelineModel : PageModel
     public async Task<IActionResult> OnPostFollow(string followee)
     {
         User? follower = _signInManager.UserManager.GetUserAsync(User).Result;
+        if (follower == null)
+        {
+            TempData["alert-error"] = "You must be logged in to follow someone!";
+            return RedirectToPage();
+        }
+
         User followeeUser = _repository.GetUserByString(followee).Result;
         await _repository.FollowUser(follower, followeeUser);
         TempData["alert-success"] = $"You are now following {followeeUser.UserName}!";
@@ -48,6 +54,12 @@ public abstract class TimelineModel : PageModel
     public async Task<IActionResult> OnPostUnfollow(string followee)
     {
         User? follower = _signInManager.UserManager.GetUserAsync(User).Result;
+        if (follower == null)
+        {
+            TempData["alert-error"] = "You must be logged in to unfollow someone!";
+            return RedirectToPage();
+        }
+
         User followeeUser = _repository.GetUserByString(followee).Result;
         await _repository.UnfollowUser(follower, followeeUser);
         TempData["alert-success"] = $"You are no longer following {followeeUser.UserName}!";

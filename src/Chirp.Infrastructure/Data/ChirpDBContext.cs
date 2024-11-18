@@ -3,15 +3,12 @@ using Microsoft.EntityFrameworkCore;
 
 public class ChirpDBContext : IdentityDbContext<User>
 {
-    public DbSet<Cheep> Cheeps { get; set; }
-    public DbSet<Follower> Followers { get; set; }
+    public required DbSet<Cheep> Cheeps { get; set; }
+    public required DbSet<Follower> Followers { get; set; }
 
     public ChirpDBContext(DbContextOptions<ChirpDBContext> options) : base(options)
     {
-        if (Database.EnsureCreated())
-        {
-            //DbInitializer.SeedDatabase(this);
-        }
+        Database.EnsureCreated();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -1,3 +1,5 @@
+using Microsoft.Build.Experimental.ProjectCache;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 
 public class CheepRepository : ICheepRepository
@@ -20,6 +22,7 @@ public class CheepRepository : ICheepRepository
             .Take(pageSize)
             .Select(cheep => new CheepDTO(
                 cheep.Author.UserName,
+
                 cheep.Text,
                 cheep.TimeStamp.ToString(defaultTimeStampFormat)
             ));
@@ -39,8 +42,7 @@ public class CheepRepository : ICheepRepository
                 cheep.Text,
                 cheep.TimeStamp.ToString(defaultTimeStampFormat)
             ));
-        var result = await query.ToListAsync();
-        return result;
+        return await query.ToListAsync();
     }
 
     public async Task<List<CheepDTO>> GetCheepsFromEmail(string email, int page)
@@ -55,8 +57,7 @@ public class CheepRepository : ICheepRepository
                 cheep.Text,
                 cheep.TimeStamp.ToString(defaultTimeStampFormat)
             ));
-        var result = await query.ToListAsync();
-        return result;
+        return await query.ToListAsync();
     }
 
     public int GetNextCheepId()
@@ -64,16 +65,16 @@ public class CheepRepository : ICheepRepository
         var query = _context.Cheeps
             .OrderByDescending(cheep => cheep.CheepId)
             .Select(cheep => cheep.CheepId);
-        var result = query.FirstOrDefault() + 1;
-        return result;
+
+        return query.FirstOrDefault() + 1;
     }
 
     public async Task<User> GetUserByString(string userString)
     {
         var query = _context.Users
             .Where(u => u.UserName == userString || u.Email == userString);
-        var result = await query.FirstOrDefaultAsync();
-        return result;
+
+        return await query.FirstOrDefaultAsync() ?? throw new Exception("User not found");
     }
 
     public async Task<List<User>> GetFollowers(User user)
@@ -81,8 +82,8 @@ public class CheepRepository : ICheepRepository
         var query = _context.Followers
             .Where(f => f.FolloweeId == user.Id)
             .Select(f => f.FollowerUser);
-        var result = await query.ToListAsync();
-        return result;
+
+        return await query.ToListAsync();
     }
 
     public async Task<List<User>> GetFollowing(User user)
@@ -90,8 +91,8 @@ public class CheepRepository : ICheepRepository
         var query = _context.Followers
             .Where(f => f.FollowerId == user.Id)
             .Select(f => f.FolloweeUser);
-        var result = await query.ToListAsync();
-        return result;
+
+        return await query.ToListAsync();
     }
     #endregion
 
@@ -99,9 +100,9 @@ public class CheepRepository : ICheepRepository
 
     public async Task CreateCheep(User user, string message)
     {
-        User author = await _context.Users
+        User? author = await _context.Users
             .Where(u => u.UserName == user.UserName)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync() ?? throw new Exception("User not found");
 
         Cheep newCheep = new Cheep
         {

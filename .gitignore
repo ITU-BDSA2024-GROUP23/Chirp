@@ -6,7 +6,8 @@
 # dotenv files
 .env
 
-# Dump db files
+# Dump db files & db folder
+src/Chirp.Web/Database
 *.db-shm
 *.db-wal
 
