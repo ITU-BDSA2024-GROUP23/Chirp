@@ -1,11 +1,11 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 public class Program
 {
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        builder.Configuration.AddEnvironmentVariables("GH_");
 
         string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
         builder.Services.AddDbContext<ChirpDBContext>(options => options.UseSqlite(connectionString));
@@ -35,7 +35,8 @@ public class Program
 
         var app = builder.Build();
 
-        app.UseCookiePolicy(new CookiePolicyOptions {
+        app.UseCookiePolicy(new CookiePolicyOptions
+        {
             MinimumSameSitePolicy = SameSiteMode.Lax
         });
 

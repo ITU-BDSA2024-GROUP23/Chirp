@@ -1,0 +1,38 @@
+@foreach (var cheep in Model.Cheeps)
+{
+    <div class="card mb-3">
+    <div class="card-body">
+        <div class="d-flex align-items-center justify-content-between mb-2">
+            <div>
+                <strong>
+                    <a href="/@cheep.Author" class="text-decoration-none">@cheep.Author</a>
+                </strong>
+                @if (cheep.Author != User.Identity.Name && User.Identity.IsAuthenticated)
+                    {
+                        @if (Model.IsFollowing(cheep.Author))
+                        {
+                            <form method="post" asp-page-handler="Unfollow" class="d-inline ms-2">
+                                <input type="hidden" name="followee" value="@cheep.Author" />
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Unfollow</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <form method="post" asp-page-handler="Follow" class="d-inline ms-2">
+                                <input type="hidden" name="followee" value="@cheep.Author" />
+                                <button type="submit" class="btn btn-sm btn-outline-success">Follow</button>
+                            </form>
+                        }
+                    }
+                </div>
+            </div>
+            <p class="card-text">
+                @cheep.Text
+            </p>
+            <p class="text-muted small mb-0">
+                <small>@cheep.TimeStamp</small>
+            </p>
+        </div>
+    </div>
+}
+</div>

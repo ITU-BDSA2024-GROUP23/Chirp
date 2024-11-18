@@ -38,7 +38,8 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
         var content = await response.Content.ReadAsStringAsync();
 
         Assert.Contains("Chirp!", content);
-        Assert.Contains($"{user}'s Timeline", content);
+        Assert.Contains($"{user}'s profile", content);
+        Assert.Contains("Timeline", content);
     }
 
     [Theory]
