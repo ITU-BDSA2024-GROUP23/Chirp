@@ -691,6 +691,5 @@ public static class DbInitializer
             chirpContext.SaveChanges();
         }
     }
-
 }
 
