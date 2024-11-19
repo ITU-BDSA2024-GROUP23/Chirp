@@ -1,3 +1,5 @@
+using AspNetCoreGeneratedDocument;
+
 using Chirp.Web.Pages.Shared.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -61,9 +63,16 @@ public abstract class TimelineModel : PageModel
 
     protected async Task GetFollowedUsers()
     {
-        if (User.Identity!.IsAuthenticated)
+        if (_signInManager.IsSignedIn(User))
         {
             User currentUser = await _signInManager.UserManager.GetUserAsync(User);
+            if(currentUser == null)
+            {
+                TempData["alert-error"] = "Your cookie has expired. Please log in again.";
+                await _signInManager.SignOutAsync();
+                RedirectToPage();
+                return;
+            }
             Following = _repository.GetFollowing(currentUser).Result.ToList();
         }
     }

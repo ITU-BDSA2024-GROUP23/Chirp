@@ -64,7 +64,14 @@ public class UserTimelineModel : TimelineModel
 
     private async Task GetFollowedCheeps(int page)
     {
-        User currentUser = await _signInManager.UserManager.GetUserAsync(User) ?? throw new Exception("User not found"); // User is authenticated, so this should never be null
+        User currentUser = await _signInManager.UserManager.GetUserAsync(User); // User is authenticated, so this should never be null - unless we delete the user entry from the database
+        if(currentUser == null)
+        {
+            TempData["alert-error"] = "Your cookie has expired. Please log in again.";
+            await _signInManager.SignOutAsync();
+            RedirectToPage();
+            return;
+        }
         var userCheeps = await _repository.GetCheepsFromUserName(currentUser.UserName, page);
 
         var followedCheeps = new List<CheepDTO>();
