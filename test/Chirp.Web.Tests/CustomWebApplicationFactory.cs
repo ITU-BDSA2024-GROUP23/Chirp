@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 /// <summary>
 /// This class overrides the default database configuration of the application to use an 
@@ -45,6 +46,10 @@ public class CustomWebApplicationFactory<TProgram>
                 var connection = container.GetRequiredService<DbConnection>();
                 options.UseSqlite(connection);
             });
+        });
+        builder.ConfigureLogging(logging =>
+        {
+            logging.ClearProviders();
         });
 
         builder.UseEnvironment("Development");

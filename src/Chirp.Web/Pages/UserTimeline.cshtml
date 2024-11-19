@@ -7,9 +7,11 @@
 }
 
 <div>
-    <h2> @routeName's Timeline </h2>
+    <h2> @routeName's profile </h2>
     <partial name="_ProfileInfo" model="Model" />
     <partial name="_CheepBox" model="Model.CheepBox" />
+    <hr />
+    <h3>Timeline</h2>
     
     @if (Model.Cheeps.Any())
     {

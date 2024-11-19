@@ -10,13 +10,24 @@ public class ChirpDBContext : IdentityDbContext<User>
     {
         if (Database.EnsureCreated())
         {
-            //DbInitializer.SeedDatabase(this);
+            DbInitializer.SeedDatabase(this);
         }
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        /* TODO: This should be added, but currently its throwing an exception that crashes the app when a non-unique user/email is added
+        / This needs to be handled.
+        modelBuilder.Entity<User>()
+            .HasIndex(u => u.Email)
+            .IsUnique();
+
+        modelBuilder.Entity<User>()
+            .HasIndex(u => u.UserName)
+            .IsUnique();
+        */
 
         modelBuilder.Entity<Follower>()
             .HasKey(f => new { f.FollowerId, f.FolloweeId });
