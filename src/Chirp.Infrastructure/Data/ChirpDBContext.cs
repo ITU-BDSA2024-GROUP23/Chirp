@@ -10,7 +10,7 @@ public class ChirpDBContext : IdentityDbContext<User>
     {
         if (Database.EnsureCreated())
         {
-            //DbInitializer.SeedDatabase(this);
+            DbInitializer.SeedDatabase(this);
         }
     }
 
