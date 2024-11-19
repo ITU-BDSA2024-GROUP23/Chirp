@@ -9,6 +9,7 @@
 # Dump db files
 *.db-shm
 *.db-wal
+*.db
 
 # User-specific files
 *.rsuser
