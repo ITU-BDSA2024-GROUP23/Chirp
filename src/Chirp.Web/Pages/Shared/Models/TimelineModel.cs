@@ -63,7 +63,7 @@ public abstract class TimelineModel : PageModel
     {
         if (User.Identity!.IsAuthenticated)
         {
-            User currentUser = await _signInManager.UserManager.GetUserAsync(User) ?? throw new Exception("User not found");
+            User currentUser = await _signInManager.UserManager.GetUserAsync(User);
             Following = _repository.GetFollowing(currentUser).Result.ToList();
         }
     }
