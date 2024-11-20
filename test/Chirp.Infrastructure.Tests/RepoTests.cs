@@ -12,7 +12,7 @@ public class CheepRepositoryTests
         _connection.Open();
         var options = new DbContextOptionsBuilder<ChirpDBContext>()
             .UseSqlite(_connection);
-        
+
         _context = new ChirpDBContext(options.Options);
         _repository = new CheepRepository(_context);
 
@@ -177,5 +177,5 @@ public class CheepRepositoryTests
         //Assert
         Assert.Contains(following1, user => user.UserName == "Luanna Muro");
         Assert.Contains(following2, user => user.UserName == "Roger Histand");
-    }     
+    }
 }

@@ -41,7 +41,7 @@ public abstract class TimelineModel : PageModel
     }
     public async Task<IActionResult> OnPostFollow(string followee)
     {
-        if(!User.Identity!.IsAuthenticated)
+        if (!User.Identity!.IsAuthenticated)
         {
             TempData["alert-error"] = "You must be logged in to follow someone!";
             return RedirectToPage();
@@ -56,7 +56,7 @@ public abstract class TimelineModel : PageModel
 
         User followeeUser = _repository.GetUserByString(followee).Result;
 
-        if(follower == followeeUser)
+        if (follower == followeeUser)
         {
             TempData["alert-error"] = "You can't follow yourself!";
             return RedirectToPage();
@@ -69,7 +69,7 @@ public abstract class TimelineModel : PageModel
 
     public async Task<IActionResult> OnPostUnfollow(string followee)
     {
-        if(!User.Identity!.IsAuthenticated)
+        if (!User.Identity!.IsAuthenticated)
         {
             TempData["alert-error"] = "You must be logged in to unfollow someone!";
             return RedirectToPage();
@@ -84,12 +84,12 @@ public abstract class TimelineModel : PageModel
 
         User followeeUser = _repository.GetUserByString(followee).Result;
 
-        if(follower == followeeUser)
+        if (follower == followeeUser)
         {
             TempData["alert-error"] = "You can't unfollow yourself!";
             return RedirectToPage();
         }
-        
+
         await _repository.UnfollowUser(follower, followeeUser);
         TempData["alert-success"] = $"You are no longer following {followeeUser.UserName}!";
         return RedirectToPage();
@@ -105,7 +105,7 @@ public abstract class TimelineModel : PageModel
         if (_signInManager.IsSignedIn(User))
         {
             User currentUser = await _signInManager.UserManager.GetUserAsync(User);
-            if(currentUser == null)
+            if (currentUser == null)
             {
                 TempData["alert-error"] = "Your cookie has expired. Please log in again.";
                 await _signInManager.SignOutAsync();
