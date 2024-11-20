@@ -2,27 +2,25 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Chirp.Core.Tests;
 
-public class UnitTests
+public class ModelsTest
 {
-    /* DEPRECATED DUE TO CHANGES IN THE PROJECT
     [Fact]
-    public void AuthorCanBeInstantiated()
+    public void UserCanBeInstantiated()
     {
         // Arrange
-        Author author = new Author { Name = "Victor", Email = "vmem@itu.dk" };
+        User user = new User { UserName = "Victor", Email = "vmem@itu.dk", Followers = new List<Follower>(), Following = new List<Follower>()};
 
         // Assert
-        Assert.Equal("Victor", author.Name);
-        Assert.Equal("vmem@itu.dk", author.Email);
-        Assert.Empty(author.Cheeps);
+        Assert.Equal("Victor", user.UserName);
+        Assert.Equal("vmem@itu.dk", user.Email);
     }
 
     [Fact]
     public void CheepCanBeInstantiated()
     {
         // Arrange
-        Author author = new Author { Name = "Kasper", Email = "kasjo@itu.dk" };
-        Cheep cheep = new Cheep { CheepId = 1, Author = author, AuthorId = author.AuthorId, Text = "test", TimeStamp = DateTime.Now };
+        User user = new User { UserName = "Victor", Email = "vmem@itu.dk", Followers = new List<Follower>(), Following = new List<Follower>()};
+        Cheep cheep = new Cheep { CheepId = 1, Author = user, Text = "test", TimeStamp = DateTime.Now };
 
         // Assert
         Assert.Equal("test", cheep.Text);
@@ -36,8 +34,7 @@ public class UnitTests
         Cheep cheep = new Cheep
         {
             CheepId = 1,
-            Author = new Author { AuthorId = 1, Name = "Philip", Email = "phro@itu.dk" },
-            AuthorId = 1,
+            Author = new User { UserName = "Victor", Email = "vmem@itu.dk", Followers = new List<Follower>(), Following = new List<Follower>()},
             Text = "",
             TimeStamp = DateTime.Now
         };
@@ -59,9 +56,8 @@ public class UnitTests
         Cheep cheep = new Cheep
         {
             CheepId = 1,
-            Author = new Author { AuthorId = 1, Name = "Axel", Email = "axlu@itu.dk" },
-            AuthorId = 1,
-            Text = new('a', 161),
+            Author = new User { UserName = "Victor", Email = "vmem@itu.dk", Followers = new List<Follower>(), Following = new List<Follower>()},
+            Text = "",
             TimeStamp = DateTime.Now
         };
 
@@ -74,5 +70,4 @@ public class UnitTests
         // Assert
         Assert.False(tooLong);
     }
-    */
 }

@@ -10,6 +10,7 @@
 src/Chirp.Web/Database
 *.db-shm
 *.db-wal
+*.db
 
 # User-specific files
 *.rsuser

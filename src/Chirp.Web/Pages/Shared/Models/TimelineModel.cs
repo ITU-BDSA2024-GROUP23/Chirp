@@ -1,3 +1,5 @@
+using AspNetCoreGeneratedDocument;
+
 using Chirp.Web.Pages.Shared.Models;
 
 using Microsoft.AspNetCore.Identity;
@@ -39,6 +41,12 @@ public abstract class TimelineModel : PageModel
     }
     public async Task<IActionResult> OnPostFollow(string followee)
     {
+        if(!User.Identity!.IsAuthenticated)
+        {
+            TempData["alert-error"] = "You must be logged in to follow someone!";
+            return RedirectToPage();
+        }
+
         User? follower = _signInManager.UserManager.GetUserAsync(User).Result;
         if (follower == null)
         {
@@ -47,6 +55,13 @@ public abstract class TimelineModel : PageModel
         }
 
         User followeeUser = _repository.GetUserByString(followee).Result;
+
+        if(follower == followeeUser)
+        {
+            TempData["alert-error"] = "You can't follow yourself!";
+            return RedirectToPage();
+        }
+
         await _repository.FollowUser(follower, followeeUser);
         TempData["alert-success"] = $"You are now following {followeeUser.UserName}!";
         return RedirectToPage();
@@ -54,6 +69,12 @@ public abstract class TimelineModel : PageModel
 
     public async Task<IActionResult> OnPostUnfollow(string followee)
     {
+        if(!User.Identity!.IsAuthenticated)
+        {
+            TempData["alert-error"] = "You must be logged in to unfollow someone!";
+            return RedirectToPage();
+        }
+
         User? follower = _signInManager.UserManager.GetUserAsync(User).Result;
         if (follower == null)
         {
@@ -62,6 +83,13 @@ public abstract class TimelineModel : PageModel
         }
 
         User followeeUser = _repository.GetUserByString(followee).Result;
+
+        if(follower == followeeUser)
+        {
+            TempData["alert-error"] = "You can't unfollow yourself!";
+            return RedirectToPage();
+        }
+        
         await _repository.UnfollowUser(follower, followeeUser);
         TempData["alert-success"] = $"You are no longer following {followeeUser.UserName}!";
         return RedirectToPage();
@@ -74,9 +102,16 @@ public abstract class TimelineModel : PageModel
 
     protected async Task GetFollowedUsers()
     {
-        if (User.Identity!.IsAuthenticated)
+        if (_signInManager.IsSignedIn(User))
         {
-            User currentUser = await _signInManager.UserManager.GetUserAsync(User) ?? throw new Exception("User not found");
+            User currentUser = await _signInManager.UserManager.GetUserAsync(User);
+            if(currentUser == null)
+            {
+                TempData["alert-error"] = "Your cookie has expired. Please log in again.";
+                await _signInManager.SignOutAsync();
+                RedirectToPage();
+                return;
+            }
             Following = _repository.GetFollowing(currentUser).Result.ToList();
         }
     }

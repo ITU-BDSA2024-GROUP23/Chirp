@@ -8,6 +8,7 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 public class PlaywrightWebApplicationFactory<TProgram> : WebApplicationFactory<TProgram> where TProgram : class
 {
@@ -49,6 +50,10 @@ public class PlaywrightWebApplicationFactory<TProgram> : WebApplicationFactory<T
                 var connection = container.GetRequiredService<DbConnection>();
                 options.UseSqlite(connection);
             });
+        });
+        builder.ConfigureLogging(logging =>
+        {
+            logging.ClearProviders();
         });
 
         builder.UseEnvironment("Development");
