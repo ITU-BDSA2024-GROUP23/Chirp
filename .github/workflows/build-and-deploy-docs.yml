@@ -29,7 +29,7 @@ jobs:
           version: "latest"
 
       - name: Install MkDocs Material
-        run: uv pip install mkdocs-material --system
+        run: pip install mkdocs-material
 
       - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV
       - uses: actions/cache@v4
