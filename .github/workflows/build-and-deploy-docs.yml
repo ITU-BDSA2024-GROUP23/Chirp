@@ -1,0 +1,43 @@
+name: Build docs and publish to GitHub Pages
+
+on:
+  workflow_call:
+    inputs:
+      deploy_env:
+        description: Deployment environment
+        required: true
+        type: string
+
+jobs:
+  deploy-to-gh-pages:
+    if: inputs.deploy_env == 'prod'
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure Git Credentials
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "latest"
+
+      - name: Install MkDocs Material
+        run: uv pip install mkdocs-material --system
+
+      - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV
+      - uses: actions/cache@v4
+        with:
+          key: mkdocs-material-${{ env.cache_id }}
+          path: .cache
+          restore-keys: |
+            mkdocs-material-
+
+      - name: Deploy mkdocs to GitHub Pages
+        run: uv run mkdocs gh-deploy -s

@@ -40,3 +40,10 @@ jobs:
     with:
       dotnet_version: ${{ needs.prepare-pipeline.outputs.dotnet_version }}
       deploy_env: ${{ needs.prepare-pipeline.outputs.deploy_env }}
+
+  build-and-deploy-docs:
+    uses: ./.github/workflows/build-and-deploy-docs.yml
+    needs: [prepare-pipeline, lint-and-test]
+    secrets: inherit
+    with:
+      deploy_env: ${{ needs.prepare-pipeline.outputs.deploy_env }}
