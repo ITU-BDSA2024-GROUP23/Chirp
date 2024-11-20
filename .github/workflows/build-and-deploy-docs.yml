@@ -44,4 +44,4 @@ jobs:
           uv install mkdocs-material
 
       - name: Deploy mkdocs to GitHub Pages
-        run: uv run mkdocs build -s
+        run: uv run mkdocs gh-deploy -s
