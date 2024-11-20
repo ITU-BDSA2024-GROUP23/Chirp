@@ -1,4 +1,5 @@
 using System.Data.Common;
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
@@ -63,10 +64,10 @@ public class PlaywrightWebApplicationFactory<TProgram> : WebApplicationFactory<T
     protected override IHost CreateHost(IHostBuilder builder)
     {
         var testHost = builder.Build();
-        var kestrelBuilder = builder.ConfigureWebHost(webBuilder => 
+        var kestrelBuilder = builder.ConfigureWebHost(webBuilder =>
         {
             webBuilder.UseKestrel()
-                     .UseUrls("http://localhost:5273"); 
+                     .UseUrls("http://localhost:5273");
         });
 
         host = kestrelBuilder.Build();
@@ -76,9 +77,9 @@ public class PlaywrightWebApplicationFactory<TProgram> : WebApplicationFactory<T
         var server = host.Services.GetRequiredService<IServer>();
         var addresses = server.Features.Get<IServerAddressesFeature>();
 
-        ClientOptions.BaseAddress = addresses!.Addresses  
-            .Select(x => new Uri(x))  
-            .Last(); 
+        ClientOptions.BaseAddress = addresses!.Addresses
+            .Select(x => new Uri(x))
+            .Last();
 
         // Start and return the test host
         testHost.Start();

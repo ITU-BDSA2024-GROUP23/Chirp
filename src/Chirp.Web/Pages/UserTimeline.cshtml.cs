@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,7 +41,7 @@ public class UserTimelineModel : TimelineModel
     {
         User targetUser = await _repository.GetUserByString(user);
         // TODO: Handle null targetUser - this is a cringe way to do it
-        if(targetUser == null)
+        if (targetUser == null)
         {
             TempData["alert-error"] = "User not found";
             userInfo = new UserDTO
