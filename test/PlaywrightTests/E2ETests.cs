@@ -1,7 +1,8 @@
-using Microsoft.Playwright.NUnit;
 using System.Diagnostics;
+
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Playwright;
+using Microsoft.Playwright.NUnit;
 
 namespace PlaywrightTests;
 
