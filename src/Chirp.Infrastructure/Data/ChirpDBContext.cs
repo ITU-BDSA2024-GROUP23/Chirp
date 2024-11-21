@@ -14,7 +14,7 @@ public class ChirpDBContext : IdentityDbContext<User>
     /// </summary>
     public ChirpDBContext(DbContextOptions<ChirpDBContext> options) : base(options)
     {
-        if(Database.GetPendingMigrations().Any())
+        if (Database.GetPendingMigrations().Any())
         {
             Database.Migrate();
         }
