@@ -1,5 +1,5 @@
-site_name: MDE FixIt integration
-repo_url: https://github.com/egmont-security-team/mde-fixit-integration
+site_name: Chirp Documentation
+repo_url: https://github.com/ITU-BDSA2024-GROUP23/Chrip
 
 markdown_extensions:
   - tables
@@ -28,8 +28,6 @@ markdown_extensions:
 
 theme:
   name: material
-
-  favicon: assets/favicon.ico
 
   features:
     - content.code.copy
