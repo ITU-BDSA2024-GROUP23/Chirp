@@ -8,7 +8,7 @@ public class AboutMeModel : PageModel
     private readonly SignInManager<User> _signInManager;
     private readonly ICheepRepository _repository;
 
-    public UserDTO? UserInfo { get; set; }
+    public UserInfoDTO? UserInfo { get; set; }
 
     public IList<CheepDTO> RecentCheeps { get; set; } = new List<CheepDTO>();
 
@@ -29,14 +29,13 @@ public class AboutMeModel : PageModel
         }
 
         // Populate user information
-        UserInfo = new UserDTO
+        UserInfo = new UserInfoDTO
         {
             UserName = currentUser.UserName,
             FollowersCount = (await _repository.GetFollowers(currentUser)).Count,
             FollowingCount = (await _repository.GetFollowing(currentUser)).Count
-        };
 
-        // Optionally, fetch recent activity (e.g., recent cheeps)
+        };        // Optionally, fetch recent activity (e.g., recent cheeps)
         RecentCheeps = await _repository.GetCheepsFromUserName(currentUser.UserName, page: 0);
         return Page();
     }
