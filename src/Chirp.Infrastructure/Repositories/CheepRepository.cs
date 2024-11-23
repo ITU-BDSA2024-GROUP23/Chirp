@@ -43,6 +43,21 @@ public class CheepRepository : ICheepRepository
         return result;
     }
 
+    public async Task<List<CheepDTO>> GetCheepsFromUserName(string userName)
+    {
+        var query = _context.Cheeps
+            .Where(cheep => cheep.Author.UserName == userName)
+            .OrderByDescending(cheep => cheep.TimeStamp)
+            .Take(pageSize)
+            .Select(cheep => new CheepDTO(
+                cheep.Author.UserName,
+                cheep.Text,
+                cheep.TimeStamp.ToString(defaultTimeStampFormat)
+            ));
+        var result = await query.ToListAsync();
+        return result;
+    }
+
     public async Task<List<CheepDTO>> GetCheepsFromEmail(string email, int page)
     {
         var query = _context.Cheeps
@@ -136,6 +151,27 @@ public class CheepRepository : ICheepRepository
         if (followerToRemove != null)
         {
             _context.Followers.Remove(followerToRemove);
+            await _context.SaveChangesAsync();
+        }
+    }
+
+    public async Task ForgetMe(User user)
+    {
+        User userToForget = await _context.Users
+            .Where(u => u.Id == user.Id)
+            .FirstOrDefaultAsync();
+        if (userToForget != null)
+        {
+            // Remove user's cheeps
+            var cheepsToRemove = _context.Cheeps.Where(c => c.Author.Id == user.Id);
+            _context.Cheeps.RemoveRange(cheepsToRemove);
+
+            // Remove user's followers
+            var followersToRemove = _context.Followers.Where(f => f.FolloweeId == user.Id || f.FollowerId == user.Id);
+            _context.Followers.RemoveRange(followersToRemove);
+
+            // Remove the user
+            _context.Users.Remove(userToForget);
             await _context.SaveChangesAsync();
         }
     }

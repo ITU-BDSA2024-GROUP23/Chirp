@@ -31,14 +31,29 @@ public class AboutMeModel : PageModel
         return Page();
     }
 
-    private async Task PrepareInfo(User currentUser) {
+    private async Task PrepareInfo(User currentUser) 
+    {
         UserInfo = new UserInfoDTO
         {
             UserName = currentUser.UserName,
             Email = currentUser.Email,
-            Cheeps = await _repository.GetCheepsFromUserName(currentUser.UserName, page: 0),
+            Cheeps = await _repository.GetCheepsFromUserName(currentUser.UserName),
             Following = await _repository.GetFollowing(currentUser),
+            Followers = await _repository.GetFollowers(currentUser)
         };
         
+    }
+
+    public async Task<IActionResult> OnPostForgetMeAsync()
+    {
+        var currentUser = await _signInManager.UserManager.GetUserAsync(User);
+        if (currentUser == null)
+        {
+            TempData["alert-error"] = "You are not logged in.";
+            return RedirectToPage("/Account/Login");
+        }
+        await _repository.ForgetMe(currentUser);
+        await _signInManager.SignOutAsync();
+        return RedirectToPage("/Account/Login");
     }
 }

@@ -11,6 +11,7 @@
     <div>
         <h2>@Model.UserInfo.UserName</h2>
         <h3>@Model.UserInfo.Email</h3>
+        <h3>@Model.UserInfo.Followers.Count Followers</h3>
         <h3>@Model.UserInfo.Following.Count Following</h3>
     </div>
 
@@ -36,3 +37,6 @@ else
 {
     <p>User information not available.</p>
 }
+<form method="post">
+    <button type="submit" asp-page-handler="ForgetMe" class="btn btn-lg btn-danger" data-toggle="tooltip" data-placement="top" title="Deletes all your data permanently"> Forget Me </button>
+</form>
