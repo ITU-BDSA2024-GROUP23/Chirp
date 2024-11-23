@@ -10,8 +10,6 @@ public class AboutMeModel : PageModel
 
     public UserInfoDTO? UserInfo { get; set; }
 
-    public IList<CheepDTO> RecentCheeps { get; set; } = new List<CheepDTO>();
-
     public AboutMeModel(SignInManager<User> signInManager, ICheepRepository repository)
     {
         _signInManager = signInManager;
@@ -25,18 +23,22 @@ public class AboutMeModel : PageModel
         if (currentUser == null)
         {
             TempData["alert-error"] = "You are not logged in.";
-            return RedirectToPage("/");
+            return RedirectToPage("/Account/Login");
         }
 
-        // Populate user information
+        await PrepareInfo(currentUser);
+        
+        return Page();
+    }
+
+    private async Task PrepareInfo(User currentUser) {
         UserInfo = new UserInfoDTO
         {
             UserName = currentUser.UserName,
-            FollowersCount = (await _repository.GetFollowers(currentUser)).Count,
-            FollowingCount = (await _repository.GetFollowing(currentUser)).Count
-
-        };        // Optionally, fetch recent activity (e.g., recent cheeps)
-        RecentCheeps = await _repository.GetCheepsFromUserName(currentUser.UserName, page: 0);
-        return Page();
+            Email = currentUser.Email,
+            Cheeps = await _repository.GetCheepsFromUserName(currentUser.UserName, page: 0),
+            Following = await _repository.GetFollowing(currentUser),
+        };
+        
     }
 }
