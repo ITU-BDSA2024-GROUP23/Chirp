@@ -155,7 +155,7 @@ public class CheepRepository : ICheepRepository
         }
     }
 
-    public async Task ForgetMe(User user)
+    public async Task DeleteUser(User user)
     {
         User userToForget = await _context.Users
             .Where(u => u.Id == user.Id)
