@@ -1,0 +1,37 @@
+@page
+@model AboutMeModel
+@{
+    ViewData["Title"] = "About Me";
+}
+
+<h1>About Me</h1>
+
+@if (Model.UserInfo != null)
+{
+    <div>
+        <h2>@Model.UserInfo.UserName</h2>
+        <p>Followers: @Model.UserInfo.FollowersCount</p>
+        <p>Following: @Model.UserInfo.FollowingCount</p>
+    </div>
+
+    <h3>Recent Activity</h3>
+    @if (Model.RecentCheeps.Any())
+    {
+        <ul>
+            @foreach (var cheep in Model.RecentCheeps)
+            {
+                <li>
+                    <strong>@cheep.Text</strong> <small>@cheep.TimeStamp</small>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No recent activity found.</p>
+    }
+}
+else
+{
+    <p>User information not available.</p>
+}

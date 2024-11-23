@@ -1,6 +1,6 @@
 @using Microsoft.AspNetCore.Identity
-@inject SignInManager<User> SignInManager 
-@inject UserManager<User> UserManager   
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
 
 <ul class="navbar-nav ms-auto">
     @if (User.Identity.IsAuthenticated)
@@ -10,6 +10,9 @@
         </li>
         <li class="nav-item">
             <a class="nav-link" href="/">public timeline</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-area="Identity" asp-page="/Account/AboutMe">About me</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" asp-area="Identity" asp-page="/Account/Logout">logout [@(User.Identity.Name)]</a>
