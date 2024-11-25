@@ -2,6 +2,8 @@
 
 Chirp project, developed following the course Analysis, Design and Software Architecture (Autumn 2024).
 
+Check out our documentation at <https://itu-bdsa2024-group23.github.io/chirp/>.
+
 ## Committing not working code
 
 If the code that you are working on breaks other services, it should never end up in
