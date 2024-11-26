@@ -1,8 +1,9 @@
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.IO.Compression;
+using System.Text;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Text;
-using System.IO.Compression;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 
 public class AboutMeModel : PageModel
@@ -28,11 +29,11 @@ public class AboutMeModel : PageModel
         }
 
         await PrepareInfo(currentUser);
-        
+
         return Page();
     }
 
-    private async Task PrepareInfo(User currentUser) 
+    private async Task PrepareInfo(User currentUser)
     {
         UserInfo = new UserInfoDTO
         {
@@ -42,7 +43,7 @@ public class AboutMeModel : PageModel
             Following = await _repository.GetFollowing(currentUser),
             Followers = await _repository.GetFollowers(currentUser)
         };
-        
+
     }
 
     public async Task<IActionResult> OnPostDeleteMeAsync()
@@ -67,7 +68,7 @@ public class AboutMeModel : PageModel
             return Page();
         }
 
-        
+
         return Page();
     }
 
