@@ -8,8 +8,4 @@ public class User : IdentityUser
     public required ICollection<Follower> Following { get; set; }
     [Required]
     public required ICollection<Follower> Followers { get; set; }
-    [Required]
-    public override required string UserName { get; set; }
-    [Required]
-    public override required string Email { get; set; }
 }

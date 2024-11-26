@@ -10,11 +10,14 @@ public class UserRepository : IUserRepository
     }
 
     #region Queries
-    public async Task<List<User>> GetFollowers(User user)
+    public async Task<List<UserDTO>> GetFollowers(UserDTO user)
     {
         var query = _context.Followers
             .Where(f => f.FolloweeId == user.Id)
-            .Select(f => f.FollowerUser);
+            .Select(f => new UserDTO(
+                f.FollowerUser.Id,
+                f.FollowerUser.UserName
+            ));
         var result = await query.ToListAsync();
         return result;
     }
