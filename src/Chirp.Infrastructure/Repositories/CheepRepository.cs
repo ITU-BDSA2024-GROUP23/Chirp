@@ -88,6 +88,10 @@ public class CheepRepository : ICheepRepository
         var query = _context.Users
             .Where(u => u.UserName == userString || u.Email == userString);
         var result = await query.FirstOrDefaultAsync();
+        if (result == null)
+        {
+            throw new Exception("User not found");
+        }
         return result;
     }
 
@@ -114,9 +118,13 @@ public class CheepRepository : ICheepRepository
 
     public async Task CreateCheep(User user, string message)
     {
-        User author = await _context.Users
+        User author = (await _context.Users
             .Where(u => u.UserName == user.UserName)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync())!;
+        if(author == null)
+        {
+            throw new Exception("User not found");
+        }
 
         Cheep newCheep = new Cheep
         {
@@ -157,20 +165,20 @@ public class CheepRepository : ICheepRepository
 
     public async Task DeleteUser(User user)
     {
-        User userToForget = await _context.Users
+        User userToForget = (await _context.Users
             .Where(u => u.Id == user.Id)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync())!;
         if (userToForget != null)
         {
-            // Remove user's cheeps
+            // Remove cheeps
             var cheepsToRemove = _context.Cheeps.Where(c => c.Author.Id == user.Id);
             _context.Cheeps.RemoveRange(cheepsToRemove);
 
-            // Remove user's followers
+            // Remove followers
             var followersToRemove = _context.Followers.Where(f => f.FolloweeId == user.Id || f.FollowerId == user.Id);
             _context.Followers.RemoveRange(followersToRemove);
 
-            // Remove the user
+            // Remove user
             _context.Users.Remove(userToForget);
             await _context.SaveChangesAsync();
         }
