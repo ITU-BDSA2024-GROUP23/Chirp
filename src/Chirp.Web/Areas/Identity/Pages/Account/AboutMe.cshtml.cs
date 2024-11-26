@@ -48,7 +48,6 @@ public class AboutMeModel : PageModel
             Following = await _userService.GetFollowing(currentUser),
             Followers = await _userService.GetFollowers(currentUser)
         };
-
     }
 
     public async Task<IActionResult> OnPostDeleteMeAsync()

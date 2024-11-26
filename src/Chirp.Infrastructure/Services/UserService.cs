@@ -79,5 +79,4 @@ public class UserService : IUserService
     {
         await _userRepository.DeleteUser(user);
     }
-
 }
