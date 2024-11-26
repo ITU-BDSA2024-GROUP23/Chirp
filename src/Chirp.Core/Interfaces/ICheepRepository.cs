@@ -1,5 +1,3 @@
-
-
 public interface ICheepRepository
 {
     public Task<List<CheepDTO>> GetCheeps(int page);
