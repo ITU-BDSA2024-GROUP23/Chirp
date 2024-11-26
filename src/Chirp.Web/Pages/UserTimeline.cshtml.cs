@@ -8,7 +8,11 @@ namespace Chirp.Web.Pages;
 public class UserTimelineModel : TimelineModel
 {
     public UserDTO? userInfo;
-    public UserTimelineModel(ICheepRepository repository, SignInManager<User> signInManager) : base(repository, signInManager)
+
+    public UserTimelineModel(
+        IUserService  userService, 
+        ICheepService cheepService,
+        SignInManager<User> signInManager) : base(signInManager, userService, cheepService)
     {
     }
 
@@ -25,11 +29,11 @@ public class UserTimelineModel : TimelineModel
         }
         else if (emailRegex.IsMatch(user))
         {
-            Cheeps = await _repository.GetCheepsFromEmail(user, page);
+            Cheeps = await _cheepService.GetCheepsFromEmail(user, page);
         }
         else
         {
-            Cheeps = await _repository.GetCheepsFromUserName(user, page);
+            Cheeps = await _cheepService.GetCheepsFromUserName(user, page);
         }
 
         await PrepareUserInfo(user);
@@ -39,7 +43,7 @@ public class UserTimelineModel : TimelineModel
 
     private async Task PrepareUserInfo(string user)
     {
-        User targetUser = await _repository.GetUserByString(user);
+        User targetUser = await _userService.GetUserByString(user);
         // TODO: Handle null targetUser - this is a cringe way to do it
         if (targetUser == null)
         {
@@ -57,15 +61,15 @@ public class UserTimelineModel : TimelineModel
             {
                 UserName = targetUser.UserName,
                 //find better way to do this - i imagine we need the list so you can click on followers/following and see who they are
-                FollowersCount = (await _repository.GetFollowers(targetUser)).Count,
-                FollowingCount = (await _repository.GetFollowing(targetUser)).Count,
+                FollowersCount = (await _userService.GetFollowers(targetUser)).Count,
+                FollowingCount = (await _userService.GetFollowing(targetUser)).Count
             };
         }
     }
 
     private async Task GetFollowedCheeps(int page)
     {
-        User currentUser = await _signInManager.UserManager.GetUserAsync(User); // User is authenticated, so this should never be null - unless we delete the user entry from the database
+        User? currentUser = await _signInManager.UserManager.GetUserAsync(User); // User is authenticated, so this should never be null - unless we delete the user entry from the database
         if (currentUser == null)
         {
             TempData["alert-error"] = "Your cookie has expired. Please log in again.";
@@ -73,12 +77,12 @@ public class UserTimelineModel : TimelineModel
             RedirectToPage();
             return;
         }
-        var userCheeps = await _repository.GetCheepsFromUserName(currentUser.UserName, page);
+        var userCheeps = await _cheepService.GetCheepsFromUserName(currentUser.UserName, page);
 
         var followedCheeps = new List<CheepDTO>();
         foreach (User followee in Following)
         {
-            followedCheeps.AddRange(await _repository.GetCheepsFromUserName(followee.UserName, page));
+            followedCheeps.AddRange(await _cheepService.GetCheepsFromUserName(followee.UserName, page));
         }
 
         Cheeps = userCheeps

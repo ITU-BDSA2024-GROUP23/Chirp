@@ -6,6 +6,7 @@ public class CheepRepositoryTests
     private readonly ChirpDBContext _context;
     private readonly SqliteConnection _connection;
     private readonly CheepRepository _repository;
+    private readonly UserRepository _userrepo;
     public CheepRepositoryTests()
     {
         _connection = new SqliteConnection("DataSource=:memory:");
@@ -15,6 +16,7 @@ public class CheepRepositoryTests
 
         _context = new ChirpDBContext(options.Options);
         _repository = new CheepRepository(_context);
+        _userrepo = new UserRepository(_context);
 
         //IMPORTANT: Uncomment this line if we don't seed the db ChirpDBContext
         //DbInitializer.SeedDatabase(_context);
@@ -68,7 +70,7 @@ public class CheepRepositoryTests
     [Fact]
     public async Task TestGetUserFromString_ReturnsCorrectUser()
     {
-        var result = await _repository.GetUserByString("Roger Histand");
+        var result = await _userrepo.GetUserByString("Roger Histand");
         Assert.Equal("Roger Histand", result.UserName);
         Assert.Equal("Roger+Histand@hotmail.com", result.Email);
     }
@@ -76,7 +78,7 @@ public class CheepRepositoryTests
     [Fact]
     public async Task TestGetUserFromString_ReturnsNull()
     {
-        var result = await _repository.GetUserByString("Roger Histand2");
+        var result = await _userrepo.GetUserByString("Roger Histand2");
         Assert.Null(result);
     }
 
@@ -84,7 +86,7 @@ public class CheepRepositoryTests
     public async Task TestCreateCheep()
     {
         //Arrange
-        var user = await _repository.GetUserByString("Roger Histand");
+        var user = await _userrepo.GetUserByString("Roger Histand");
 
         //Act
         await _repository.CreateCheep(user, "Test cheep");
@@ -97,7 +99,7 @@ public class CheepRepositoryTests
     public async Task TestGetNextCheepId_Increments()
     {
         //Arrange
-        var user = await _repository.GetUserByString("Roger Histand");
+        var user = await _userrepo.GetUserByString("Roger Histand");
         var currentId = _repository.GetNextCheepId();
 
         //Act
@@ -111,12 +113,12 @@ public class CheepRepositoryTests
     public async Task TestNoFollowRelationship()
     {
         //Arrange
-        var user1 = await _repository.GetUserByString("Roger Histand");
-        var user2 = await _repository.GetUserByString("Luanna Muro");
+        var user1 = await _userrepo.GetUserByString("Roger Histand");
+        var user2 = await _userrepo.GetUserByString("Luanna Muro");
 
         //Act
-        var followers1 = await _repository.GetFollowers(user1);
-        var followers2 = await _repository.GetFollowers(user2);
+        var followers1 = await _userrepo.GetFollowers(user1);
+        var followers2 = await _userrepo.GetFollowers(user2);
 
         //Assert
         Assert.DoesNotContain(followers1, user => user.UserName == "Luanna Muro");
@@ -127,14 +129,14 @@ public class CheepRepositoryTests
     public async Task TestFollowUser()
     {
         //Arrange
-        var user1 = await _repository.GetUserByString("Roger Histand");
-        var user2 = await _repository.GetUserByString("Luanna Muro");
+        var user1 = await _userrepo.GetUserByString("Roger Histand");
+        var user2 = await _userrepo.GetUserByString("Luanna Muro");
 
         //Act
-        await _repository.FollowUser(user1, user2);
-        await _repository.FollowUser(user2, user1);
-        var followers1 = await _repository.GetFollowers(user1);
-        var followers2 = await _repository.GetFollowers(user2);
+        await _userrepo.FollowUser(user1, user2);
+        await _userrepo.FollowUser(user2, user1);
+        var followers1 = await _userrepo.GetFollowers(user1);
+        var followers2 = await _userrepo.GetFollowers(user2);
 
         //Assert
         Assert.Contains(followers1, user => user.UserName == "Luanna Muro");
@@ -145,16 +147,16 @@ public class CheepRepositoryTests
     public async Task TestUnfollowUser()
     {
         //Arrange
-        var user1 = await _repository.GetUserByString("Roger Histand");
-        var user2 = await _repository.GetUserByString("Luanna Muro");
+        var user1 = await _userrepo.GetUserByString("Roger Histand");
+        var user2 = await _userrepo.GetUserByString("Luanna Muro");
 
         //Act
-        await _repository.FollowUser(user1, user2);
-        await _repository.FollowUser(user2, user1);
-        await _repository.UnfollowUser(user1, user2);
-        await _repository.UnfollowUser(user2, user1);
-        var followers1 = await _repository.GetFollowers(user1);
-        var followers2 = await _repository.GetFollowers(user2);
+        await _userrepo.FollowUser(user1, user2);
+        await _userrepo.FollowUser(user2, user1);
+        await _userrepo.UnfollowUser(user1, user2);
+        await _userrepo.UnfollowUser(user2, user1);
+        var followers1 = await _userrepo.GetFollowers(user1);
+        var followers2 = await _userrepo.GetFollowers(user2);
 
         //Assert
         Assert.DoesNotContain(followers1, user => user.UserName == "Luanna Muro");
@@ -165,14 +167,14 @@ public class CheepRepositoryTests
     public async Task TestGetFollowing()
     {
         //Arrange
-        var user1 = await _repository.GetUserByString("Roger Histand");
-        var user2 = await _repository.GetUserByString("Luanna Muro");
+        var user1 = await _userrepo.GetUserByString("Roger Histand");
+        var user2 = await _userrepo.GetUserByString("Luanna Muro");
 
         //Act
-        await _repository.FollowUser(user1, user2);
-        await _repository.FollowUser(user2, user1);
-        var following1 = await _repository.GetFollowing(user1);
-        var following2 = await _repository.GetFollowing(user2);
+        await _userrepo.FollowUser(user1, user2);
+        await _userrepo.FollowUser(user2, user1);
+        var following1 = await _userrepo.GetFollowing(user1);
+        var following2 = await _userrepo.GetFollowing(user2);
 
         //Assert
         Assert.Contains(following1, user => user.UserName == "Luanna Muro");

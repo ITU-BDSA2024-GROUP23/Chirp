@@ -9,14 +9,19 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 public class AboutMeModel : PageModel
 {
     private readonly SignInManager<User> _signInManager;
-    private readonly ICheepRepository _repository;
+    private readonly IUserService _userService;
+    private readonly ICheepService _cheepService;
 
     public UserInfoDTO? UserInfo { get; set; }
 
-    public AboutMeModel(SignInManager<User> signInManager, ICheepRepository repository)
+    public AboutMeModel(
+        SignInManager<User> signInManager, 
+        IUserService userService, 
+        ICheepService cheepService)
     {
         _signInManager = signInManager;
-        _repository = repository;
+        _userService = userService;
+        _cheepService = cheepService;
     }
 
     public async Task<IActionResult> OnGetAsync()
@@ -39,9 +44,9 @@ public class AboutMeModel : PageModel
         {
             UserName = currentUser.UserName,
             Email = currentUser.Email,
-            Cheeps = await _repository.GetCheepsFromUserName(currentUser.UserName),
-            Following = await _repository.GetFollowing(currentUser),
-            Followers = await _repository.GetFollowers(currentUser)
+            Cheeps = await _cheepService.GetCheepsFromUserName(currentUser.UserName),
+            Following = await _userService.GetFollowing(currentUser),
+            Followers = await _userService.GetFollowers(currentUser)
         };
 
     }
@@ -54,7 +59,7 @@ public class AboutMeModel : PageModel
             TempData["alert-error"] = "You are not logged in.";
             return RedirectToPage("/Account/Login");
         }
-        await _repository.DeleteUser(currentUser);
+        await _userService.DeleteUser(currentUser);
         await _signInManager.SignOutAsync();
         return RedirectToPage("/Account/Login");
     }
@@ -74,7 +79,7 @@ public class AboutMeModel : PageModel
 
     private string GenerateFollowingCSV(ZipArchive archive, User user)
     {
-        var following = _repository.GetFollowing(user).Result;
+        var following = _userService.GetFollowing(user).Result;
         var csv = new StringBuilder();
         csv.AppendLine("Following " + user.UserName);
         foreach (var followee in following)
@@ -86,7 +91,7 @@ public class AboutMeModel : PageModel
 
     private string GenerateFollowersCSV(ZipArchive archive, User user)
     {
-        var followers = _repository.GetFollowers(user).Result;
+        var followers = _userService.GetFollowers(user).Result;
         var csv = new StringBuilder();
         csv.AppendLine("Followers to " + user.UserName);
         foreach (var follower in followers)
@@ -98,7 +103,7 @@ public class AboutMeModel : PageModel
 
     private string GenerateCheepsCSV(ZipArchive archive, User user)
     {
-        var cheeps = _repository.GetCheepsFromUserName(user.UserName).Result;
+        var cheeps = _cheepService.GetCheepsFromUserName(user.UserName).Result;
         var csv = new StringBuilder();
         csv.AppendLine("Author, Cheep, TimeStamp");
         foreach (var cheep in cheeps)
