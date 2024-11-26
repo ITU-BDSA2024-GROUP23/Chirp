@@ -46,9 +46,32 @@ else
 <form method="post">
     @Html.AntiForgeryToken()
     <button type="submit" asp-page-handler="DownloadInfo" class="btn btn-lg btn-warning" title="Download your data zipped"> Download My Data </button>
-    <button type="submit" asp-page-handler="DeleteMe" class="btn btn-lg btn-danger" title="Deletes all your data permanently"> Forget Me </button>
+    <button type="button" class="btn btn-lg btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAccount" title="Deletes all your data permanently">Delete account</button>
 </form>
 
+<!-- Confirmation Modal -->
+<div class="modal" id="deleteAccount" style="max-height: 40vh;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Forget Me</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete your account?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancel</button>
+                <form method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" asp-page-handler="DeleteMe" class="btn btn-danger" title="Deletes all your data permanently">Yes I am sure</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Followers modal -->
 <div class="modal" id="followersModal" style="max-height: 40vh;">
     <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
@@ -57,7 +80,7 @@ else
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                @if (Model.UserInfo.Followers.Any())
+                @if (Model.UserInfo != null && Model.UserInfo.Followers.Any())
                 {
                     <ul class="list-group">
                         @foreach (var follower in Model.UserInfo.Followers)
@@ -75,6 +98,7 @@ else
     </div>
 </div>
 
+<!-- Following modal -->
 <div class="modal" id="followingModal" style="max-height: 40vh;">
     <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
@@ -83,7 +107,7 @@ else
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                @if (Model.UserInfo.Following.Any())
+                @if (Model.UserInfo != null && Model.UserInfo.Following.Any())
                 {
                     <ul class="list-group">
                         @foreach (var following in Model.UserInfo.Following)
