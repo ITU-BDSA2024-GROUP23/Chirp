@@ -76,10 +76,9 @@ public class CheepRepositoryTests
     }
 
     [Fact]
-    public async Task TestGetUserFromString_ReturnsNull()
+    public async Task TestGetUserFromString_Throws()
     {
-        var result = await _userrepo.GetUserByString("Roger Histand2");
-        Assert.Null(result);
+        await Assert.ThrowsAsync<Exception>(async () => await _userrepo.GetUserByString("This user does not exist"));
     }
 
     [Fact]

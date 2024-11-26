@@ -43,28 +43,7 @@ public class UserTimelineModel : TimelineModel
 
     private async Task PrepareUserInfo(string user)
     {
-        User targetUser = await _userService.GetUserByString(user);
-        // TODO: Handle null targetUser - this is a cringe way to do it
-        if (targetUser == null)
-        {
-            TempData["alert-error"] = "User not found";
-            userInfo = new UserDTO
-            {
-                UserName = user,
-                FollowersCount = 0,
-                FollowingCount = 0
-            };
-        }
-        else
-        {
-            userInfo = new UserDTO
-            {
-                UserName = targetUser.UserName,
-                //find better way to do this - i imagine we need the list so you can click on followers/following and see who they are
-                FollowersCount = (await _userService.GetFollowers(targetUser)).Count,
-                FollowingCount = (await _userService.GetFollowing(targetUser)).Count
-            };
-        }
+        userInfo = await _userService.GetUserDTO(user);
     }
 
     private async Task GetFollowedCheeps(int page)

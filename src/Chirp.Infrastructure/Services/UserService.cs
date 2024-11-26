@@ -1,5 +1,6 @@
 public interface IUserService
 {
+    public Task<UserDTO> GetUserDTO(string user);
     public Task<User> GetUserByString(string userString);
     public Task FollowUser(User follower, User followee);
     public Task UnfollowUser(User follower, User followee);
@@ -15,6 +16,25 @@ public class UserService : IUserService
     public UserService(IUserRepository userRepository)
     {
         _userRepository = userRepository;
+    }
+
+    public async Task<UserDTO> GetUserDTO(string user)
+    {
+        try
+        {
+            User targetUser = await _userRepository.GetUserByString(user);
+            List<User> followers = await _userRepository.GetFollowers(targetUser);
+            List<User> following = await _userRepository.GetFollowing(targetUser);
+            return new UserDTO
+            {
+                UserName = targetUser.UserName,
+                FollowersCount = followers.Count,
+                FollowingCount = following.Count
+            };
+        } catch (Exception)
+        {
+            return new UserDTO{UserName = "User not found", FollowersCount = 0, FollowingCount = 0};
+        }
     }
 
     public async Task<User> GetUserByString(string userString)
