@@ -1,0 +1,126 @@
+@page
+@model AboutMeModel
+@{
+    ViewData["Title"] = "Chirp | About Me";
+}
+
+<h1>About Me</h1>
+
+@if (Model.UserInfo != null)
+{
+    <h2>@Model.UserInfo.UserName (@Model.UserInfo.Email)</h2>
+        <a class="btn btn-link text-decoration-none" data-bs-toggle="modal" data-bs-target="#followersModal">
+            <strong>@Model.UserInfo.Followers.Count</strong> Followers
+        </a>
+        <a class="btn btn-link text-decoration-none" data-bs-toggle="modal" data-bs-target="#followingModal">
+            <strong>@Model.UserInfo.Following.Count</strong> Following
+        </a>
+    <hr/>
+    <h3>Cheeping activity</h3>
+    @if (Model.UserInfo.Cheeps.Any())
+    {
+        <div class="list-group-container">
+            <ul class="list-group">
+                @foreach (var cheep in Model.UserInfo.Cheeps)
+                {
+                    <li class="list-group-item">
+                        <strong>You:</strong>
+                        <span>@cheep.Text</span> 
+                        <small class="text-muted">@cheep.TimeStamp</small>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+    else
+    {
+        <p class="text-muted">No recent activity found.</p>
+    }
+}
+else
+{
+    <p class="text-danger">User information not available.</p>
+}
+<hr>
+
+<form method="post">
+    @Html.AntiForgeryToken()
+    <button type="submit" asp-page-handler="DownloadInfo" class="btn btn-lg btn-warning" title="Download your data zipped"> Download My Data </button>
+    <button type="button" class="btn btn-lg btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAccount" title="Deletes all your data permanently">Delete account</button>
+</form>
+
+<!-- Confirmation Modal -->
+<div class="modal" id="deleteAccount" style="max-height: 40vh;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Forget Me</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete your account?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancel</button>
+                <form method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" asp-page-handler="DeleteMe" class="btn btn-danger" title="Deletes all your data permanently">Yes I am sure</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Followers modal -->
+<div class="modal" id="followersModal" style="max-height: 40vh;">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Followers</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                @if (Model.UserInfo != null && Model.UserInfo.Followers.Any())
+                {
+                    <ul class="list-group">
+                        @foreach (var follower in Model.UserInfo.Followers)
+                        {
+                            <li class="list-group-item btn btn-link text-decoration-none">@follower.UserName</li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p class="text-muted">No followers yet.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Following modal -->
+<div class="modal" id="followingModal" style="max-height: 40vh;">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Following</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                @if (Model.UserInfo != null && Model.UserInfo.Following.Any())
+                {
+                    <ul class="list-group">
+                        @foreach (var following in Model.UserInfo.Following)
+                        {
+                            <a href="/@following.UserName" class="list-group-item btn btn-link text-decoration-none">@following.UserName</a>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p class="text-muted">Not following anyone yet.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>

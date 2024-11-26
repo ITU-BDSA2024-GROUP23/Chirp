@@ -8,17 +8,22 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 public abstract class TimelineModel : PageModel
 {
-    protected readonly ICheepRepository _repository;
+    protected readonly IUserService _userService;
+    protected readonly ICheepService _cheepService;
     public List<CheepDTO> Cheeps { get; set; } = new();
     protected List<User> Following { get; set; } = new();
     [BindProperty]
     public CheepBoxModel CheepBox { get; set; } = new();
     protected readonly SignInManager<User> _signInManager;
 
-    public TimelineModel(ICheepRepository repository, SignInManager<User> signInManager)
+    public TimelineModel(
+        SignInManager<User> signInManager,
+        IUserService userService,
+        ICheepService cheepService)
     {
-        _repository = repository;
         _signInManager = signInManager;
+        _userService = userService;
+        _cheepService = cheepService;
     }
 
     public async Task<IActionResult> OnPost()
@@ -35,7 +40,7 @@ public abstract class TimelineModel : PageModel
             TempData["alert-error"] = errors;
             return RedirectToPage();
         }
-        await _repository.CreateCheep(user, CheepBox.Message ?? throw new InvalidOperationException("Cheep message is null!")); // we should never get to the exception because of the validation
+        await _cheepService.CreateCheep(user, CheepBox.Message ?? throw new InvalidOperationException("Cheep message is null!")); // we should never get to the exception because of the validation
         TempData["alert-success"] = "Cheep posted successfully!";
         return RedirectToPage();
     }
@@ -47,16 +52,16 @@ public abstract class TimelineModel : PageModel
             return RedirectToPage();
         }
 
-        User? follower = _signInManager.UserManager.GetUserAsync(User).Result;
-        User followeeUser = _repository.GetUserByString(followee).Result;
+        User? follower = await _signInManager.UserManager.GetUserAsync(User);
+        User followeeUser = await _userService.GetUserByString(followee);
 
-        if (follower == followeeUser)
+        bool success = await _userService.FollowUser(follower!, followeeUser); // we are checking for null in the service
+        if (!success)
         {
             TempData["alert-error"] = "You can't follow yourself!";
             return RedirectToPage();
         }
 
-        await _repository.FollowUser(follower, followeeUser);
         TempData["alert-success"] = $"You are now following {followeeUser.UserName}!";
         return RedirectToPage();
     }
@@ -69,16 +74,16 @@ public abstract class TimelineModel : PageModel
             return RedirectToPage();
         }
 
-        User? follower = _signInManager.UserManager.GetUserAsync(User).Result;
-        User followeeUser = _repository.GetUserByString(followee).Result;
+        User? follower = await _signInManager.UserManager.GetUserAsync(User);
+        User followeeUser = await _userService.GetUserByString(followee);
 
-        if (follower == followeeUser)
+        bool success = await _userService.UnfollowUser(follower!, followeeUser); // we are checking for null in the service
+        if (!success)
         {
             TempData["alert-error"] = "You can't unfollow yourself!";
             return RedirectToPage();
         }
 
-        await _repository.UnfollowUser(follower, followeeUser);
         TempData["alert-success"] = $"You are no longer following {followeeUser.UserName}!";
         return RedirectToPage();
     }
@@ -92,7 +97,7 @@ public abstract class TimelineModel : PageModel
     {
         if (_signInManager.IsSignedIn(User))
         {
-            User currentUser = await _signInManager.UserManager.GetUserAsync(User);
+            User? currentUser = await _signInManager.UserManager.GetUserAsync(User);
             if (currentUser == null)
             {
                 TempData["alert-error"] = "Your cookie has expired. Please log in again.";
@@ -100,7 +105,7 @@ public abstract class TimelineModel : PageModel
                 RedirectToPage();
                 return;
             }
-            Following = _repository.GetFollowing(currentUser).Result.ToList();
+            Following = _userService.GetFollowing(currentUser).Result.ToList();
         }
     }
 }
