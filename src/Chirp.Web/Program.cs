@@ -11,6 +11,7 @@ public class Program
         builder.Services.AddDbContext<ChirpDBContext>(options => options.UseSqlite(connectionString));
         builder.Services.AddRazorPages();
         builder.Services.AddScoped<ICheepRepository, CheepRepository>();
+        builder.Services.AddScoped<IUserRepository, IUserRepository>();
 
         builder.Services.AddHsts(options => options.MaxAge = TimeSpan.FromDays(365));
 
