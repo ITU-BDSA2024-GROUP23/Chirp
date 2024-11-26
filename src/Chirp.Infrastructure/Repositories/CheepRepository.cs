@@ -91,7 +91,7 @@ public class CheepRepository : ICheepRepository
         User author = (await _context.Users
             .Where(u => u.UserName == user.UserName)
             .FirstOrDefaultAsync())!;
-        if(author == null)
+        if (author == null)
         {
             throw new Exception("User not found");
         }

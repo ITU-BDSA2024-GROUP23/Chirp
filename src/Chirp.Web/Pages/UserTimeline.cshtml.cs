@@ -10,7 +10,7 @@ public class UserTimelineModel : TimelineModel
     public UserDTO? userInfo;
 
     public UserTimelineModel(
-        IUserService  userService, 
+        IUserService userService,
         ICheepService cheepService,
         SignInManager<User> signInManager) : base(signInManager, userService, cheepService)
     {

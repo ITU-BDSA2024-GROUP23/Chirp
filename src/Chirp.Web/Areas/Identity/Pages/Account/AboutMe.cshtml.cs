@@ -15,8 +15,8 @@ public class AboutMeModel : PageModel
     public UserInfoDTO? UserInfo { get; set; }
 
     public AboutMeModel(
-        SignInManager<User> signInManager, 
-        IUserService userService, 
+        SignInManager<User> signInManager,
+        IUserService userService,
         ICheepService cheepService)
     {
         _signInManager = signInManager;

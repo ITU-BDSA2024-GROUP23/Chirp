@@ -97,7 +97,7 @@ public abstract class TimelineModel : PageModel
     {
         if (_signInManager.IsSignedIn(User))
         {
-            User? currentUser = await _signInManager.UserManager.GetUserAsync(User); 
+            User? currentUser = await _signInManager.UserManager.GetUserAsync(User);
             if (currentUser == null)
             {
                 TempData["alert-error"] = "Your cookie has expired. Please log in again.";

@@ -31,9 +31,10 @@ public class UserService : IUserService
                 FollowersCount = followers.Count,
                 FollowingCount = following.Count
             };
-        } catch (Exception)
+        }
+        catch (Exception)
         {
-            return new UserDTO{UserName = "User not found", FollowersCount = 0, FollowingCount = 0};
+            return new UserDTO { UserName = "User not found", FollowersCount = 0, FollowingCount = 0 };
         }
     }
 

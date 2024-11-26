@@ -6,9 +6,9 @@ namespace Chirp.Web.Pages;
 public class PublicModel : TimelineModel
 {
     public PublicModel(
-        SignInManager<User> signInManager, 
-        IUserService userService, 
-        ICheepService cheepService) 
+        SignInManager<User> signInManager,
+        IUserService userService,
+        ICheepService cheepService)
         : base(signInManager, userService, cheepService)
     {
     }

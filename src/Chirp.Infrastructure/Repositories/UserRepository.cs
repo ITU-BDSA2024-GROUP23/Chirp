@@ -10,7 +10,7 @@ public class UserRepository : IUserRepository
     }
 
     #region Queries
-        public async Task<List<User>> GetFollowers(User user)
+    public async Task<List<User>> GetFollowers(User user)
     {
         var query = _context.Followers
             .Where(f => f.FolloweeId == user.Id)
