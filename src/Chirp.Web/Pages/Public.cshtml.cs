@@ -5,7 +5,11 @@ namespace Chirp.Web.Pages;
 
 public class PublicModel : TimelineModel
 {
-    public PublicModel(ICheepRepository repository, SignInManager<User> signInManager) : base(repository, signInManager)
+    public PublicModel(
+        SignInManager<User> signInManager,
+        IUserService userService,
+        ICheepService cheepService)
+        : base(signInManager, userService, cheepService)
     {
     }
 
@@ -13,7 +17,7 @@ public class PublicModel : TimelineModel
     {
         await GetFollowedUsers();
         int offset = page - 1;
-        Cheeps = _repository.GetCheeps(offset).Result.ToList();
+        Cheeps = await _cheepService.GetCheeps(offset);
         return Page();
     }
 }
