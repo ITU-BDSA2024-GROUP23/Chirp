@@ -52,16 +52,16 @@ public abstract class TimelineModel : PageModel
             return RedirectToPage();
         }
 
-        User? follower = _signInManager.UserManager.GetUserAsync(User).Result;
-        User followeeUser = _userService.GetUserByString(followee).Result;
+        User? follower = await _signInManager.UserManager.GetUserAsync(User);
+        User followeeUser = await _userService.GetUserByString(followee);
 
-        if (follower == followeeUser)
+        bool success = await _userService.FollowUser(follower!, followeeUser); // we are checking for null in the service
+        if (!success)
         {
             TempData["alert-error"] = "You can't follow yourself!";
             return RedirectToPage();
         }
 
-        await _userService.FollowUser(follower, followeeUser);
         TempData["alert-success"] = $"You are now following {followeeUser.UserName}!";
         return RedirectToPage();
     }
@@ -74,16 +74,16 @@ public abstract class TimelineModel : PageModel
             return RedirectToPage();
         }
 
-        User? follower = _signInManager.UserManager.GetUserAsync(User).Result;
-        User followeeUser = _userService.GetUserByString(followee).Result;
+        User? follower = await _signInManager.UserManager.GetUserAsync(User);
+        User followeeUser = await _userService.GetUserByString(followee);
 
-        if (follower == followeeUser)
+        bool success = await _userService.UnfollowUser(follower!, followeeUser); // we are checking for null in the service
+        if (!success)
         {
             TempData["alert-error"] = "You can't unfollow yourself!";
             return RedirectToPage();
         }
 
-        await _userService.UnfollowUser(follower, followeeUser);
         TempData["alert-success"] = $"You are no longer following {followeeUser.UserName}!";
         return RedirectToPage();
     }

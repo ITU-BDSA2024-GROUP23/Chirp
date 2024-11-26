@@ -2,8 +2,8 @@ public interface IUserService
 {
     public Task<UserDTO> GetUserDTO(string user);
     public Task<User> GetUserByString(string userString);
-    public Task FollowUser(User follower, User followee);
-    public Task UnfollowUser(User follower, User followee);
+    public Task<bool> FollowUser(User follower, User followee);
+    public Task<bool> UnfollowUser(User follower, User followee);
     public Task<List<User>> GetFollowers(User user);
     public Task<List<User>> GetFollowing(User user);
     public Task DeleteUser(User user);
@@ -43,14 +43,26 @@ public class UserService : IUserService
         return await _userRepository.GetUserByString(userString);
     }
 
-    public async Task FollowUser(User follower, User followee)
+    public async Task<bool> FollowUser(User follower, User followee)
     {
+        if (follower == followee || follower == null || followee == null)
+        {
+            return false;
+        }
+
         await _userRepository.FollowUser(follower, followee);
+        return true;
     }
 
-    public async Task UnfollowUser(User follower, User followee)
+    public async Task<bool> UnfollowUser(User follower, User followee)
     {
+        if (follower == followee || follower == null || followee == null)
+        {
+            return false;
+        }
+
         await _userRepository.UnfollowUser(follower, followee);
+        return true;
     }
 
     public async Task<List<User>> GetFollowers(User user)
