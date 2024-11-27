@@ -14,42 +14,38 @@ public class UserRepository : IUserRepository
     {
         var query = _context.Followers
             .Where(f => f.FolloweeId == user.Id)
-            .Select(f => new UserDTO(
-                f.FollowerUser.Id,
-                f.FollowerUser.UserName
-            ));
+            .Select(f => f.FollowerUser.ToUserDTO())
+            .OfType<UserDTO>();
         var result = await query.ToListAsync();
         return result;
     }
 
-    public async Task<List<User>> GetFollowing(User user)
+    public async Task<List<UserDTO>> GetFollowing(UserDTO user)
     {
         var query = _context.Followers
             .Where(f => f.FollowerId == user.Id)
-            .Select(f => f.FolloweeUser);
+            .Select(f => f.FolloweeUser.ToUserDTO())
+            .OfType<UserDTO>();
         var result = await query.ToListAsync();
         return result;
     }
-    public async Task<User> GetUserByString(string userString)
+
+    public async Task<UserDTO> GetUserByString(string userString) // TODO: Consider checked exception
     {
-        var query = _context.Users
-            .Where(u => u.UserName == userString || u.Email == userString);
-        var result = await query.FirstOrDefaultAsync();
-        if (result == null)
-        {
-            throw new Exception("User not found");
-        }
+        var query = _context.Users.Where(u => u.UserName == userString || u.Email == userString);
+        User user = await query.FirstOrDefaultAsync() ?? throw new Exception("User not found");
+        UserDTO result = user.ToUserDTO() ?? throw new Exception("Invalid user");
         return result;
     }
     #endregion
 
     #region Commands
 
-    public async Task DeleteUser(User user)
+    public async Task DeleteUser(UserDTO user)
     {
-        User userToForget = (await _context.Users
-            .Where(u => u.Id == user.Id)
-            .FirstOrDefaultAsync())!;
+        var query = _context.Users.Where(u => u.Id == user.Id);
+        User? userToForget = await query.FirstOrDefaultAsync();
+
         if (userToForget != null)
         {
             // Remove cheeps

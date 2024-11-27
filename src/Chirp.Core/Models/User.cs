@@ -8,4 +8,15 @@ public class User : IdentityUser
     public required ICollection<Follower> Following { get; set; }
     [Required]
     public required ICollection<Follower> Followers { get; set; }
+
+    public UserDTO? ToUserDTO() {
+        if (UserName == null) {
+            return null;
+        }
+        
+        return new UserDTO(
+            Id: Id,
+            UserName: UserName
+        );
+    }
 }
