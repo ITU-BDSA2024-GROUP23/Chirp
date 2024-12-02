@@ -48,7 +48,7 @@ public class E2ETests : PageTest
     }
 
     [Test]
-    public async Task TestCanRegister()
+    public async Task TestCheepUI()
     {
         await InitTestUser();
         await Expect(Page.GetByRole(AriaRole.Heading, new() { Name = "Public Timeline" })).ToBeVisibleAsync();
@@ -82,18 +82,39 @@ public class E2ETests : PageTest
     }
 
     [Test]
-    public async Task TestAboutMe()
+    public async Task TestAboutMeNavBar()
     {
         await InitTestUser();
         await Page.GotoAsync("http://localhost:5273/");
         await Page.GetByRole(AriaRole.Link, new() { Name = "about me" }).ClickAsync();
         await Expect(Page.GetByRole(AriaRole.Heading, new() { Name = "ropf (ropf@itu.dk)" })).ToBeVisibleAsync();
-        await Expect(Page.GetByText("0 Followers")).ToBeVisibleAsync();
-        await Expect(Page.GetByText("0 Following")).ToBeVisibleAsync();
-        await Expect(Page.GetByRole(AriaRole.Heading, new() { Name = "Cheeping activity" })).ToBeVisibleAsync();
-        await Expect(Page.GetByText("No recent activity found.")).ToBeVisibleAsync();
+    }
+
+    [Test]
+    public async Task TestAboutMeButtons()
+    {
+        await InitTestUser();
+        await Page.GotoAsync("http://localhost:5273/Identity/Account/AboutMe");
         await Expect(Page.GetByRole(AriaRole.Button, new() { Name = "Download My Data" })).ToBeVisibleAsync();
         await Expect(Page.GetByRole(AriaRole.Button, new() { Name = "Delete account" })).ToBeVisibleAsync();
+    }
+
+    [Test]
+    public async Task AboutMeFollowers()
+    {
+        await InitTestUser();
+        await Page.GotoAsync("http://localhost:5273/Identity/Account/AboutMe");
+        await Expect(Page.GetByText("0 Followers")).ToBeVisibleAsync();
+        await Expect(Page.GetByText("0 Following")).ToBeVisibleAsync();
+    }
+
+    [Test]
+    public async Task TestAboutMeActivity()
+    {
+        await InitTestUser();
+        await Page.GotoAsync("http://localhost:5273/Identity/Account/AboutMe");
+        await Expect(Page.GetByRole(AriaRole.Heading, new() { Name = "Cheeping activity" })).ToBeVisibleAsync();
+        await Expect(Page.GetByText("No recent activity found.")).ToBeVisibleAsync();
     }
 
     [Test]
