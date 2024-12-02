@@ -135,7 +135,7 @@ public class E2ETests : PageTest
     [Test]
     public async Task AboutMeNotLoggedIn()
     {
-        await Page.GotoAsync("http://localhost:5273/Identity/Account/AboutMe");;
+        await Page.GotoAsync("http://localhost:5273/Identity/Account/AboutMe"); ;
         await Expect(Page.Locator("body")).ToContainTextAsync("You are not logged in.");
     }
 
