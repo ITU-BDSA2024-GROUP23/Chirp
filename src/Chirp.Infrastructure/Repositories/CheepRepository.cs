@@ -19,6 +19,7 @@ public class CheepRepository : ICheepRepository
             .Skip(page * pageSize)
             .Take(pageSize)
             .Select(cheep => new CheepDTO(
+                cheep.CheepId,
                 cheep.Author.UserName,
                 cheep.Text,
                 cheep.TimeStamp.ToString(defaultTimeStampFormat)
@@ -35,6 +36,7 @@ public class CheepRepository : ICheepRepository
             .Skip(page * pageSize)
             .Take(pageSize)
             .Select(cheep => new CheepDTO(
+                cheep.CheepId,
                 cheep.Author.UserName,
                 cheep.Text,
                 cheep.TimeStamp.ToString(defaultTimeStampFormat)
@@ -50,6 +52,7 @@ public class CheepRepository : ICheepRepository
             .OrderByDescending(cheep => cheep.TimeStamp)
             .Take(pageSize)
             .Select(cheep => new CheepDTO(
+                cheep.CheepId,
                 cheep.Author.UserName,
                 cheep.Text,
                 cheep.TimeStamp.ToString(defaultTimeStampFormat)
@@ -66,6 +69,7 @@ public class CheepRepository : ICheepRepository
             .Skip(page * pageSize)
             .Take(pageSize)
             .Select(cheep => new CheepDTO(
+                cheep.CheepId,
                 cheep.Author.UserName,
                 cheep.Text,
                 cheep.TimeStamp.ToString(defaultTimeStampFormat)
@@ -105,6 +109,20 @@ public class CheepRepository : ICheepRepository
         };
         await _context.Cheeps.AddAsync(newCheep);
         await _context.SaveChangesAsync();
+    }
+
+    public async Task<bool> DeleteCheep(int cheepId)
+    {
+        Cheep? cheep = await _context.Cheeps
+            .Where(c => c.CheepId == cheepId)
+            .FirstOrDefaultAsync();
+        if (cheep == null)
+        {
+            return false;
+        }
+        _context.Cheeps.Remove(cheep);
+        await _context.SaveChangesAsync();
+        return true;
     }
     #endregion
 }
