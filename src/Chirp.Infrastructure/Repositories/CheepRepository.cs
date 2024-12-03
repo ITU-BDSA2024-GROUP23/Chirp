@@ -101,5 +101,19 @@ public class CheepRepository : ICheepRepository
 
         return true;
     }
+    
+    public async Task<bool> DeleteCheep(int cheepId)
+    {
+        Cheep? cheep = await _context.Cheeps
+            .Where(c => c.CheepId == cheepId)
+            .FirstOrDefaultAsync();
+        if (cheep == null)
+        {
+            return false;
+        }
+        _context.Cheeps.Remove(cheep);
+        await _context.SaveChangesAsync();
+        return true;
+    }
     #endregion
 }

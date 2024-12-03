@@ -31,6 +31,16 @@
             </p>
             <p class="text-muted small mb-0">
                 <small>@cheep.TimeStamp</small>
+                @if (cheep.Author == User.Identity.Name)
+                {
+                    <hr />
+                    <form method="post" asp-page-handler="DeleteCheep">
+                        <button type="submit" class="border-0 bg-transparent p-0">
+                            <input type="hidden" name="cheepId" value="@cheep.Id" />
+                            <img src="~/images/trash.svg" style="width: 15px; height: 15px;"/>
+                        </button>
+                    </form>
+                }
             </p>
         </div>
     </div>

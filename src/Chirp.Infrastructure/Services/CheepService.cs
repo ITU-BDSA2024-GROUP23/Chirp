@@ -6,6 +6,7 @@ public interface ICheepService
     public Task<List<CheepDTO>> GetCheepsFromEmail(string email, int page);
     public Task CreateCheep(User user, string message);
     public int GetNextCheepId();
+    public Task<bool> DeleteCheep(int cheepId);
 }
 
 public class CheepService : ICheepService
@@ -45,5 +46,10 @@ public class CheepService : ICheepService
     public int GetNextCheepId()
     {
         return _cheepRepository.GetNextCheepId();
+    }
+
+    public async Task<bool> DeleteCheep(int cheepId)
+    {
+        return await _cheepRepository.DeleteCheep(cheepId);
     }
 }

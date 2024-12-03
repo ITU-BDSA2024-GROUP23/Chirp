@@ -48,7 +48,7 @@ public class E2ETests : PageTest
     }
 
     [Test]
-    public async Task TestCanRegister()
+    public async Task TestCheepUI()
     {
         await InitTestUser();
         await Expect(Page.GetByRole(AriaRole.Heading, new() { Name = "Public Timeline" })).ToBeVisibleAsync();
@@ -81,6 +81,64 @@ public class E2ETests : PageTest
         await Expect(Page.GetByText("You have been logged out.")).ToBeVisibleAsync();
     }
 
+    [Test]
+    public async Task TestAboutMeNavBar()
+    {
+        await InitTestUser();
+        await Page.GotoAsync("http://localhost:5273/");
+        await Page.GetByRole(AriaRole.Link, new() { Name = "about me" }).ClickAsync();
+        await Expect(Page.GetByRole(AriaRole.Heading, new() { Name = "ropf (ropf@itu.dk)" })).ToBeVisibleAsync();
+    }
+
+    [Test]
+    public async Task TestAboutMeButtons()
+    {
+        await InitTestUser();
+        await Page.GotoAsync("http://localhost:5273/Identity/Account/AboutMe");
+        await Expect(Page.GetByRole(AriaRole.Button, new() { Name = "Download My Data" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Button, new() { Name = "Delete account" })).ToBeVisibleAsync();
+    }
+
+    [Test]
+    public async Task AboutMeFollowers()
+    {
+        await InitTestUser();
+        await Page.GotoAsync("http://localhost:5273/Identity/Account/AboutMe");
+        await Expect(Page.GetByText("0 Followers")).ToBeVisibleAsync();
+        await Expect(Page.GetByText("0 Following")).ToBeVisibleAsync();
+    }
+
+    [Test]
+    public async Task TestAboutMeActivity()
+    {
+        await InitTestUser();
+        await Page.GotoAsync("http://localhost:5273/Identity/Account/AboutMe");
+        await Expect(Page.GetByRole(AriaRole.Heading, new() { Name = "Cheeping activity" })).ToBeVisibleAsync();
+        await Expect(Page.GetByText("No recent activity found.")).ToBeVisibleAsync();
+    }
+
+    [Test]
+    public async Task TestUserCanDeleteAccount()
+    {
+        await InitTestUser();
+        await Page.GotoAsync("http://localhost:5273/Identity/Account/AboutMe");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Delete account" }).ClickAsync();
+        await Expect(Page.GetByRole(AriaRole.Button, new() { Name = "Delete account" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Button, new() { Name = "Cancel" })).ToBeVisibleAsync();
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Cancel" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Delete account" }).ClickAsync();
+        await Expect(Page.GetByRole(AriaRole.Button, new() { Name = "Yes I am sure" })).ToBeVisibleAsync();
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Yes I am sure" }).ClickAsync();
+        await Expect(Page.GetByRole(AriaRole.Heading, new() { Name = "Log in", Exact = true })).ToBeVisibleAsync();
+    }
+
+    [Test]
+    public async Task AboutMeNotLoggedIn()
+    {
+        await Page.GotoAsync("http://localhost:5273/Identity/Account/AboutMe"); ;
+        await Expect(Page.Locator("body")).ToContainTextAsync("You are not logged in.");
+    }
+
     // This method is used to create a test user for the tests. - moved to a seperate method because an authed account is needed for multiple tests
     // NOTE: If the registrations fails, all tests dependent on this method will fail.
     private async Task InitTestUser()
@@ -95,6 +153,58 @@ public class E2ETests : PageTest
         await Page.GetByPlaceholder("Confirm Password").FillAsync("LetM31n!");
         await Page.GetByRole(AriaRole.Button, new() { Name = "Register", Exact = true }).ClickAsync();
     }
+
+    [Test]
+    public async Task FollowAndUnfollow_UserCard()
+    {
+        await InitTestUser();
+        await Page.GotoAsync("http://localhost:5273/");
+        await Page.Locator(".d-inline > .btn").First.ClickAsync();
+        await Page.Locator(".text-decoration-none").First.ClickAsync();
+        await Expect(Page.GetByRole(AriaRole.Main)).ToContainTextAsync("1 Followers");
+        await Page.Locator(".btn").First.ClickAsync();
+        await Expect(Page.GetByRole(AriaRole.Main)).ToContainTextAsync("0 Followers");
+    }
+
+
+    [Test]
+    public async Task Following_ShowUp_MyTimeline()
+    {
+        await InitTestUser();
+        await Page.GotoAsync("http://localhost:5273/");
+        await Page.Locator(".d-inline > .btn").First.ClickAsync();
+        await Expect(Page.GetByRole(AriaRole.Main)).ToContainTextAsync("Jacqualine Gilcoine");
+        await Page.GetByRole(AriaRole.Link, new() { Name = "my timeline" }).ClickAsync();
+        await Expect(Page.GetByRole(AriaRole.Main)).ToContainTextAsync("Jacqualine Gilcoine");
+    }
+
+
+    [Test]
+    public async Task WriteCheep()
+    {
+        await InitTestUser();
+        await Page.GotoAsync("http://localhost:5273/");
+        await Page.GetByPlaceholder("Cheep something..").ClickAsync();
+        await Page.GetByPlaceholder("Cheep something..").FillAsync("Hello what are you up to?");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Cheep" }).ClickAsync();
+        await Expect(Page.GetByRole(AriaRole.Main)).ToContainTextAsync("Hello what are you up to?");
+
+    }
+
+    [Test]
+    public async Task DeleteCheep()
+    {
+        await InitTestUser();
+        await Page.GotoAsync("http://localhost:5273/");
+        await Page.GetByPlaceholder("Cheep something..").ClickAsync();
+        await Page.GetByPlaceholder("Cheep something..").FillAsync("delete my cheep");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Cheep" }).ClickAsync();
+        await Expect(Page.GetByText("ropf delete my cheep 03/12/")).ToBeVisibleAsync();
+        await Page.Locator(".border-0").First.ClickAsync();
+        await Expect(Page.GetByText("test2 delete my cheep 03/12/")).Not.ToBeVisibleAsync();
+
+    }
+
 
     [TearDown]
     public void TearDown()

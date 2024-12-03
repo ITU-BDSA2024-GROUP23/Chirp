@@ -124,6 +124,19 @@ public abstract class TimelineModel : PageModel
         }
     }
 
+
+    public async Task<IActionResult> OnPostDeleteCheep(int cheepId)
+    {
+        bool success = await _cheepService.DeleteCheep(cheepId);
+        if (!success)
+        {
+            TempData["alert-error"] = "Cheep not found!";
+            return RedirectToPage();
+        }
+        TempData["alert-success"] = "Cheep deleted successfully!";
+        return RedirectToPage();
+    }
+    
     private IActionResult ShowError(string errorMsg, string? pageName = null)
     {
         TempData["alert-error"] = errorMsg;
