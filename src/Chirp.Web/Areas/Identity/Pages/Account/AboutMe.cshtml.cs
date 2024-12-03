@@ -24,6 +24,11 @@ public class AboutMeModel : PageModel
         _cheepService = cheepService;
     }
 
+    /// <summary>
+    /// Handles HTTP GET requests for the current page. The method ensures that a user is <br/>
+    /// authenticated and has access to the page. If the user is not authenticated, they <br/>
+    /// are redirected to the login page.
+    /// </summary>
     public async Task<IActionResult> OnGetAsync()
     {
         var currentUser = await _signInManager.UserManager.GetUserAsync(User);
@@ -50,6 +55,11 @@ public class AboutMeModel : PageModel
         };
     }
 
+    /// <summary>
+    /// Handles HTTP POST requests for deleting the currently logged-in user's account. <br/>
+    /// If the user is not authenticated, they are redirected to the login page. If authenticated, <br/>
+    /// their account is deleted, they are signed out, and redirected to the login page.
+    /// </summary>
     public async Task<IActionResult> OnPostDeleteMeAsync()
     {
         var currentUser = await _signInManager.UserManager.GetUserAsync(User);
@@ -63,6 +73,12 @@ public class AboutMeModel : PageModel
         return RedirectToPage("/Account/Login");
     }
 
+
+    /// <summary>
+    /// Handles HTTP POST requests to retrieve user-specific information. This method ensures <br/>
+    /// the current useris authenticated and performs necessary operations to gather user-related data. <br/>
+    /// If an error occurs, an alert message is displayed.
+    /// </summary>
     public async Task<IActionResult> OnPostGetInfoAsync()
     {
         var currentUser = await _signInManager.UserManager.GetUserAsync(User);
