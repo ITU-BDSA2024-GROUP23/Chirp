@@ -67,49 +67,5 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
         Assert.NotEqual(content1, content2);
     }
 
-    /*[Fact]
-    public async void CanLogIn()
-    {
-        var response = await _client.GetAsync("/Identity/Account/Login");
-        response.EnsureSuccessStatusCode();
-        var content = await response.Content.ReadAsStringAsync();
-
-
-
-    }*/
-
-
-    /*[Theory]
-    [InlineData("/Identity/Account/Logout", "/Identity/Account/Login?ReturnUrl=%2FIdentity%2FAccount%2FLogout")]
-    public async Task CanLogOut(string logoutUrl, string loginUrl)
-    {
-
-        var logoutResponse = await _client.GetAsync(logoutUrl);
-        logoutResponse.EnsureSuccessStatusCode();
-
-        var logoutContent = await logoutResponse.Content.ReadAsStringAsync();
-
-
-        Assert.Contains("You have been logged out.", logoutContent);
-
-
-        var loginResponse = await _client.GetAsync(loginUrl);
-        loginResponse.EnsureSuccessStatusCode();
-
-        var loginContent = await loginResponse.Content.ReadAsStringAsync();
-
-
-        Assert.Contains("Login", loginContent);
-    }*/
-
-    /*[Fact]
-    public async void CanCreateCheep()
-    {
-        var response = await _client.GetAsync("/");
-        response.EnsureSuccessStatusCode();
-        var content = await response.Content.ReadAsStringAsync();
-
-
-    }*/
 
 }
