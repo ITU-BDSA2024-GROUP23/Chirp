@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 
 public class PlaywrightWebApplicationFactory<TProgram> : WebApplicationFactory<TProgram> where TProgram : class
 {
-    private IHost? host;
+    private IHost? _host;
 
     /// <summary>
     /// This class overrides the default database configuration of the application to use an 
@@ -69,35 +69,53 @@ public class PlaywrightWebApplicationFactory<TProgram> : WebApplicationFactory<T
     protected override IHost CreateHost(IHostBuilder builder)
     {
         var testHost = builder.Build();
-        var kestrelBuilder = builder.ConfigureWebHost(webBuilder =>
-        {
-            webBuilder.UseKestrel()
-                     .UseUrls("http://localhost:5273");
-        });
+        builder.ConfigureWebHost(webHostBuilder => webHostBuilder.UseKestrel());
 
-        host = kestrelBuilder.Build();
-        host.Start();
+        // Create and start the Kestrel server before the test server,  
+        // otherwise due to the way the deferred host builder works    
+        // for minimal hosting, the server will not get "initialized    
+        // enough" for the address it is listening on to be available.    
+        // See https://github.com/dotnet/aspnetcore/issues/33846.    
 
-        // Get the assigned port from Kestrel
-        var server = host.Services.GetRequiredService<IServer>();
+        _host = builder.Build();
+        _host.Start();
+
+        var server = _host.Services.GetRequiredService<IServer>();
         var addresses = server.Features.Get<IServerAddressesFeature>();
 
         ClientOptions.BaseAddress = addresses!.Addresses
             .Select(x => new Uri(x))
             .Last();
 
-        // Start and return the test host
+        // Return the host that uses TestServer, rather than the real one.  
+        // Otherwise the internals will complain about the host's server    
+        // not being an instance of the concrete type TestServer.    
+        // See https://github.com/dotnet/aspnetcore/pull/34702.   
+
         testHost.Start();
         return testHost;
     }
 
+    public string ServerAddress
+    {
+        get
+        {
+            EnsureServer();
+            return ClientOptions.BaseAddress.ToString();
+        }
+    }
+
+    private void EnsureServer()
+    {
+        if (_host is null)
+        {
+            // This forces WebApplicationFactory to bootstrap the server  
+            using var _ = CreateDefaultClient();
+        }
+    }
+
     protected override void Dispose(bool disposing)
     {
-        base.Dispose(disposing);
-
-        if (disposing)
-        {
-            host?.Dispose();
-        }
+        _host?.Dispose();
     }
 }
