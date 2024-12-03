@@ -5,6 +5,7 @@ public class ChirpDBContext : IdentityDbContext<User>
 {
     public DbSet<Cheep> Cheeps { get; set; }
     public DbSet<Follower> Followers { get; set; }
+    public DbSet<Like> Likes { get; set; }
 
     /// <summary>
     /// This is the constructor for our DBContext.
@@ -25,27 +26,9 @@ public class ChirpDBContext : IdentityDbContext<User>
         }
     }
 
-
-    /// <summary>
-    /// This method configures the model for the database context using the Entity Framework Core.<br/>
-    /// It defines relationships, primary keys, and other constraints between entities.<br/>
-    /// The commented-out portion indicates a work-in-progress feature to enforce uniqueness for certain properties.
-    /// </summary>
-    /// <param name="modelBuilder"></param>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
-        /* TODO: This should be added, but currently its throwing an exception that crashes the app when a non-unique user/email is added
-        / This needs to be handled.
-        modelBuilder.Entity<User>()
-            .HasIndex(u => u.Email)
-            .IsUnique();
-
-        modelBuilder.Entity<User>()
-            .HasIndex(u => u.UserName)
-            .IsUnique();
-        */
 
         modelBuilder.Entity<Follower>()
             .HasKey(f => new { f.FollowerId, f.FolloweeId });
@@ -59,5 +42,8 @@ public class ChirpDBContext : IdentityDbContext<User>
             .HasOne(f => f.FolloweeUser)
             .WithMany(u => u.Followers)
             .HasForeignKey(f => f.FolloweeId);
+
+        modelBuilder.Entity<Like>()
+            .HasKey("Id", "CheepId");
     }
 }
