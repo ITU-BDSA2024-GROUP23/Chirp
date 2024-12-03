@@ -19,6 +19,7 @@ public class Cheep
         }
 
         return new CheepDTO(
+            Id: CheepId,
             Author: Author.UserName,
             Text: Text,
             TimeStamp: TimeStamp.ToString()

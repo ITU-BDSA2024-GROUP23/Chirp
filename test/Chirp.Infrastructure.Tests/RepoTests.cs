@@ -202,7 +202,7 @@ public class CheepRepositoryTests
     public async Task TestDeleteCheep()
     {
         //Arrange
-        var user = await _userrepo.GetUserByString("Roger Histand");
+        var user = await _userrepo.GetUserObjectByString("Roger Histand");
         await _repository.CreateCheep(user, "Test cheep");
         var cheep = _context.Cheeps.First(cheep => cheep.Text == "Test cheep");
 

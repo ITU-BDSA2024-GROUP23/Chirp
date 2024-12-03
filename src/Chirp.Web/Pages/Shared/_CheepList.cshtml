@@ -31,7 +31,7 @@
             </p>
             <p class="text-muted small mb-0">
                 <small>@cheep.TimeStamp</small>
-                @if (cheep.Author == User.Identity.Name)
+                @if (User.Identity != null && cheep.Author == User.Identity.Name)
                 {
                     <hr />
                     <form method="post" asp-page-handler="DeleteCheep">
