@@ -209,6 +209,7 @@ public class E2ETests : PageTest
                 var response = await client.GetAsync("/"); 
                 if (response.IsSuccessStatusCode)
                 {
+                    Console.WriteLine("Server is ready..");
                     serverReady = true;
                     break; 
                 }
@@ -219,7 +220,7 @@ public class E2ETests : PageTest
             }
 
             retries--;
-            await Task.Delay(1000);
+            await Task.Delay(2500); // Wait for 2.5 seconds
         }
 
         if (!serverReady)
