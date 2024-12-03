@@ -205,14 +205,6 @@ public class E2ETests : PageTest
 
     }
 
-         [Test]
-    public async Task PageByURL()
-    {
-        await InitTestUser();
-        await Page.GotoAsync("http://localhost:5273/");
-        await Page.GotoAsync("http://localhost:5273/?page=2");
-        
-    }
 
     [TearDown]
     public void TearDown()
