@@ -199,26 +199,11 @@ public class E2ETests : PageTest
 
     private async Task WaitForServer(HttpClient client)
     {
-        int maxRetries = 5;
-        int retries = 0;
-        while (retries < maxRetries)
+        var response = await client.GetAsync("http://localhost:5273/");
+        while (!response.IsSuccessStatusCode)
         {
-            try
-            {
-                var response = await client.GetAsync("http://localhost:5273/");
-                // server started, break loop
-                if (response.IsSuccessStatusCode)
-                {
-                    break;
-                }
-            }
-            // server not ready yet, retry
-            catch (Exception)
-            {
-                Console.WriteLine("Server not ready yet, retrying...\n Retries left: " + (maxRetries - retries + 1));
-            }
-            await Task.Delay(2500);
-            retries++;
+            await Task.Delay(1000);
+            response = await client.GetAsync("http://localhost:5273/");
         }
     }
 
