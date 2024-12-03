@@ -26,28 +26,27 @@ public class AboutMeModel : PageModel
 
     public async Task<IActionResult> OnGetAsync()
     {
-        var currentUser = await _signInManager.UserManager.GetUserAsync(User);
+        User? currentUser = await _signInManager.UserManager.GetUserAsync(User);
         if (currentUser == null)
         {
             TempData["alert-error"] = "You are not logged in.";
             return RedirectToPage("/Account/Login");
         }
 
-        await PrepareInfo(currentUser);
+        string? userName = currentUser.UserName;
+        if (userName == null) {
+            TempData["alert-error"] = "You are not logged in.";
+            return RedirectToPage("/Account/Login");
+        }
+
+        UserInfo = await _userService.GetUserInfoDTO(userName);
+        if (UserInfo == null)
+        {
+            TempData["alert-error"] = "An error occured. Please retry.";
+            return RedirectToPage("/Account/Login");
+        }
 
         return Page();
-    }
-
-    private async Task PrepareInfo(User currentUser)
-    {
-        UserInfo = new UserInfoDTO
-        {
-            UserName = currentUser.UserName,
-            Email = currentUser.Email,
-            Cheeps = await _cheepService.GetCheepsFromUserName(currentUser.UserName),
-            Following = await _userService.GetFollowing(currentUser),
-            Followers = await _userService.GetFollowers(currentUser)
-        };
     }
 
     public async Task<IActionResult> OnPostDeleteMeAsync()

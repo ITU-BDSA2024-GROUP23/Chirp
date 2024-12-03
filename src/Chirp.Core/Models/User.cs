@@ -13,10 +13,14 @@ public class User : IdentityUser
         if (UserName == null) {
             return null;
         }
-        
+        if (Email == null) {
+            return null;
+        }
+
         return new UserDTO(
             Id: Id,
-            UserName: UserName
+            UserName: UserName,
+            Email: Email
         );
     }
 }

@@ -52,10 +52,10 @@ public class UserRepository : IUserRepository
 
     #region Commands
 
-    public async Task DeleteUser(UserDTO user)
+    public async Task<bool> DeleteUser(UserDTO user)
     {
         User? userToForget = await UserFromDTO(user);
-        if (userToForget == null) return; // TODO: Consider throwing exception?
+        if (userToForget == null) return false;
 
         // Remove cheeps
         var cheepsToRemove = _context.Cheeps.Where(c => c.Author.Id == user.Id);
@@ -68,12 +68,14 @@ public class UserRepository : IUserRepository
         // Remove user
         _context.Users.Remove(userToForget);
         await _context.SaveChangesAsync();
+
+        return true;
     }
-    public async Task FollowUser(UserDTO follower, UserDTO followee)
+    public async Task<bool> FollowUser(UserDTO follower, UserDTO followee)
     {
         User? followerUser = await UserFromDTO(follower);
         User? followeeUser = await UserFromDTO(followee);
-        if (followerUser == null || followeeUser == null) return; // TODO: Consider throwing exception?
+        if (followerUser == null || followeeUser == null) return false;
 
         Follower newFollowRelation = new Follower
         {
@@ -86,16 +88,20 @@ public class UserRepository : IUserRepository
 
         await _context.Followers.AddAsync(newFollowRelation);
         await _context.SaveChangesAsync();
+
+        return true;
     }
 
-    public async Task UnfollowUser(UserDTO follower, UserDTO followee)
+    public async Task<bool> UnfollowUser(UserDTO follower, UserDTO followee)
     {
         var query = _context.Followers.Where(f => f.FollowerId == follower.Id && f.FolloweeId == followee.Id);
         Follower? relationToRemove = await query.FirstOrDefaultAsync();
-        if (relationToRemove == null) return; // TODO: Consider throwing exception?
+        if (relationToRemove == null) return false;
 
         _context.Followers.Remove(relationToRemove);
         await _context.SaveChangesAsync();
+
+        return true;
     }
     #endregion
 }

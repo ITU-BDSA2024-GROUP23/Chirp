@@ -18,11 +18,8 @@ public class CheepRepository : ICheepRepository
             .OrderByDescending(cheep => cheep.TimeStamp)
             .Skip(page * pageSize)
             .Take(pageSize)
-            .Select(cheep => new CheepDTO(
-                cheep.Author.UserName,
-                cheep.Text,
-                cheep.TimeStamp.ToString(defaultTimeStampFormat)
-            ));
+            .Select(cheep => cheep.ToCheepDTO())
+            .OfType<CheepDTO>();
         var result = await query.ToListAsync();
         return result;
     }
@@ -34,11 +31,8 @@ public class CheepRepository : ICheepRepository
             .OrderByDescending(cheep => cheep.TimeStamp)
             .Skip(page * pageSize)
             .Take(pageSize)
-            .Select(cheep => new CheepDTO(
-                cheep.Author.UserName,
-                cheep.Text,
-                cheep.TimeStamp.ToString(defaultTimeStampFormat)
-            ));
+            .Select(cheep => cheep.ToCheepDTO())
+            .OfType<CheepDTO>();
         var result = await query.ToListAsync();
         return result;
     }
@@ -49,11 +43,8 @@ public class CheepRepository : ICheepRepository
             .Where(cheep => cheep.Author.UserName == userName)
             .OrderByDescending(cheep => cheep.TimeStamp)
             .Take(pageSize)
-            .Select(cheep => new CheepDTO(
-                cheep.Author.UserName,
-                cheep.Text,
-                cheep.TimeStamp.ToString(defaultTimeStampFormat)
-            ));
+            .Select(cheep => cheep.ToCheepDTO())
+            .OfType<CheepDTO>();
         var result = await query.ToListAsync();
         return result;
     }
@@ -65,11 +56,8 @@ public class CheepRepository : ICheepRepository
             .OrderByDescending(cheep => cheep.TimeStamp)
             .Skip(page * pageSize)
             .Take(pageSize)
-            .Select(cheep => new CheepDTO(
-                cheep.Author.UserName,
-                cheep.Text,
-                cheep.TimeStamp.ToString(defaultTimeStampFormat)
-            ));
+            .Select(cheep => cheep.ToCheepDTO())
+            .OfType<CheepDTO>();
         var result = await query.ToListAsync();
         return result;
     }
@@ -86,14 +74,15 @@ public class CheepRepository : ICheepRepository
 
     #region Commands
 
-    public async Task CreateCheep(User user, string message)
+    public async Task<bool> CreateCheep(User user, string message)
     {
-        User author = (await _context.Users
+        User? author = await _context.Users
             .Where(u => u.UserName == user.UserName)
-            .FirstOrDefaultAsync())!;
+            .FirstOrDefaultAsync();
+
         if (author == null)
         {
-            throw new Exception("User not found");
+            return false;
         }
 
         Cheep newCheep = new Cheep
@@ -105,6 +94,8 @@ public class CheepRepository : ICheepRepository
         };
         await _context.Cheeps.AddAsync(newCheep);
         await _context.SaveChangesAsync();
+
+        return true;
     }
     #endregion
 }
