@@ -118,6 +118,14 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
+                //email exists
+                var eMailExists = await _userManager.FindByEmailAsync(Input.Email);
+                if (eMailExists != null)
+                {
+                    ModelState.AddModelError(string.Empty, "Email already exists");
+                    return Page();
+                }
+
                 var user = CreateUser();
 
                 await _userStore.SetUserNameAsync(user, Input.UserName, CancellationToken.None);
