@@ -16,14 +16,14 @@ public class UserTimelineModel : TimelineModel
     {
     }
 
-/// <summary>
-/// Handles HTTP GET requests to display "cheeps" (user-generated content) for a specific user or email address. <br/>
-/// This method determines the source of the request (authenticated user, email, or username) and retrieves the<br/>
-/// corresponding cheeps, while also preparing user-specific information.
-/// </summary>
-/// <param name="user"></param>
-/// <param name="page"></param>
-/// <returns></returns>
+    /// <summary>
+    /// Handles HTTP GET requests to display "cheeps" (user-generated content) for a specific user or email address. <br/>
+    /// This method determines the source of the request (authenticated user, email, or username) and retrieves the<br/>
+    /// corresponding cheeps, while also preparing user-specific information.
+    /// </summary>
+    /// <param name="user"></param>
+    /// <param name="page"></param>
+    /// <returns></returns>
     public async Task<IActionResult> OnGetAsync(string user, [FromQuery(Name = "page")] int page = 1)
     {
         page = Math.Max(0, page - 1);
