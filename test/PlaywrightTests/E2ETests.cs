@@ -1,7 +1,3 @@
-using System.Diagnostics;
-
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.CodeAnalysis.Elfie.Serialization;
 using Microsoft.Playwright;
 using Microsoft.Playwright.NUnit;
 
@@ -14,10 +10,13 @@ public class E2ETests : PageTest
     private PlaywrightWebApplicationFactory<Program> _factory;
 
     [SetUp]
-    public void Init()
+    public async Task Init()
     {
         _factory = new PlaywrightWebApplicationFactory<Program>();
-        _factory.CreateClient();
+        var client = _factory.CreateClient();
+
+        // Wait for the server to start
+        await WaitForServer(client);
     }
 
     [Test]
@@ -196,6 +195,37 @@ public class E2ETests : PageTest
         await Expect(Page.GetByText("Hello what are you up to?")).ToBeVisibleAsync();
         await Page.Locator(".border-0").First.ClickAsync();
         await Expect(Page.GetByText("Hello what are you up to?")).Not.ToBeVisibleAsync();
+    }
+
+    private async Task WaitForServer(HttpClient client)
+    {
+        int retries = 5;
+        var serverReady = false;
+
+        while (retries > 0)
+        {
+            try
+            {
+                var response = await client.GetAsync("/"); 
+                if (response.IsSuccessStatusCode)
+                {
+                    serverReady = true;
+                    break; 
+                }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine($"ERROR: Server is not ready. Retrying.. Attempts left: {retries-1}.");
+            }
+
+            retries--;
+            await Task.Delay(500);
+        }
+
+        if (!serverReady)
+        {
+            Console.WriteLine("WARNING: Server startup failed.. Expect tests to fail.");
+        }
     }
 
 
