@@ -215,7 +215,7 @@ public class E2ETests : PageTest
             // server not ready yet, retry
             catch (Exception)
             {
-                Console.WriteLine("Server not ready yet, retrying...\n Retries left: " + (maxRetries - retries));
+                Console.WriteLine("Server not ready yet, retrying...\n Retries left: " + (maxRetries - retries+1));
             }
             await Task.Delay(2500);
             retries++;
