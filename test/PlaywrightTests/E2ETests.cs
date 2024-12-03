@@ -154,6 +154,65 @@ public class E2ETests : PageTest
         await Page.GetByRole(AriaRole.Button, new() { Name = "Register", Exact = true }).ClickAsync();
     }
 
+    [Test]
+    public async Task FollowAndUnfollow_UserCard ()
+    {
+        await InitTestUser();
+        await Page.GotoAsync("http://localhost:5273/");
+        await Page.Locator(".d-inline > .btn").First.ClickAsync();
+        await Page.Locator(".text-decoration-none").First.ClickAsync();
+        await Expect(Page.GetByRole(AriaRole.Main)).ToContainTextAsync("1 Followers");
+        await Page.Locator(".btn").First.ClickAsync();
+        await Expect(Page.GetByRole(AriaRole.Main)).ToContainTextAsync("0 Followers");
+    }
+
+
+    [Test]
+    public async Task Following_ShowUp_MyTimeline()
+    {
+        await InitTestUser();
+        await Page.GotoAsync("http://localhost:5273/");
+        await Page.Locator(".d-inline > .btn").First.ClickAsync();
+        await Expect(Page.GetByRole(AriaRole.Main)).ToContainTextAsync("Jacqualine Gilcoine");
+        await Page.GetByRole(AriaRole.Link, new() { Name = "my timeline" }).ClickAsync();
+        await Expect(Page.GetByRole(AriaRole.Main)).ToContainTextAsync("Jacqualine Gilcoine");
+    }
+
+
+    [Test]
+    public async Task WriteCheep()
+    {
+        await InitTestUser();
+        await Page.GotoAsync("http://localhost:5273/");
+        await Page.GetByPlaceholder("Cheep something..").ClickAsync();
+        await Page.GetByPlaceholder("Cheep something..").FillAsync("Hello what are you up to?");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Cheep" }).ClickAsync();
+        await Expect(Page.GetByRole(AriaRole.Main)).ToContainTextAsync("Hello what are you up to?");
+      
+    }
+
+     [Test]
+    public async Task DeleteCheep()
+    {
+        await InitTestUser();
+        await Page.GotoAsync("http://localhost:5273/");
+        await Page.GetByPlaceholder("Cheep something..").ClickAsync();
+        await Page.GetByPlaceholder("Cheep something..").FillAsync("delete my cheep");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Cheep" }).ClickAsync();
+        await Expect(Page.GetByText("ropf delete my cheep 03/12/")).ToBeVisibleAsync();
+        await Page.Locator(".border-0").First.ClickAsync();
+        await Expect(Page.GetByText("test2 delete my cheep 03/12/")).Not.ToBeVisibleAsync();
+
+    }
+
+         [Test]
+    public async Task PageByURL()
+    {
+        await InitTestUser();
+        await Page.GotoAsync("http://localhost:5273/");
+        await Page.GotoAsync("http://localhost:5273/?page=2");
+        
+    }
 
     [TearDown]
     public void TearDown()
