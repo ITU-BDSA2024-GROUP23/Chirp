@@ -9,6 +9,7 @@ public class UserServiceTests
     private readonly ChirpDBContext _context;
     private readonly SqliteConnection _connection;
     private readonly UserService _userService;
+    private readonly CheepRepository _cheepRepo;
     private readonly UserRepository _userRepo;
 
     public UserServiceTests()
@@ -20,8 +21,8 @@ public class UserServiceTests
 
         _context = new ChirpDBContext(options.Options);
         _userRepo = new UserRepository(_context);
-        var userRepository = new CheepRepository(_context);
-        _userService = new UserService(userRepository);
+        _cheepRepo = new CheepRepository(_context);
+        _userService = new UserService(_userRepo, _cheepRepo);
     }
 
     [Fact]
@@ -60,7 +61,7 @@ public class UserServiceTests
     {
         // Arrange
         var follower = await _userService.GetUserByString("Roger Histand");
-        UserDTO followee = null;
+        UserDTO? followee = null;
 
         // Act
         var result = await _userService.FollowUser(follower, followee);
@@ -115,7 +116,7 @@ public class UserServiceTests
     public async Task TestDeleteNullUser()
     {
         // Arrange
-        UserDTO user = null;
+        UserDTO? user = null;
 
         // Act
         var result = await _userService.DeleteUser(user);
