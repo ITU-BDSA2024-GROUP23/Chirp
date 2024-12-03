@@ -219,7 +219,7 @@ public class E2ETests : PageTest
             }
 
             retries--;
-            await Task.Delay(500);
+            await Task.Delay(1000);
         }
 
         if (!serverReady)
