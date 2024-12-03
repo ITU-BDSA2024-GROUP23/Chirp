@@ -8,21 +8,19 @@ namespace PlaywrightTests;
 public class E2ETests : PageTest
 {
     private PlaywrightWebApplicationFactory<Program> _factory;
+    private string _baseUrl;
 
     [SetUp]
     public async Task Init()
     {
         _factory = new PlaywrightWebApplicationFactory<Program>();
-        var client = _factory.CreateClient();
-
-        // Wait for the server to start
-        await WaitForServer(client);
+        _baseUrl = _factory.ServerAddress;
     }
 
     [Test]
     public async Task TestLayoutUI()
     {
-        await Page.GotoAsync("http://localhost:5273/");
+        await Page.GotoAsync(_baseUrl);
         await Expect(Page.GetByRole(AriaRole.Heading)).ToContainTextAsync("Public Timeline");
         await Expect(Page.GetByRole(AriaRole.Navigation)).ToContainTextAsync("Chirp!");
         await Expect(Page.GetByRole(AriaRole.List)).ToContainTextAsync("public timeline");
