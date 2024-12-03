@@ -101,7 +101,7 @@ public class CheepRepository : ICheepRepository
 
         return true;
     }
-    
+
     public async Task<bool> DeleteCheep(int cheepId)
     {
         Cheep? cheep = await _context.Cheeps

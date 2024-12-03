@@ -136,7 +136,7 @@ public abstract class TimelineModel : PageModel
         TempData["alert-success"] = "Cheep deleted successfully!";
         return RedirectToPage();
     }
-    
+
     private IActionResult ShowError(string errorMsg, string? pageName = null)
     {
         TempData["alert-error"] = errorMsg;
