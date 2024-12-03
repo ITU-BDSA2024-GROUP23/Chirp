@@ -82,7 +82,7 @@ public class UserTimelineModel : TimelineModel
         var followedCheeps = new List<CheepDTO>();
         foreach (UserDTO followee in Following)
         {
-            followedCheeps.AddRange(await _cheepService.GetCheepsFromUserName(userDTO.UserName, page));
+            followedCheeps.AddRange(await _cheepService.GetCheepsFromUserName(followee.UserName, page));
         }
 
         Cheeps = userCheeps

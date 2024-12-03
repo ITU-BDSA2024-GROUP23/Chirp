@@ -15,6 +15,7 @@ public class CheepRepository : ICheepRepository
     public async Task<List<CheepDTO>> GetCheeps(int page = 0)
     {
         var query = _context.Cheeps
+            .Include(cheep => cheep.Author)
             .OrderByDescending(cheep => cheep.TimeStamp)
             .Skip(page * pageSize)
             .Take(pageSize)
@@ -27,6 +28,7 @@ public class CheepRepository : ICheepRepository
     public async Task<List<CheepDTO>> GetCheepsFromUserName(string userName, int page)
     {
         var query = _context.Cheeps
+            .Include(cheep => cheep.Author)
             .Where(cheep => cheep.Author.UserName == userName)
             .OrderByDescending(cheep => cheep.TimeStamp)
             .Skip(page * pageSize)
@@ -40,6 +42,7 @@ public class CheepRepository : ICheepRepository
     public async Task<List<CheepDTO>> GetCheepsFromUserName(string userName)
     {
         var query = _context.Cheeps
+            .Include(cheep => cheep.Author)
             .Where(cheep => cheep.Author.UserName == userName)
             .OrderByDescending(cheep => cheep.TimeStamp)
             .Take(pageSize)
@@ -52,6 +55,7 @@ public class CheepRepository : ICheepRepository
     public async Task<List<CheepDTO>> GetCheepsFromEmail(string email, int page)
     {
         var query = _context.Cheeps
+            .Include(cheep => cheep.Author)
             .Where(cheep => cheep.Author.Email == email)
             .OrderByDescending(cheep => cheep.TimeStamp)
             .Skip(page * pageSize)

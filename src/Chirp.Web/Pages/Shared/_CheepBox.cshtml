@@ -9,8 +9,7 @@
 @if (SignInManager.IsSignedIn(User))
 {
     // If user is signed in and is on their own profile page or on the home page.
-    // TODO: Why? || string.IsNullOrEmpty(user)
-    if(User.Identity != null && user == User.Identity.Name)
+    if(User.Identity != null && (user == User.Identity.Name || string.IsNullOrEmpty(user)))
     {
         <div class="card mb-4">
             <div class="card-body">
