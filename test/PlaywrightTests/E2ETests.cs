@@ -197,6 +197,7 @@ public class E2ETests : PageTest
         await Expect(Page.GetByText("Hello what are you up to?")).Not.ToBeVisibleAsync();
     }
 
+    //credits to ChatGPT for parts of this method
     private async Task WaitForServer(HttpClient client)
     {
         int retries = 5;
@@ -206,17 +207,16 @@ public class E2ETests : PageTest
         {
             try
             {
-                var response = await client.GetAsync("/"); 
+                var response = await client.GetAsync("/");
                 if (response.IsSuccessStatusCode)
                 {
-                    Console.WriteLine("Server is ready..");
                     serverReady = true;
-                    break; 
+                    break;
                 }
             }
             catch (Exception)
             {
-                Console.WriteLine($"ERROR: Server is not ready. Retrying.. Attempts left: {retries-1}.");
+                Console.WriteLine($"ERROR: Server is not ready. Retrying.. Attempts left: {retries - 1}.");
             }
 
             retries--;
