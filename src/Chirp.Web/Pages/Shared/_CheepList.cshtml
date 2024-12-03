@@ -7,23 +7,23 @@
                 <strong>
                     <a href="/@cheep.Author" class="text-decoration-none">@cheep.Author</a>
                 </strong>
-                @if (cheep.Author != User.Identity.Name && User.Identity.IsAuthenticated)
+                @if (User.Identity != null && User.Identity.IsAuthenticated && cheep.Author != User.Identity.Name)
+                {
+                    @if (Model.IsFollowing(cheep.Author))
                     {
-                        @if (Model.IsFollowing(cheep.Author))
-                        {
-                            <form method="post" asp-page-handler="Unfollow" class="d-inline ms-2">
-                                <input type="hidden" name="followee" value="@cheep.Author" />
-                                <button type="submit" class="btn btn-sm btn-outline-danger">Unfollow</button>
-                            </form>
-                        }
-                        else
-                        {
-                            <form method="post" asp-page-handler="Follow" class="d-inline ms-2">
-                                <input type="hidden" name="followee" value="@cheep.Author" />
-                                <button type="submit" class="btn btn-sm btn-outline-success">Follow</button>
-                            </form>
-                        }
+                        <form method="post" asp-page-handler="Unfollow" class="d-inline ms-2">
+                            <input type="hidden" name="followee" value="@cheep.Author" />
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Unfollow</button>
+                        </form>
                     }
+                    else
+                    {
+                        <form method="post" asp-page-handler="Follow" class="d-inline ms-2">
+                            <input type="hidden" name="followee" value="@cheep.Author" />
+                            <button type="submit" class="btn btn-sm btn-outline-success">Follow</button>
+                        </form>
+                    }
+                }
                 </div>
             </div>
             <p class="card-text">
@@ -31,6 +31,16 @@
             </p>
             <p class="text-muted small mb-0">
                 <small>@cheep.TimeStamp</small>
+                @if (User.Identity != null && cheep.Author == User.Identity.Name)
+                {
+                    <hr />
+                    <form method="post" asp-page-handler="DeleteCheep">
+                        <button type="submit" class="border-0 bg-transparent p-0">
+                            <input type="hidden" name="cheepId" value="@cheep.Id" />
+                            <img src="~/images/trash.svg" style="width: 15px; height: 15px;"/>
+                        </button>
+                    </form>
+                }
             </p>
         </div>
     </div>

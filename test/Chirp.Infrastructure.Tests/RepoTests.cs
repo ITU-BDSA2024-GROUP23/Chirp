@@ -85,7 +85,7 @@ public class CheepRepositoryTests
     public async Task TestCreateCheep()
     {
         //Arrange
-        var user = await _userrepo.GetUserByString("Roger Histand");
+        var user = await _userrepo.GetUserObjectByString("Roger Histand");
 
         //Act
         await _repository.CreateCheep(user, "Test cheep");
@@ -98,7 +98,7 @@ public class CheepRepositoryTests
     public async Task TestGetNextCheepId_Increments()
     {
         //Arrange
-        var user = await _userrepo.GetUserByString("Roger Histand");
+        var user = await _userrepo.GetUserObjectByString("Roger Histand");
         var currentId = _repository.GetNextCheepId();
 
         //Act
@@ -178,5 +178,38 @@ public class CheepRepositoryTests
         //Assert
         Assert.Contains(following1, user => user.UserName == "Luanna Muro");
         Assert.Contains(following2, user => user.UserName == "Roger Histand");
+    }
+
+    [Fact]
+    public async Task TestGetFollowers()
+    {
+        //Arrange
+        var user1 = await _userrepo.GetUserByString("Roger Histand");
+        var user2 = await _userrepo.GetUserByString("Luanna Muro");
+
+        //Act
+        await _userrepo.FollowUser(user1, user2);
+        await _userrepo.FollowUser(user2, user1);
+        var followers1 = await _userrepo.GetFollowers(user1);
+        var followers2 = await _userrepo.GetFollowers(user2);
+
+        //Assert
+        Assert.Contains(followers1, user => user.UserName == "Luanna Muro");
+        Assert.Contains(followers2, user => user.UserName == "Roger Histand");
+    }
+
+    [Fact]
+    public async Task TestDeleteCheep()
+    {
+        //Arrange
+        var user = await _userrepo.GetUserObjectByString("Roger Histand");
+        await _repository.CreateCheep(user, "Test cheep");
+        var cheep = _context.Cheeps.First(cheep => cheep.Text == "Test cheep");
+
+        //Act
+        await _repository.DeleteCheep(cheep.CheepId);
+
+        //Assert
+        Assert.DoesNotContain(_context.Cheeps, cheep => cheep.Text == "Test cheep");
     }
 }

@@ -24,61 +24,52 @@ public class AboutMeModel : PageModel
         _cheepService = cheepService;
     }
 
-    /// <summary>
-    /// Handles HTTP GET requests for the current page. The method ensures that a user is <br/>
-    /// authenticated and has access to the page. If the user is not authenticated, they <br/>
-    /// are redirected to the login page.
-    /// </summary>
     public async Task<IActionResult> OnGetAsync()
     {
-        var currentUser = await _signInManager.UserManager.GetUserAsync(User);
+        User? currentUser = await _signInManager.UserManager.GetUserAsync(User);
         if (currentUser == null)
         {
             TempData["alert-error"] = "You are not logged in.";
             return RedirectToPage("/Account/Login");
         }
 
-        await PrepareInfo(currentUser);
+        string? userName = currentUser.UserName;
+        if (userName == null)
+        {
+            TempData["alert-error"] = "You are not logged in.";
+            return RedirectToPage("/Account/Login");
+        }
+
+        UserInfo = await _userService.GetUserInfoDTO(userName);
+        if (UserInfo == null)
+        {
+            TempData["alert-error"] = "An error occured. Please retry.";
+            return RedirectToPage("/Account/Login");
+        }
 
         return Page();
     }
 
-    private async Task PrepareInfo(User currentUser)
-    {
-        UserInfo = new UserInfoDTO
-        {
-            UserName = currentUser.UserName,
-            Email = currentUser.Email,
-            Cheeps = await _cheepService.GetCheepsFromUserName(currentUser.UserName),
-            Following = await _userService.GetFollowing(currentUser),
-            Followers = await _userService.GetFollowers(currentUser)
-        };
-    }
-
-    /// <summary>
-    /// Handles HTTP POST requests for deleting the currently logged-in user's account. <br/>
-    /// If the user is not authenticated, they are redirected to the login page. If authenticated, <br/>
-    /// their account is deleted, they are signed out, and redirected to the login page.
-    /// </summary>
     public async Task<IActionResult> OnPostDeleteMeAsync()
     {
-        var currentUser = await _signInManager.UserManager.GetUserAsync(User);
+        User? currentUser = await _signInManager.UserManager.GetUserAsync(User);
         if (currentUser == null)
         {
             TempData["alert-error"] = "You are not logged in.";
             return RedirectToPage("/Account/Login");
         }
-        await _userService.DeleteUser(currentUser);
+
+        var success = await _userService.DeleteUser(currentUser.ToUserDTO());
+        if (!success)
+        {
+            TempData["alert-error"] = "An error occured. Please retry.";
+            return RedirectToPage();
+        }
+
         await _signInManager.SignOutAsync();
         return RedirectToPage("/Account/Login");
     }
 
-
-    /// <summary>
-    /// Handles HTTP POST requests to retrieve user-specific information. This method ensures <br/>
-    /// the current useris authenticated and performs necessary operations to gather user-related data. <br/>
-    /// If an error occurs, an alert message is displayed.
-    /// </summary>
     public async Task<IActionResult> OnPostGetInfoAsync()
     {
         var currentUser = await _signInManager.UserManager.GetUserAsync(User);
@@ -92,7 +83,7 @@ public class AboutMeModel : PageModel
         return Page();
     }
 
-    private string GenerateFollowingCSV(ZipArchive archive, User user)
+    private string GenerateFollowingCSV(UserDTO user)
     {
         var following = _userService.GetFollowing(user).Result;
         var csv = new StringBuilder();
@@ -104,7 +95,7 @@ public class AboutMeModel : PageModel
         return csv.ToString();
     }
 
-    private string GenerateFollowersCSV(ZipArchive archive, User user)
+    private string GenerateFollowersCSV(UserDTO user)
     {
         var followers = _userService.GetFollowers(user).Result;
         var csv = new StringBuilder();
@@ -116,7 +107,7 @@ public class AboutMeModel : PageModel
         return csv.ToString();
     }
 
-    private string GenerateCheepsCSV(ZipArchive archive, User user)
+    private string GenerateCheepsCSV(UserDTO user)
     {
         var cheeps = _cheepService.GetCheepsFromUserName(user.UserName).Result;
         var csv = new StringBuilder();
@@ -128,7 +119,7 @@ public class AboutMeModel : PageModel
         return csv.ToString();
     }
 
-    private string GenerateUserCSV(ZipArchive archive, User user)
+    private string GenerateUserCSV(UserDTO user)
     {
         var csv = new StringBuilder();
         csv.AppendLine($"Username: {user.UserName}");
@@ -153,17 +144,21 @@ public class AboutMeModel : PageModel
             TempData["alert-error"] = "You are not logged in.";
             return RedirectToPage("/Account/Login");
         }
-
-        using (var memoryStream = new MemoryStream())
+        var userDTO = currentUser.ToUserDTO();
+        if (userDTO == null)
         {
-            using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
-            {
-                AddCSVToZip(archive, GenerateUserCSV(archive, currentUser), "userinfo.csv");
-                AddCSVToZip(archive, GenerateCheepsCSV(archive, currentUser), "cheeps.csv");
-                AddCSVToZip(archive, GenerateFollowingCSV(archive, currentUser), "following.csv");
-                AddCSVToZip(archive, GenerateFollowersCSV(archive, currentUser), "followers.csv");
-            }
-            return File(memoryStream.ToArray(), "application/zip", "info.zip");
+            TempData["alert-error"] = "You are not logged in.";
+            return RedirectToPage("/Account/Login");
         }
+
+        using var memoryStream = new MemoryStream();
+        using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+        {
+            AddCSVToZip(archive, GenerateUserCSV(userDTO), "userinfo.csv");
+            AddCSVToZip(archive, GenerateCheepsCSV(userDTO), "cheeps.csv");
+            AddCSVToZip(archive, GenerateFollowingCSV(userDTO), "following.csv");
+            AddCSVToZip(archive, GenerateFollowersCSV(userDTO), "followers.csv");
+        }
+        return File(memoryStream.ToArray(), "application/zip", "info.zip");
     }
 }
