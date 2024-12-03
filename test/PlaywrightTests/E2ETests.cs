@@ -1,6 +1,7 @@
 using System.Diagnostics;
 
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.CodeAnalysis.Elfie.Serialization;
 using Microsoft.Playwright;
 using Microsoft.Playwright.NUnit;
 
@@ -194,15 +195,10 @@ public class E2ETests : PageTest
     [Test]
     public async Task DeleteCheep()
     {
-        await InitTestUser();
-        await Page.GotoAsync("http://localhost:5273/");
-        await Page.GetByPlaceholder("Cheep something..").ClickAsync();
-        await Page.GetByPlaceholder("Cheep something..").FillAsync("delete my cheep");
-        await Page.GetByRole(AriaRole.Button, new() { Name = "Cheep" }).ClickAsync();
-        await Expect(Page.GetByText("ropf delete my cheep 03/12/")).ToBeVisibleAsync();
+        await WriteCheep();
+        await Expect(Page.GetByText("Hello what are you up to?")).ToBeVisibleAsync();
         await Page.Locator(".border-0").First.ClickAsync();
-        await Expect(Page.GetByText("test2 delete my cheep 03/12/")).Not.ToBeVisibleAsync();
-
+        await Expect(Page.GetByText("Hello what are you up to?")).Not.ToBeVisibleAsync();
     }
 
 
