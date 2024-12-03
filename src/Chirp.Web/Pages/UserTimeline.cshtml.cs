@@ -7,7 +7,7 @@ namespace Chirp.Web.Pages;
 
 public class UserTimelineModel : TimelineModel
 {
-    public UserDTO? userInfo;
+    public UserInfoDTO? userInfo;
 
     public UserTimelineModel(
         IUserService userService,
@@ -43,7 +43,19 @@ public class UserTimelineModel : TimelineModel
 
     private async Task PrepareUserInfo(string user)
     {
-        userInfo = await _userService.GetUserDTO(user);
+        userInfo = await _userService.GetUserInfoDTO(user);
+        if (userInfo == null)
+        {
+            // empty user info - this is shown when a user accesses a user timeline that does not exist
+            userInfo = new UserInfoDTO
+            {
+                UserName = "User not found",
+                Email = "notfound",
+                Cheeps = new List<CheepDTO>(),
+                Followers = new List<UserDTO>(),
+                Following = new List<UserDTO>() 
+            };
+        }
     }
 
     private async Task GetFollowedCheeps(int page)
@@ -56,12 +68,21 @@ public class UserTimelineModel : TimelineModel
             RedirectToPage();
             return;
         }
-        var userCheeps = await _cheepService.GetCheepsFromUserName(currentUser.UserName, page);
+
+        UserDTO? userDTO = currentUser.ToUserDTO();
+        if (userDTO == null) {
+            TempData["alert-error"] = "An error occurred.";
+            await _signInManager.SignOutAsync();
+            RedirectToPage();
+            return;
+        }
+
+        var userCheeps = await _cheepService.GetCheepsFromUserName(userDTO.UserName, page);
 
         var followedCheeps = new List<CheepDTO>();
-        foreach (User followee in Following)
+        foreach (UserDTO followee in Following)
         {
-            followedCheeps.AddRange(await _cheepService.GetCheepsFromUserName(followee.UserName, page));
+            followedCheeps.AddRange(await _cheepService.GetCheepsFromUserName(userDTO.UserName, page));
         }
 
         Cheeps = userCheeps

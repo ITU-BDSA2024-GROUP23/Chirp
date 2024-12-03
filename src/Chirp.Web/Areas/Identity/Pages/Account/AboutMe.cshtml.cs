@@ -51,13 +51,20 @@ public class AboutMeModel : PageModel
 
     public async Task<IActionResult> OnPostDeleteMeAsync()
     {
-        var currentUser = await _signInManager.UserManager.GetUserAsync(User);
+        User? currentUser = await _signInManager.UserManager.GetUserAsync(User);
         if (currentUser == null)
         {
             TempData["alert-error"] = "You are not logged in.";
             return RedirectToPage("/Account/Login");
         }
-        await _userService.DeleteUser(currentUser);
+        
+        var success = await _userService.DeleteUser(currentUser.ToUserDTO());
+        if (!success)
+        {
+            TempData["alert-error"] = "An error occured. Please retry.";
+            return RedirectToPage();
+        }
+        
         await _signInManager.SignOutAsync();
         return RedirectToPage("/Account/Login");
     }
@@ -75,7 +82,7 @@ public class AboutMeModel : PageModel
         return Page();
     }
 
-    private string GenerateFollowingCSV(ZipArchive archive, User user)
+    private string GenerateFollowingCSV(UserDTO user)
     {
         var following = _userService.GetFollowing(user).Result;
         var csv = new StringBuilder();
@@ -87,7 +94,7 @@ public class AboutMeModel : PageModel
         return csv.ToString();
     }
 
-    private string GenerateFollowersCSV(ZipArchive archive, User user)
+    private string GenerateFollowersCSV(UserDTO user)
     {
         var followers = _userService.GetFollowers(user).Result;
         var csv = new StringBuilder();
@@ -99,7 +106,7 @@ public class AboutMeModel : PageModel
         return csv.ToString();
     }
 
-    private string GenerateCheepsCSV(ZipArchive archive, User user)
+    private string GenerateCheepsCSV(UserDTO user)
     {
         var cheeps = _cheepService.GetCheepsFromUserName(user.UserName).Result;
         var csv = new StringBuilder();
@@ -111,7 +118,7 @@ public class AboutMeModel : PageModel
         return csv.ToString();
     }
 
-    private string GenerateUserCSV(ZipArchive archive, User user)
+    private string GenerateUserCSV(UserDTO user)
     {
         var csv = new StringBuilder();
         csv.AppendLine($"Username: {user.UserName}");
@@ -136,17 +143,21 @@ public class AboutMeModel : PageModel
             TempData["alert-error"] = "You are not logged in.";
             return RedirectToPage("/Account/Login");
         }
-
-        using (var memoryStream = new MemoryStream())
+        var userDTO = currentUser.ToUserDTO();
+        if (userDTO == null) 
         {
-            using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
-            {
-                AddCSVToZip(archive, GenerateUserCSV(archive, currentUser), "userinfo.csv");
-                AddCSVToZip(archive, GenerateCheepsCSV(archive, currentUser), "cheeps.csv");
-                AddCSVToZip(archive, GenerateFollowingCSV(archive, currentUser), "following.csv");
-                AddCSVToZip(archive, GenerateFollowersCSV(archive, currentUser), "followers.csv");
-            }
-            return File(memoryStream.ToArray(), "application/zip", "info.zip");
+            TempData["alert-error"] = "You are not logged in.";
+            return RedirectToPage("/Account/Login");
         }
+
+        using var memoryStream = new MemoryStream();
+        using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+        {
+            AddCSVToZip(archive, GenerateUserCSV(userDTO), "userinfo.csv");
+            AddCSVToZip(archive, GenerateCheepsCSV(userDTO), "cheeps.csv");
+            AddCSVToZip(archive, GenerateFollowingCSV(userDTO), "following.csv");
+            AddCSVToZip(archive, GenerateFollowersCSV(userDTO), "followers.csv");
+        }
+        return File(memoryStream.ToArray(), "application/zip", "info.zip");
     }
 }
