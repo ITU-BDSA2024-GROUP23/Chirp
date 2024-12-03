@@ -1,82 +1,89 @@
 public interface IUserService
 {
-    public Task<UserDTO> GetUserDTO(string user);
-    public Task<User> GetUserByString(string userString);
-    public Task<bool> FollowUser(User follower, User followee);
-    public Task<bool> UnfollowUser(User follower, User followee);
-    public Task<List<User>> GetFollowers(User user);
-    public Task<List<User>> GetFollowing(User user);
-    public Task DeleteUser(User user);
+    public Task<UserInfoDTO?> GetUserInfoDTO(string userStr);
+    public Task<UserDTO> GetUserByString(string userStr);
+    public Task<bool> FollowUser(UserDTO? follower, UserDTO? followee);
+    public Task<bool> UnfollowUser(UserDTO? follower, UserDTO? followee);
+    public Task<List<UserDTO>> GetFollowers(UserDTO user);
+    public Task<List<UserDTO>> GetFollowing(UserDTO user);
+    public Task<bool> DeleteUser(UserDTO? user);
 }
 
 public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
+    private readonly ICheepRepository _cheepRepository;
 
-    public UserService(IUserRepository userRepository)
+    public UserService(IUserRepository userRepository, ICheepRepository cheepRepository)
     {
+        _cheepRepository = cheepRepository;
         _userRepository = userRepository;
     }
 
-    public async Task<UserDTO> GetUserDTO(string user)
+    public async Task<UserInfoDTO?> GetUserInfoDTO(string userStr)
     {
         try
         {
-            User targetUser = await _userRepository.GetUserByString(user);
-            List<User> followers = await _userRepository.GetFollowers(targetUser);
-            List<User> following = await _userRepository.GetFollowing(targetUser);
-            return new UserDTO
+            UserDTO targetUser = await _userRepository.GetUserByString(userStr);
+            List<CheepDTO> cheeps = await _cheepRepository.GetCheepsFromUserName(targetUser.UserName);
+            List<UserDTO> followers = await _userRepository.GetFollowers(targetUser);
+            List<UserDTO> following = await _userRepository.GetFollowing(targetUser);
+            return new UserInfoDTO
             {
                 UserName = targetUser.UserName,
-                FollowersCount = followers.Count,
-                FollowingCount = following.Count
+                Email = targetUser.Email,
+                Cheeps = cheeps,
+                Followers = followers,
+                Following = following
             };
         }
         catch (Exception)
         {
-            return new UserDTO { UserName = "User not found", FollowersCount = 0, FollowingCount = 0 };
+            return null;
         }
     }
 
-    public async Task<User> GetUserByString(string userString)
+    public async Task<UserDTO> GetUserByString(string userStr)
     {
-        return await _userRepository.GetUserByString(userString);
+        return await _userRepository.GetUserByString(userStr);
     }
 
-    public async Task<bool> FollowUser(User follower, User followee)
+    public async Task<bool> FollowUser(UserDTO? follower, UserDTO? followee)
     {
-        if (follower == followee || follower == null || followee == null)
+        if (follower == null || followee == null || follower.UserName == followee.UserName)
         {
             return false;
         }
 
-        await _userRepository.FollowUser(follower, followee);
-        return true;
+        return await _userRepository.FollowUser(follower, followee);
     }
 
-    public async Task<bool> UnfollowUser(User follower, User followee)
+    public async Task<bool> UnfollowUser(UserDTO? follower, UserDTO? followee)
     {
-        if (follower == followee || follower == null || followee == null)
+        if (follower == null || followee == null || follower.UserName == followee.UserName)
         {
             return false;
         }
 
-        await _userRepository.UnfollowUser(follower, followee);
-        return true;
+        return await _userRepository.UnfollowUser(follower, followee);
     }
 
-    public async Task<List<User>> GetFollowers(User user)
+    public async Task<List<UserDTO>> GetFollowers(UserDTO user)
     {
         return await _userRepository.GetFollowers(user);
     }
 
-    public async Task<List<User>> GetFollowing(User user)
+    public async Task<List<UserDTO>> GetFollowing(UserDTO user)
     {
         return await _userRepository.GetFollowing(user);
     }
 
-    public async Task DeleteUser(User user)
+    public async Task<bool> DeleteUser(UserDTO? user)
     {
-        await _userRepository.DeleteUser(user);
+        if (user == null)
+        {
+            return false;
+        }
+        return await _userRepository.DeleteUser(user);
     }
 }

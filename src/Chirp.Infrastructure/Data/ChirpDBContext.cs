@@ -25,6 +25,13 @@ public class ChirpDBContext : IdentityDbContext<User>
         }
     }
 
+
+    /// <summary>
+    /// This method configures the model for the database context using the Entity Framework Core.<br/>
+    /// It defines relationships, primary keys, and other constraints between entities.<br/>
+    /// The commented-out portion indicates a work-in-progress feature to enforce uniqueness for certain properties.
+    /// </summary>
+    /// <param name="modelBuilder"></param>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
