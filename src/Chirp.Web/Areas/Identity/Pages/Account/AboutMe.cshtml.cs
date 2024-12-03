@@ -34,7 +34,8 @@ public class AboutMeModel : PageModel
         }
 
         string? userName = currentUser.UserName;
-        if (userName == null) {
+        if (userName == null)
+        {
             TempData["alert-error"] = "You are not logged in.";
             return RedirectToPage("/Account/Login");
         }
@@ -57,14 +58,14 @@ public class AboutMeModel : PageModel
             TempData["alert-error"] = "You are not logged in.";
             return RedirectToPage("/Account/Login");
         }
-        
+
         var success = await _userService.DeleteUser(currentUser.ToUserDTO());
         if (!success)
         {
             TempData["alert-error"] = "An error occured. Please retry.";
             return RedirectToPage();
         }
-        
+
         await _signInManager.SignOutAsync();
         return RedirectToPage("/Account/Login");
     }
@@ -144,7 +145,7 @@ public class AboutMeModel : PageModel
             return RedirectToPage("/Account/Login");
         }
         var userDTO = currentUser.ToUserDTO();
-        if (userDTO == null) 
+        if (userDTO == null)
         {
             TempData["alert-error"] = "You are not logged in.";
             return RedirectToPage("/Account/Login");

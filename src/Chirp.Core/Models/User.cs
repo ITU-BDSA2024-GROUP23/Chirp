@@ -9,12 +9,13 @@ public class User : IdentityUser
     [Required]
     public required ICollection<Follower> Followers { get; set; }
 
-    public UserDTO? ToUserDTO() {
-        if (UserName == null) 
+    public UserDTO? ToUserDTO()
+    {
+        if (UserName == null)
         {
             return null;
         }
-        if (Email == null) 
+        if (Email == null)
         {
             return null;
         }

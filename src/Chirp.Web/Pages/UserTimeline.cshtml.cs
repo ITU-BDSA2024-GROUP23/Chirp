@@ -53,7 +53,7 @@ public class UserTimelineModel : TimelineModel
                 Email = "notfound",
                 Cheeps = new List<CheepDTO>(),
                 Followers = new List<UserDTO>(),
-                Following = new List<UserDTO>() 
+                Following = new List<UserDTO>()
             };
         }
     }
@@ -70,7 +70,8 @@ public class UserTimelineModel : TimelineModel
         }
 
         UserDTO? userDTO = currentUser.ToUserDTO();
-        if (userDTO == null) {
+        if (userDTO == null)
+        {
             TempData["alert-error"] = "An error occurred.";
             await _signInManager.SignOutAsync();
             RedirectToPage();

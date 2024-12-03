@@ -80,7 +80,7 @@ public class UserService : IUserService
 
     public async Task<bool> DeleteUser(UserDTO? user)
     {
-        if (user == null) 
+        if (user == null)
         {
             return false;
         }

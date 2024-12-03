@@ -50,7 +50,8 @@ public class UserRepository : IUserRepository
     // Many commands must handle this null-value so maybe
     // This should just throw, and the commands can propagate
     // the exception?
-    private async Task<User?> UserFromDTO(UserDTO dto) {
+    private async Task<User?> UserFromDTO(UserDTO dto)
+    {
         var query = _context.Users.Where(u => u.Id == dto.Id);
         User? user = await query.FirstOrDefaultAsync();
         return user;
