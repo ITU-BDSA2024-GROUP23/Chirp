@@ -39,6 +39,13 @@ public class UserRepository : IUserRepository
         return result;
     }
 
+    public async Task<User> GetUserObjectByString(string userString)
+    {
+        var query = _context.Users.Where(u => u.UserName == userString || u.Email == userString);
+        User user = await query.FirstOrDefaultAsync() ?? throw new Exception("User not found");
+        return user;
+    }
+
     // Returns null if no such user exists in the database.
     // Many commands must handle this null-value so maybe
     // This should just throw, and the commands can propagate

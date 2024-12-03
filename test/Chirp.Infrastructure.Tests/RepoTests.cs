@@ -85,7 +85,7 @@ public class CheepRepositoryTests
     public async Task TestCreateCheep()
     {
         //Arrange
-        var user = await _userrepo.GetUserByString("Roger Histand");
+        var user = await _userrepo.GetUserObjectByString("Roger Histand");
 
         //Act
         await _repository.CreateCheep(user, "Test cheep");
@@ -98,7 +98,7 @@ public class CheepRepositoryTests
     public async Task TestGetNextCheepId_Increments()
     {
         //Arrange
-        var user = await _userrepo.GetUserByString("Roger Histand");
+        var user = await _userrepo.GetUserObjectByString("Roger Histand");
         var currentId = _repository.GetNextCheepId();
 
         //Act
