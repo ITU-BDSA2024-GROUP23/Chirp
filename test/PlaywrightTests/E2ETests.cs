@@ -14,7 +14,7 @@ public class E2ETests : PageTest
     private PlaywrightWebApplicationFactory<Program> _factory;
 
     [SetUp]
-    public async Task Init()
+    public void Init()
     {
         _factory = new PlaywrightWebApplicationFactory<Program>();
         _factory.CreateClient();
