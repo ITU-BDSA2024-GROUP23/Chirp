@@ -1,7 +1,9 @@
-using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
+
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+
 using Xunit;
 
 public class UserServiceTests
@@ -107,7 +109,7 @@ public class UserServiceTests
         // Act
         await _userService.FollowUser(follower, followee);
         var result = await _userService.UnfollowUser(follower, followee);
-        
+
         // Assert
         Assert.True(result);
     }
