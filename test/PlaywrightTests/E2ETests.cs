@@ -3,7 +3,7 @@ using Microsoft.Playwright.NUnit;
 
 namespace PlaywrightTests;
 
-[Parallelizable(ParallelScope.Self)]
+[NonParallelizable]
 [TestFixture]
 public class E2ETests : PageTest
 {
