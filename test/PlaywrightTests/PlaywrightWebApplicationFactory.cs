@@ -68,13 +68,7 @@ public class PlaywrightWebApplicationFactory<TProgram> : WebApplicationFactory<T
     /// </summary>
     protected override IHost CreateHost(IHostBuilder builder)  
     {  
-        // Create the host for TestServer now before we  
-        // modify the builder to use Kestrel instead.    
-        var testHost = builder.Build();  
-    
-        // Modify the host builder to use Kestrel instead  
-        // of TestServer so we can listen on a real address.    
-    
+        var testHost = builder.Build();    
         builder.ConfigureWebHost(webHostBuilder => webHostBuilder.UseKestrel());  
     
         // Create and start the Kestrel server before the test server,  
@@ -85,11 +79,6 @@ public class PlaywrightWebApplicationFactory<TProgram> : WebApplicationFactory<T
     
         _host = builder.Build();  
         _host.Start();  
-    
-        // Extract the selected dynamic port out of the Kestrel server  
-        // and assign it onto the client options for convenience so it    
-        // "just works" as otherwise it'll be the default http://localhost    
-        // URL, which won't route to the Kestrel-hosted HTTP server.     
     
         var server = _host.Services.GetRequiredService<IServer>();  
         var addresses = server.Features.Get<IServerAddressesFeature>();  

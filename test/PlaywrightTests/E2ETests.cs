@@ -11,7 +11,7 @@ public class E2ETests : PageTest
     private string _baseUrl;
 
     [SetUp]
-    public async Task Init()
+    public void Init()
     {
         _factory = new PlaywrightWebApplicationFactory<Program>();
         _baseUrl = _factory.ServerAddress;
