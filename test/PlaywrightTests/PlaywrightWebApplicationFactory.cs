@@ -27,22 +27,14 @@ public class PlaywrightWebApplicationFactory<TProgram> : WebApplicationFactory<T
             var dbContextDescriptor = services.SingleOrDefault(
                 d => d.ServiceType ==
                     typeof(DbContextOptions<ChirpDBContext>));
-            if(dbContextDescriptor == null)
-            {
-                throw new InvalidOperationException("ChirpDBContext is not registered in the service collection.");
-            }
 
-            services.Remove(dbContextDescriptor);
+            services.Remove(dbContextDescriptor!);
 
             var dbConnectionDescriptor = services.SingleOrDefault(
                 d => d.ServiceType ==
                     typeof(DbConnection));
-            if(dbConnectionDescriptor == null)
-            {
-                throw new InvalidOperationException("ChirpDBContext is not registered in the service collection.");
-            }
 
-            services.Remove(dbConnectionDescriptor);
+            services.Remove(dbConnectionDescriptor!);
 
             // Create open SqliteConnection so EF won't automatically close it.
             services.AddSingleton<DbConnection>(container =>
