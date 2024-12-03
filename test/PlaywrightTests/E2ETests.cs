@@ -20,7 +20,6 @@ public class E2ETests : PageTest
         _factory.CreateClient();
     }
 
-
     [Test]
     public async Task TestLayoutUI()
     {
