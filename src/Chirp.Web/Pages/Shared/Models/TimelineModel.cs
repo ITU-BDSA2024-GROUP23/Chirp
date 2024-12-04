@@ -97,7 +97,7 @@ public abstract class TimelineModel : PageModel
         return RedirectToPage();
     }
 
-    public async Task<IActionResult> OnPostLike(int cheepId) 
+    public async Task<IActionResult> OnPostLike(int cheepId)
     {
         User? liker = await _signInManager.UserManager.GetUserAsync(User);
 
@@ -106,7 +106,7 @@ public abstract class TimelineModel : PageModel
             return ShowError("You must be logged in to interact with posts!");
         }
 
-        if (!await _cheepService.LikeCheep(liker, cheepId)) 
+        if (!await _cheepService.LikeCheep(liker, cheepId))
         {
             return ShowError("Something went wrong!");
         }
@@ -115,7 +115,7 @@ public abstract class TimelineModel : PageModel
         return RedirectToPage();
     }
 
-    public async Task<IActionResult> OnPostUnlike(int cheepId) 
+    public async Task<IActionResult> OnPostUnlike(int cheepId)
     {
         User? unliker = await _signInManager.UserManager.GetUserAsync(User);
 
@@ -124,10 +124,11 @@ public abstract class TimelineModel : PageModel
             return ShowError("You must be logged in to interact with posts!");
         }
 
-        if (!await _cheepService.UnlikeCheep(unliker, cheepId)) {
+        if (!await _cheepService.UnlikeCheep(unliker, cheepId))
+        {
             return ShowError("Something went wrong!");
         }
-        
+
         TempData["alert-success"] = $"You no longer like this post!";
         return RedirectToPage();
     }
@@ -137,7 +138,7 @@ public abstract class TimelineModel : PageModel
         return Following.Any(f => f.UserName == author);
     }
 
-    public async Task<bool> HasLiked(int cheepId) 
+    public async Task<bool> HasLiked(int cheepId)
     {
         User? user = await _signInManager.UserManager.GetUserAsync(User);
 
@@ -149,7 +150,7 @@ public abstract class TimelineModel : PageModel
         return await _cheepService.HasLiked(user, cheepId);
     }
 
-    public async Task<int> GetLikes(int cheepId) 
+    public async Task<int> GetLikes(int cheepId)
     {
         return await _cheepService.GetLikes(cheepId);
     }

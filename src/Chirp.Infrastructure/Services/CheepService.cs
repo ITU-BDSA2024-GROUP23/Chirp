@@ -57,7 +57,7 @@ public class CheepService : ICheepService
         return await _cheepRepository.DeleteCheep(cheepId);
     }
 
-    public async Task<bool> LikeCheep(User liker, int cheepId) 
+    public async Task<bool> LikeCheep(User liker, int cheepId)
     {
         Cheep? cheep = await _cheepRepository.GetCheep(cheepId);
         if (cheep == null)
@@ -68,7 +68,7 @@ public class CheepService : ICheepService
         return await _cheepRepository.LikeCheep(liker, cheep);
     }
 
-    public async Task<bool> UnlikeCheep(User unliker, int cheepId) 
+    public async Task<bool> UnlikeCheep(User unliker, int cheepId)
     {
         Cheep? cheep = await _cheepRepository.GetCheep(cheepId);
         if (cheep == null)
@@ -79,7 +79,7 @@ public class CheepService : ICheepService
         return await _cheepRepository.UnlikeCheep(unliker, cheep);
     }
 
-    public async Task<bool> HasLiked(User user, int cheepId) 
+    public async Task<bool> HasLiked(User user, int cheepId)
     {
         return await _cheepRepository.HasLiked(user, cheepId);
     }

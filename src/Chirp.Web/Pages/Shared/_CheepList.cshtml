@@ -23,23 +23,7 @@
                             <button type="submit" class="btn btn-sm btn-outline-success">Follow</button>
                         </form>
                     }
-
-                    @if (await Model.HasLiked(cheep.Id))
-                    {
-                        <form method="post" asp-page-handler="Unlike" class="d-inline ms-2">
-                            <input type="hidden" name="cheepId" value="@cheep.Id" />
-                            <button type="submit" class="btn btn-sm btn-outline-danger">Unlike</button>
-                        </form>
-                    }
-                    else
-                    {
-                        <form method="post" asp-page-handler="Like" class="d-inline ms-2">
-                            <input type="hidden" name="cheepId" value="@cheep.Id" />
-                            <button type="submit" class="btn btn-sm btn-outline-success">Like</button>
-                        </form>
-                    }
                 }
-                <p>Likes: @await Model.GetLikes(cheep.Id)</p>
                 </div>
             </div>
             <p class="card-text">
@@ -47,16 +31,46 @@
             </p>
             <p class="text-muted small mb-0">
                 <small>@cheep.TimeStamp</small>
-                @if (User.Identity != null && cheep.Author == User.Identity.Name)
-                {
-                    <hr />
-                    <form method="post" asp-page-handler="DeleteCheep">
-                        <button type="submit" class="border-0 bg-transparent p-0">
-                            <input type="hidden" name="cheepId" value="@cheep.Id" />
-                            <img src="~/images/trash.svg" style="width: 15px; height: 15px;"/>
-                        </button>
-                    </form>
-                }
+                <div class="d-flex align-items-center">
+                    @if (User.Identity != null && cheep.Author == User.Identity.Name)
+                    {
+                        <form method="post" asp-page-handler="DeleteCheep">
+                            <button type="submit" class="border-0 bg-transparent p-0">
+                                <input type="hidden" name="cheepId" value="@cheep.Id" />
+                                <img src="~/images/trash.svg" style="width: 15px; height: 15px;"/>
+                            </button>
+                        </form>
+                    }
+                    
+                    @if(User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        @if(await Model.HasLiked(cheep.Id))
+                        {
+                            <form method="post" asp-page-handler="Unlike" class="d-inline">
+                                <button type="submit" class="border-0 bg-transparent p-0">
+                                    <input type="hidden" name="cheepId" value="@cheep.Id" />
+                                    <img src="~/images/liked.svg" style="width: 15px; height: 15px;"/>
+                                </button>
+                            </form>
+                        } else 
+                        {
+                            <form method="post" asp-page-handler="Like" class="d-inline">
+                                <button type="submit" class="border-0 bg-transparent p-0">
+                                    <input type="hidden" name="cheepId" value="@cheep.Id" />
+                                    <img src="~/images/heart.svg" style="width: 15px; height: 15px;"/>
+                                </button>
+                            </form>
+                        }
+                    }
+                    else
+                    {
+                        <img src="~/images/heart.svg" style="width: 15px; height: 15px;"/>
+                    }
+
+                    <span class="ms-1">
+                        @await Model.GetLikes(cheep.Id)
+                    </span>
+                </div>
             </p>
         </div>
     </div>

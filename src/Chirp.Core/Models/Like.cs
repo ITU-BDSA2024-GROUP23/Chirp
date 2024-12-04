@@ -1,7 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-public class Like {
+public class Like
+{
     [ForeignKey("CheepId")]
     [Required]
     public required Cheep Post { get; set; }

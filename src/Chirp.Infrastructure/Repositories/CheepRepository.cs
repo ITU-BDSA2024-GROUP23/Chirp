@@ -78,14 +78,14 @@ public class CheepRepository : ICheepRepository
         return result;
     }
 
-    public async Task<Cheep?> GetCheep(int cheepId) 
+    public async Task<Cheep?> GetCheep(int cheepId)
     {
         var query = _context.Cheeps
             .Where(cheep => cheep.CheepId == cheepId)
             .Select(cheep => cheep);
         var result = await query.FirstOrDefaultAsync();
         return result;
-    } 
+    }
 
     public async Task<bool> HasLiked(User user, int cheepId)
     {
