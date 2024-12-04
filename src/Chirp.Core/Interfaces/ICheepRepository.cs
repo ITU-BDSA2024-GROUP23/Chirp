@@ -7,4 +7,9 @@ public interface ICheepRepository
     public Task<bool> CreateCheep(User user, string message);
     public int GetNextCheepId();
     public Task<bool> DeleteCheep(int cheepId);
+    public Task<Cheep?> GetCheep(int cheepId);
+    public Task<bool> LikeCheep(User liker, Cheep cheep);
+    public Task<bool> UnlikeCheep(User unliker, Cheep cheep);
+    public Task<bool> HasLiked(User user, int cheepId);
+    public Task<int> GetLikes(int cheepId);
 }
