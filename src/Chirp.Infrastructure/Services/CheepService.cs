@@ -6,6 +6,11 @@ public interface ICheepService
     public Task<List<CheepDTO>> GetCheepsFromEmail(string email, int page);
     public Task CreateCheep(User user, string message);
     public int GetNextCheepId();
+    public Task<bool> DeleteCheep(int cheepId);
+    public Task<bool> LikeCheep(User liker, int cheepId);
+    public Task<bool> UnlikeCheep(User unliker, int cheepId);
+    public Task<bool> HasLiked(User user, int cheepId);
+    public Task<int> GetLikes(int cheepId);
 }
 
 public class CheepService : ICheepService
@@ -45,5 +50,42 @@ public class CheepService : ICheepService
     public int GetNextCheepId()
     {
         return _cheepRepository.GetNextCheepId();
+    }
+
+    public async Task<bool> DeleteCheep(int cheepId)
+    {
+        return await _cheepRepository.DeleteCheep(cheepId);
+    }
+
+    public async Task<bool> LikeCheep(User liker, int cheepId)
+    {
+        Cheep? cheep = await _cheepRepository.GetCheep(cheepId);
+        if (cheep == null)
+        {
+            return false;
+        }
+
+        return await _cheepRepository.LikeCheep(liker, cheep);
+    }
+
+    public async Task<bool> UnlikeCheep(User unliker, int cheepId)
+    {
+        Cheep? cheep = await _cheepRepository.GetCheep(cheepId);
+        if (cheep == null)
+        {
+            return false;
+        }
+
+        return await _cheepRepository.UnlikeCheep(unliker, cheep);
+    }
+
+    public async Task<bool> HasLiked(User user, int cheepId)
+    {
+        return await _cheepRepository.HasLiked(user, cheepId);
+    }
+
+    public async Task<int> GetLikes(int cheepId)
+    {
+        return await _cheepRepository.GetLikes(cheepId);
     }
 }

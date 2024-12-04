@@ -3,27 +3,27 @@
 @inject SignInManager<User> SignInManager
 
 @{
-    var user = (string)ViewContext.RouteData.Values["user"];
+    var user = (string?)ViewContext.RouteData.Values["user"];
 }
 
 @if (SignInManager.IsSignedIn(User))
 {
-    //if user is signed in and is on their own profile page or on the home page
-    if(user == User.Identity!.Name || string.IsNullOrEmpty(user))
+    // If user is signed in and is on their own profile page or on the home page.
+    if(User.Identity != null && (user == User.Identity.Name || string.IsNullOrEmpty(user)))
     {
         <div class="card mb-4">
-        <div class="card-body">
-            <h6> Whats on your mind @User.Identity!.Name?</h6>
-            <form method="post">
-                @Html.AntiForgeryToken()
-                <textarea class="form-control" rows="2" style="float: left" type="text" asp-for="Message"
-                    placeholder="Cheep something.." required></textarea>
-                <button type="submit" class="btn btn-primary" style="float: right; margin-top: 10px;">Cheep</button>
-            </form>
-            <div class="d-flex justify-content-between align-items-center">
-                <small class="text-muted">160 characters max</small>
+            <div class="card-body">
+                <h6> Whats on your mind @User.Identity.Name?</h6>
+                <form method="post">
+                    @Html.AntiForgeryToken()
+                    <textarea class="form-control" rows="2" style="float: left" type="text" asp-for="Message"
+                        placeholder="Cheep something.." required></textarea>
+                    <button type="submit" class="btn btn-primary" style="float: right; margin-top: 10px;">Cheep</button>
+                </form>
+                <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-muted">160 characters max</small>
+                </div>
             </div>
         </div>
-    </div>
     }
-}  
+}

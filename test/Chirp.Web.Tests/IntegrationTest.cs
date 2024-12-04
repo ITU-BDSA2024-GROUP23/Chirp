@@ -67,4 +67,26 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
         Assert.NotEqual(content1, content2);
     }
 
+    //This test will only pass if we seed the test db and the user Jacqualine Gilcoine is on the first page
+    [Theory]
+    [InlineData("Jacqualine Gilcoine")]
+    public async void CheepsAvailable(string user)
+    {
+        var response = await _client.GetAsync("/");
+        response.EnsureSuccessStatusCode();
+        var content = await response.Content.ReadAsStringAsync();
+
+        Assert.Contains("Chirp!", content);
+        Assert.Contains("Public Timeline", content);
+        Assert.Contains(user, content);
+    }
+
+    [Fact]
+    public async void CannotAccessAboutMeWithoutAuth()
+    {
+        var response = await _client.GetAsync("/Identity/Account/AboutMe");
+        response.EnsureSuccessStatusCode();
+        var content = await response.Content.ReadAsStringAsync();
+        Assert.Contains("Log in", content);
+    }
 }

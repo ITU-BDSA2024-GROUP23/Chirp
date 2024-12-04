@@ -1,1 +1,1 @@
-public record CheepDTO(string Author, string Text, string TimeStamp);
+public record CheepDTO(int Id, string Author, string Text, string TimeStamp);

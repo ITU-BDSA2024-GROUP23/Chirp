@@ -8,8 +8,22 @@ public class User : IdentityUser
     public required ICollection<Follower> Following { get; set; }
     [Required]
     public required ICollection<Follower> Followers { get; set; }
-    [Required]
-    public override required string UserName { get; set; }
-    [Required]
-    public override required string Email { get; set; }
+
+    public UserDTO? ToUserDTO()
+    {
+        if (UserName == null)
+        {
+            return null;
+        }
+        if (Email == null)
+        {
+            return null;
+        }
+
+        return new UserDTO(
+            Id: Id,
+            UserName: UserName,
+            Email: Email
+        );
+    }
 }
