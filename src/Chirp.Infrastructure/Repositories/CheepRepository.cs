@@ -1,4 +1,7 @@
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
+
+using NuGet.ProjectModel;
 
 public class CheepRepository : ICheepRepository
 {
@@ -74,6 +77,31 @@ public class CheepRepository : ICheepRepository
         var result = query.FirstOrDefault() + 1;
         return result;
     }
+
+    public async Task<Cheep?> GetCheep(int cheepId) 
+    {
+        var query = _context.Cheeps
+            .Where(cheep => cheep.CheepId == cheepId)
+            .Select(cheep => cheep);
+        var result = await query.FirstOrDefaultAsync();
+        return result;
+    } 
+
+    public async Task<bool> HasLiked(User user, int cheepId)
+    {
+        var query = _context.Likes
+            .Where(l => l.Liker.Id == user.Id && l.Post.CheepId == cheepId);
+        var result = await query.FirstOrDefaultAsync();
+        return result != null;
+    }
+
+    public async Task<int> GetLikes(int cheepId)
+    {
+        var query = _context.Likes
+            .Where(l => l.Post.CheepId == cheepId);
+        var result = await query.ToListAsync();
+        return result.Count;
+    }
     #endregion
 
     #region Commands
@@ -113,6 +141,34 @@ public class CheepRepository : ICheepRepository
         }
         _context.Cheeps.Remove(cheep);
         await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> LikeCheep(User liker, Cheep cheep)
+    {
+        Like newLike = new Like
+        {
+            Liker = liker,
+            Post = cheep
+        };
+
+        _context.Likes.Add(newLike);
+        await _context.SaveChangesAsync();
+
+        return true;
+    }
+
+    public async Task<bool> UnlikeCheep(User unliker, Cheep cheep)
+    {
+        Like likeToRemove = new Like
+        {
+            Liker = unliker,
+            Post = cheep
+        };
+
+        _context.Likes.Remove(likeToRemove);
+        await _context.SaveChangesAsync();
+
         return true;
     }
     #endregion

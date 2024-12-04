@@ -73,7 +73,7 @@ public abstract class TimelineModel : PageModel
 
     public async Task<IActionResult> OnPostUnfollow(string followee)
     {
-        if (!User.Identity!.IsAuthenticated)
+        if (User.Identity == null || !User.Identity.IsAuthenticated)
         {
             return ShowError("You must be logged in to unfollow someone!");
         }
@@ -97,9 +97,61 @@ public abstract class TimelineModel : PageModel
         return RedirectToPage();
     }
 
+    public async Task<IActionResult> OnPostLike(int cheepId) 
+    {
+        User? liker = await _signInManager.UserManager.GetUserAsync(User);
+
+        if (liker == null || User.Identity == null || !User.Identity.IsAuthenticated)
+        {
+            return ShowError("You must be logged in to interact with posts!");
+        }
+
+        if (!await _cheepService.LikeCheep(liker, cheepId)) 
+        {
+            return ShowError("Something went wrong!");
+        }
+
+        TempData["alert-success"] = $"You liked the post";
+        return RedirectToPage();
+    }
+
+    public async Task<IActionResult> OnPostUnlike(int cheepId) 
+    {
+        User? unliker = await _signInManager.UserManager.GetUserAsync(User);
+
+        if (unliker == null || User.Identity == null || !User.Identity.IsAuthenticated)
+        {
+            return ShowError("You must be logged in to interact with posts!");
+        }
+
+        if (!await _cheepService.UnlikeCheep(unliker, cheepId)) {
+            return ShowError("Something went wrong!");
+        }
+        
+        TempData["alert-success"] = $"You no longer like this post!";
+        return RedirectToPage();
+    }
+
     public bool IsFollowing(string author)
     {
         return Following.Any(f => f.UserName == author);
+    }
+
+    public async Task<bool> HasLiked(int cheepId) 
+    {
+        User? user = await _signInManager.UserManager.GetUserAsync(User);
+
+        if (user == null || User.Identity == null || !User.Identity.IsAuthenticated)
+        {
+            return false;
+        }
+
+        return await _cheepService.HasLiked(user, cheepId);
+    }
+
+    public async Task<int> GetLikes(int cheepId) 
+    {
+        return await _cheepService.GetLikes(cheepId);
     }
 
     protected async Task GetFollowedUsers()

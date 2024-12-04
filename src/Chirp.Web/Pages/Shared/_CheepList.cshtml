@@ -23,7 +23,23 @@
                             <button type="submit" class="btn btn-sm btn-outline-success">Follow</button>
                         </form>
                     }
+
+                    @if (await Model.HasLiked(cheep.Id))
+                    {
+                        <form method="post" asp-page-handler="Unlike" class="d-inline ms-2">
+                            <input type="hidden" name="cheepId" value="@cheep.Id" />
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Unlike</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form method="post" asp-page-handler="Like" class="d-inline ms-2">
+                            <input type="hidden" name="cheepId" value="@cheep.Id" />
+                            <button type="submit" class="btn btn-sm btn-outline-success">Like</button>
+                        </form>
+                    }
                 }
+                <p>Likes: @await Model.GetLikes(cheep.Id)</p>
                 </div>
             </div>
             <p class="card-text">
