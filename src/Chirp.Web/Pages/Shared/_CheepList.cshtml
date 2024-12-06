@@ -32,16 +32,6 @@
             <p class="text-muted small mb-0">
                 <small>@cheep.TimeStamp</small>
                 <div class="d-flex align-items-center">
-                    @if (User.Identity != null && cheep.Author == User.Identity.Name)
-                    {
-                        <form method="post" asp-page-handler="DeleteCheep">
-                            <button type="submit" class="border-0 bg-transparent p-0">
-                                <input type="hidden" name="cheepId" value="@cheep.Id" />
-                                <img src="~/images/trash.svg" style="width: 15px; height: 15px;"/>
-                            </button>
-                        </form>
-                    }
-                    
                     @if(User.Identity != null && User.Identity.IsAuthenticated)
                     {
                         @if(await Model.HasLiked(cheep.Id))
@@ -70,6 +60,15 @@
                     <span class="ms-1">
                         @await Model.GetLikes(cheep.Id)
                     </span>
+                    @if (User.Identity != null && cheep.Author == User.Identity.Name)
+                    {
+                        <form method="post" asp-page-handler="DeleteCheep">
+                            <button type="submit" class="border-0 bg-transparent p-0 ms-2">
+                                <input type="hidden" name="cheepId" value="@cheep.Id" />
+                                <img src="~/images/trash.svg" style="width: 15px; height: 15px;"/>
+                            </button>
+                        </form>
+                    }
                 </div>
             </p>
         </div>
