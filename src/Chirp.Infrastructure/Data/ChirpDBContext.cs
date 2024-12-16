@@ -31,19 +31,9 @@ public class ChirpDBContext : IdentityDbContext<User>
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<Follower>()
-            .HasKey(f => new { f.FollowerId, f.FolloweeId });
-
-        modelBuilder.Entity<Follower>()
-            .HasOne(f => f.FollowerUser)
-            .WithMany(u => u.Following)
-            .HasForeignKey(f => f.FollowerId);
-
-        modelBuilder.Entity<Follower>()
-            .HasOne(f => f.FolloweeUser)
-            .WithMany(u => u.Followers)
-            .HasForeignKey(f => f.FolloweeId);
+            .HasKey("FollowerId", "FolloweeId");
 
         modelBuilder.Entity<Like>()
-            .HasKey("Id", "CheepId");
+            .HasKey("UserId", "CheepId");
     }
 }
