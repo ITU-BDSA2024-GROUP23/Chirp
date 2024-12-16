@@ -8,7 +8,7 @@ authors:
 - "Philip Rosenhagen <phro@itu.dk>"
 - "Kasper Jønsson <kasjo@itu.dk>"
 numbersection: true
----  
+---
 
 ## Design and architecture
 
@@ -19,13 +19,14 @@ numbersection: true
 - In case you are using ASP.NET Identity, make sure to illustrate that accordingly.
 
 ### Architecture — In the small
+
 The architecture of our Chirp application is based on the "Onion Architecture" pattern. This pattern is a layered architecture that enforces seperation of concers and invites a clear dependency flow. The following diagram illustrates the layers of our application and the dependencies between them:
 
-![Onion Architecture](images/Onion.png)
+![Onion Architecture](./images/onion.png)
 
 At the center of the application is the **Core** layer. This layer contains the domain model, interfaces, and DTOs. As seen in the diagram, the "Core" layer is dependent on nothing, but is depended on by many other layers. This is, as mentioned, a key principle of the Onion Architecture pattern.
 
-The **Infrastructure** layer is responsible for data access, migrations, seeding, and our services. This layer is dependent on the **Core** layer, as it needs to interact with the domain model. 
+The **Infrastructure** layer is responsible for data access, migrations, seeding, and our services. This layer is dependent on the **Core** layer, as it needs to interact with the domain model.
 
 The outermost layer is the **Web** layer. This layer is resposible for delivering the application to the user. It uses ASP.NET Core to handle HTTP requests and is responsible for rendering the pages. Furthermore, it has the application's entry point, the `Program` class, which is responsible for configuring the application and starting the server.
 
@@ -44,19 +45,19 @@ The outermost layer is the **Web** layer. This layer is resposible for deliverin
 
 Before showing how a user can traverse the chirp application, the diagram is going to follow these annotations:
 
-![AuthLegend](images/auth-legend.png)
+![AuthLegend](./images/auth-legend.png)
 
 To show what a user can do while being logged out, we have made a 'Unauthorized' UML diagram:
 
-![AuthUnauthed](images/Unauthorized.png)
+![AuthUnauthed](./images/unauthorized.png)
 
 When a user has logged in or signed up, they now have authorized access. This grants the user more possibilities on the Chirp platform visualized in the 'Authorized' UML diagram:
 
-![AuthAuthed](images/Authorized.png)
+![AuthAuthed](./images/authorized.png)
 
 To see the full picture of how it works together the whole application is laid out in 'Complete' UML diagram:
 
-![AuthComplete](images/Complete.png)
+![AuthComplete](./images/complete.png)
 
 ### Sequence of functionality/calls trough _Chirp!_
 
@@ -77,7 +78,7 @@ To see the full picture of how it works together the whole application is laid o
 
 - Describe the illustration briefly, i.e., how your application is built, tested, released, and deployed.
 
-[./images/Pipline.png]
+![Pipeline](./images/pipeline.png)
 
 Building, testing, releasing and deploying our application is all done via our pipeline. The first step of our pipeline is preparing it. This includes declaring different variables that the pipeline uses to dertermine which jobs and steps to run and which not to. When the pipeline runs on the `main` branch, the entire pipeline is run through. This includes releasing our program and deploying our application and docs. When the pipeline runs on the `staging` branch, the pipeline will skip the deploying jobs, since a staging slot in Azure cost money and we don't want docs for our pre-release. The release it creates will be a pre-release inlcuding the short SHA of the latest commit in the version, still following the SemVer version scheme. Every other branch runs testing and linting and skips relasing and deploying.
 
@@ -103,23 +104,29 @@ When necessary, we will make sure everything works as expected on the `staging` 
 When running the test suite locally, you have to follow a few steps.
 First, if you haven't already, you need to clone the repository which is described in the previous section. You also need to have .NET 7 SDK installed on your machine. A version can be found [here](https://dotnet.microsoft.com/en-us/download/dotnet/7.0). After those steps are done, you can navigate to the cloned project folder and run the following commands:
 
-1. Setup GitHub oAuth secrets
-    ```bash
-    cd src/Chirp.Web
-    dotnet user-secrets set "GH_CLIENT_ID" YOUR_GITHUB_CLIENT_ID
-    dotnet user-secrets set "GH_CLIENT_SECRET" YOUR_GITHUB_CLIENT_SECRET
-    ```
-    Replace `YOUR_GITHUB_CLIENT_ID` and `YOUR_GITHUB_CLIENT_SECRET` with your own GitHub OAuth application credentials.
-2. Make sure Playwright is installed - if not, run the following command in the root of the project:
-    ```bash
-    pwsh test/PlaywrightTests/bin/Debug/net7.0/playwright.ps1 install --with-deps
-    ```
-3. Run the tests
-    ```bash
-    dotnet test
-    ```
+- Setup GitHub oAuth secrets
 
-If everything is set up correctly, the tests should run and you should see the results in the terminal.
+```bash
+cd src/Chirp.Web
+dotnet user-secrets set "GH_CLIENT_ID" <YOUR_GITHUB_CLIENT_ID>
+dotnet user-secrets set "GH_CLIENT_SECRET" <YOUR_GITHUB_CLIENT_SECRET>
+```
+
+Replace `YOUR_GITHUB_CLIENT_ID` and `YOUR_GITHUB_CLIENT_SECRET` with your own GitHub OAuth application credentials.
+
+- Make sure Playwright is installed - if not, run the following command in the root of the project:
+
+```bash
+pwsh test/PlaywrightTests/bin/Debug/net7.0/playwright.ps1 install --with-deps
+```
+
+- Run the tests
+
+```bash
+dotnet test
+```
+
+The tests should run and you should see the results in the terminal.
 
 ## Ethics
 
@@ -129,7 +136,7 @@ We are using an Apache 2.0 license.
 
 ### LLMs, ChatGPT, CoPilot, and others
 
-We have used ChatGPT and Github Copilot, which are powered by large language models (LLMs). A big part of utilizing these tools was generating boilerplate code and using them for our frontend development. While CoPilot helped a lot with boilerplate, ChatGPT helped with frontend and BackEnd. ChatGPT was particularly helpful when we wanted to have a starting point and get an idea of how to attack the issue. 
+We have used ChatGPT and Github Copilot, which are powered by large language models (LLMs). A big part of utilizing these tools was generating boilerplate code and using them for our frontend development. While CoPilot helped a lot with boilerplate, ChatGPT helped with frontend and BackEnd. ChatGPT was particularly helpful when we wanted to have a starting point and get an idea of how to attack the issue.
 
 The responses of the LLM's were very mixed and often dependent on the user. They could be somewhat confusing at times and if the user did not maintain a critical perspective, when used critically and only for inspiration, the responses were very helpful.
 
