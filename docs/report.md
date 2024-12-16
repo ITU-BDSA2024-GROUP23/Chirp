@@ -36,9 +36,7 @@ The outermost layer is the **Web** layer. This layer is resposible for deliverin
 - Remember, you developed a client-server application.
 - Illustrate the server component and to where it is deployed, illustrate a client component, and show how these communicate with each other.
 
-![DeployedApp](images/deployedapp.png)
-
-
+![Deployed App](images/deployed-app.png)
 
 ### User activities
 
@@ -49,19 +47,19 @@ The outermost layer is the **Web** layer. This layer is resposible for deliverin
 
 Before showing how a user can traverse the chirp application, the diagram is going to follow these annotations:
 
-![AuthLegend](./images/auth-legend.png)
+![Auth Legend](./images/auth-legend.png)
 
 To show what a user can do while being logged out, we have made a 'Unauthorized' UML diagram:
 
-![AuthUnauthed](./images/unauthorized.png)
+![Auth Unauthed](./images/unauthorized.png)
 
 When a user has logged in or signed up, they now have authorized access. This grants the user more possibilities on the Chirp platform visualized in the 'Authorized' UML diagram:
 
-![AuthAuthed](./images/authorized.png)
+![Auth Authed](./images/authorized.png)
 
 To see the full picture of how it works together the whole application is laid out in 'Complete' UML diagram:
 
-![AuthComplete](./images/complete.png)
+![Auth Complete](./images/complete.png)
 
 ### Sequence of functionality/calls trough _Chirp!_
 
