@@ -36,6 +36,10 @@ The outermost layer is the **Web** layer. This layer is resposible for deliverin
 - Remember, you developed a client-server application.
 - Illustrate the server component and to where it is deployed, illustrate a client component, and show how these communicate with each other.
 
+![DeployedApp](images/deployedapp.png)
+
+
+
 ### User activities
 
 - Illustrate typical scenarios of a user journey through your _Chirp!_ application.
