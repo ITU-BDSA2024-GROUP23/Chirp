@@ -1,13 +1,12 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 public class Follower
 {
-    [Required]
-    public required string FollowerId { get; set; }
+    [ForeignKey("FollowerId")]
     [Required]
     public required User FollowerUser { get; set; }
-    [Required]
-    public required string FolloweeId { get; set; }
+    [ForeignKey("FolloweeId")]
     [Required]
     public required User FolloweeUser { get; set; }
     [Required]

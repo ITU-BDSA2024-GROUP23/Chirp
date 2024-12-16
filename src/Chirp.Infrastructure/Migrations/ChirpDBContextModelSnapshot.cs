@@ -281,13 +281,13 @@ namespace Chirp.Infrastructure.Migrations
             modelBuilder.Entity("Follower", b =>
                 {
                     b.HasOne("User", "FolloweeUser")
-                        .WithMany("Followers")
+                        .WithMany()
                         .HasForeignKey("FolloweeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("User", "FollowerUser")
-                        .WithMany("Following")
+                        .WithMany()
                         .HasForeignKey("FollowerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -365,13 +365,6 @@ namespace Chirp.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("User", b =>
-                {
-                    b.Navigation("Followers");
-
-                    b.Navigation("Following");
                 });
 #pragma warning restore 612, 618
         }
