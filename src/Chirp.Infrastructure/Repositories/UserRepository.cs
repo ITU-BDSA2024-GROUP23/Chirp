@@ -60,12 +60,18 @@ public class UserRepository : IUserRepository
 
     #region Commands
 
-    // Note: All Cheeps and interactions related to this user are
-    // deleted cascadingly by virtue of our DDL. 
     public async Task<bool> DeleteUser(UserDTO user)
     {
         User? userToForget = await UserFromDTO(user);
         if (userToForget == null) return false;
+
+        // Remove cheeps
+        var cheepsToRemove = _context.Cheeps.Where(c => c.Author.Id == user.Id);
+        _context.Cheeps.RemoveRange(cheepsToRemove);
+
+        // Remove followers
+        var followersToRemove = _context.Followers.Where(f => f.FolloweeUser.Id == user.Id || f.FollowerUser.Id == user.Id);
+        _context.Followers.RemoveRange(followersToRemove);
 
         // Remove user
         _context.Users.Remove(userToForget);
