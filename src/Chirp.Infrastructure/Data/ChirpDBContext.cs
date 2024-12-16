@@ -34,6 +34,6 @@ public class ChirpDBContext : IdentityDbContext<User>
             .HasKey("FollowerId", "FolloweeId");
 
         modelBuilder.Entity<Like>()
-            .HasKey("Id", "CheepId");
+            .HasKey("UserId", "CheepId");
     }
 }

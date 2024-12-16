@@ -60,13 +60,13 @@ namespace Chirp.Infrastructure.Migrations
 
             modelBuilder.Entity("Like", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<string>("UserId")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("CheepId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("Id", "CheepId");
+                    b.HasKey("UserId", "CheepId");
 
                     b.HasIndex("CheepId");
 
@@ -307,7 +307,7 @@ namespace Chirp.Infrastructure.Migrations
 
                     b.HasOne("User", "Liker")
                         .WithMany()
-                        .HasForeignKey("Id")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

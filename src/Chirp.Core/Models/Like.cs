@@ -6,7 +6,7 @@ public class Like
     [ForeignKey("CheepId")]
     [Required]
     public required Cheep Post { get; set; }
-    [ForeignKey("Id")]
+    [ForeignKey("UserId")]
     [Required]
     public required User Liker { get; set; }
 }
