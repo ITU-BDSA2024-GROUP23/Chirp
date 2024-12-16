@@ -15,6 +15,8 @@ public abstract class TimelineModel : PageModel
     [BindProperty]
     public CheepBoxModel CheepBox { get; set; } = new();
     protected readonly SignInManager<User> _signInManager;
+    public int TotalCheeps { get; set; }
+    public int CurrentPage { get; set; } = 1;
 
     public TimelineModel(
         SignInManager<User> signInManager,

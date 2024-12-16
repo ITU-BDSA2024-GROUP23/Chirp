@@ -12,4 +12,5 @@ public interface ICheepRepository
     public Task<bool> UnlikeCheep(User unliker, Cheep cheep);
     public Task<bool> HasLiked(User user, int cheepId);
     public Task<int> GetLikes(int cheepId);
+    public Task<int> GetTotalCheeps();
 }

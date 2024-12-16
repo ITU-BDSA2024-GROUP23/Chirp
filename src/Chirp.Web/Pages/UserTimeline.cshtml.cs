@@ -17,13 +17,12 @@ public class UserTimelineModel : TimelineModel
     }
 
     /// <summary>
-    /// Handles HTTP GET requests to display "cheeps" (user-generated content) for a specific user or email address. <br/>
-    /// This method determines the source of the request (authenticated user, email, or username) and retrieves the<br/>
-    /// corresponding cheeps, while also preparing user-specific information.
+    /// 1. Get the user's cheeps if the user is authenticated and the user is the same as the user in the URL<br/>
+    /// 2. Get the cheeps from username if the user is not authenticated <br/>
+    /// 3. Get the cheeps from an email if the user is not authenticated and the user is an email <br/>
     /// </summary>
-    /// <param name="user"></param>
-    /// <param name="page"></param>
-    /// <returns></returns>
+    /// <param name="user">The user/email to get the cheeps from</param>
+    /// <param name="page">The page number</param>
     public async Task<IActionResult> OnGetAsync(string user, [FromQuery(Name = "page")] int page = 1)
     {
         page = Math.Max(0, page - 1);
@@ -49,6 +48,11 @@ public class UserTimelineModel : TimelineModel
         return Page();
     }
 
+    /// <summary>
+    /// This method is called upon accessing the user timeline page. <br/>
+    /// It is responsible for creating the user card, that shows the user's information. <br/>
+    /// If a user is not found, it shows a dummy user card. <br/>
+    /// </summary>
     private async Task PrepareUserInfo(string user)
     {
         userInfo = await _userService.GetUserInfoDTO(user);

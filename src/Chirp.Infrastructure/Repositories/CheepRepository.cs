@@ -102,6 +102,14 @@ public class CheepRepository : ICheepRepository
         var result = await query.ToListAsync();
         return result.Count;
     }
+
+    public async Task<int> GetTotalCheeps()
+    {
+        var query = _context.Cheeps
+            .Select(cheep => cheep);
+        var result = await query.CountAsync();
+        return result;
+    }
     #endregion
 
     #region Commands

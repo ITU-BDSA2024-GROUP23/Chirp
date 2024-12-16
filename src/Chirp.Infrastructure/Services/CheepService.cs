@@ -11,6 +11,7 @@ public interface ICheepService
     public Task<bool> UnlikeCheep(User unliker, int cheepId);
     public Task<bool> HasLiked(User user, int cheepId);
     public Task<int> GetLikes(int cheepId);
+    Task<int> GetTotalCheeps();
 }
 
 public class CheepService : ICheepService
@@ -87,5 +88,10 @@ public class CheepService : ICheepService
     public async Task<int> GetLikes(int cheepId)
     {
         return await _cheepRepository.GetLikes(cheepId);
+    }
+
+    public async Task<int> GetTotalCheeps()
+    {
+        return await _cheepRepository.GetTotalCheeps();
     }
 }
