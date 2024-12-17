@@ -1,0 +1,28 @@
+@startuml
+!theme vibrant 
+
+title lint-and-test.yml
+start
+
+partition "Testing" {
+    :Checkout repository;
+    :Setup .NET;
+    :Get Chirp.Web secrets;
+    :Restore dependencies;
+    :Build project;
+    :Install browsers;
+    :Run tests;
+}
+
+partition "Lint solution" {
+      :Checkout repository;
+      :Setup .NET;
+      :Install dotnet format;
+      :Restore dependencies;
+      :Build project;
+      :Lint project;
+}
+
+stop
+
+@enduml

@@ -1,0 +1,17 @@
+@startuml
+!theme vibrant
+
+title deploy-service-to-azure.yml
+
+start
+:Checkout repository;
+:Setup .NET;
+:Restore project dependencies;
+:Build project in release mode;
+:Archive the web packages;
+:Login to Azure using OIDC;
+:Deploy to Azure Web App;
+
+stop
+
+@enduml

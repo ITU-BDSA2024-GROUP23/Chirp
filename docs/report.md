@@ -13,7 +13,7 @@ numbersections: true
 # Design and architecture
 
 ## Domain model
-The centerpiece of our domain model is the User class. It inherits from the ASP.NET's IdentityUser class allowing us to use ASP.NET Identity to manage our users. This offloads a lot of heavy lifting such as login, registration and authentication, instead letting us focus on developing other essential features for Chirp. All other classes in the domain model are dependent on the User class. Whether it be a Cheep requiering an author, or a Like requiring a liker, they all must reference an instance of a User. This, in combination with ASP.NET Identity, makes it easy to verify that only authenticated users can interact with the site, such as following people, writing or liking cheeps. An illustration of our domain model can be seen below:
+The centerpiece of our domain model is the User class. It inherits from the ASP.NET's IdentityUser class allowing us to use ASP.NET Identity to manage our users. This offloads a lot of heavy lifting such as login, registration and authentication, instead letting us focus on developing other essential features for Chirp. All other classes in the domain model are dependent on the User class. Whether it would be a Cheep requiering an author, or a Like requiring a liker, they all must reference an instance of a User. This, in combination with ASP.NET Identity, makes it easy to verify that only authenticated users can interact with the site, such as following people, writing or liking cheeps. An illustration of our domain model can be seen below:
 
 ![Domain model of Chirp](./images/domain-model.png){width=80%}
 
@@ -37,8 +37,16 @@ The outermost layer is the **Web** layer. This layer is resposible for deliverin
 
 ![Deployed App](images/deployed-app.png){width=80%}
 
-Our Chirp application uses an Microsoft Azure server and is deployes using this. 
-
+1. Microsoft Azure Server:
+    - The application server is hozted on Azure App Service.
+    - It handles incoming requests, logic and interactions with the database.
+2. User Interaction:
+    - Users interact with the application through their browser
+    - The browser sends HTTPS requests to the server hosted on Azure for secure communication.
+3. Database Communication:
+    - The server queries our SQLite database to retrieve and or store data
+4. Third-Party Authentication:
+    - Users login or sign in via Github Authentication, which is depicted in the er diagram
 
 ## User activities
 
@@ -47,49 +55,66 @@ Before showing how a user can interact with the chirp application, the diagrams 
 
 ![Auth Legend](./images/auth-legend.png){width=80%}
 
-To show how a user can interact can interact with the website while being logged out, we have made an 'Unauthorized' UML diagram:
+To show how a user can interact with the website while being logged out, we have made an 'Unauthorized' UML diagram:
 
 ![Auth Unauthed](./images/unauthorized.png){width=80%}
 
-When a user has logged in or signed up, they now have authorized access. This grants the user more possibilities on the Chirp platform visualized in the 'Authorized' UML diagram:
+When a user has logged in or signed up, they now have authorized access. This grants the user more possibilities on the Chirp platform, visualized in the 'Authorized' UML diagram:
 
 ![Auth Authed](./images/authorized.png){width=80%}
 
-To see the full picture of how it all works together in tandem the whole application is laid out in 'Complete' UML diagram:
+To see the full picture of how it all works together in tandem, the whole application is laid out in the 'Complete' UML diagram:
 
 ![Auth Complete](./images/Complete.png){width=80%}
 
 ## Sequence of functionality/calls trough _Chirp!_
 
 - With a UML sequence diagram, illustrate the flow of messages and data through your _Chirp!_ application.
-- Start with an HTTP request that is send by an unauthorized user to the root endpoint of your application and end with the completely rendered web-page that is returned to the user.
+- Start with an HTTP request that is sent by an unauthorized user to the root endpoint of your application and end with the completely rendered web-page that is returned to the user.
 
 - Make sure that your illustration is complete.
 - That is, likely for many of you there will be different kinds of "calls" and responses.
 - Some HTTP calls and responses, some calls and responses in C# and likely some more.
 - (Note the previous sentence is vague on purpose. I want that you create a complete illustration.)
 
+The flow of data in the application is depicted in the UML sequence diagram 'sequence':
+
+![Auth Complete](./images/sequence.png){width=80%}
+
 # Process
 
 ## Build, test, release, and deployment
 
-- Illustrate with a UML activity diagram how your _Chirp!_ applications are build, tested, released, and deployed.
-- That is, illustrate the flow of activities in your respective GitHub Actions workflows.
+![Pipeline](./images/pipeline/pipeline.png){width=80%}
 
-- Describe the illustration briefly, i.e., how your application is built, tested, released, and deployed.
+This is our pipeline workflow which job is to combine the other workflows.
 
-![Pipeline](./images/pipeline.png){width=80%}
+![Prepare pipeline](./images/pipeline/prepare-pipeline.png){width=80%}
 
-Building, testing, releasing and deploying our application is all done via our pipeline. The first step of our pipeline is preparing it. This includes declaring different variables that the pipeline uses to dertermine which jobs and steps to run and which not to. When the pipeline runs on the `main` branch, the entire pipeline is run through. This includes releasing our program and deploying our application and docs. When the pipeline runs on the `staging` branch, the pipeline will skip the deploying jobs, since a staging slot in Azure cost money and we don't want docs for our pre-release. The release it creates will be a pre-release inlcuding the short SHA of the latest commit in the version, still following the SemVer version scheme. Every other branch runs testing and linting and skips relasing and deploying.
+Our prepare pipeline workflow prepares declares variables that other workflows uses.
+
+![Lint and test](./images/pipeline/lint-and-test.png){width=80%}
+
+This workflow is responsible for linting and testing our code. The testing is done on a Windows and a Linux runner. If the tests fail, the linting will not run. The linting is only done on the Linux runner - it lints by running `dotnet format --verify-`
+
+![Build and release](./images/pipeline/build-and-release.png){width=80%}
+
+Will build and create a release/pre-release depending on which branch it runs on.
+
+![Deploy to Azure](./images/pipeline/deploy-to-azure.png){width=80%}
+
+This deploys our service to Azure.
+
+Building, testing, releasing and deploying our application is all done via our pipeline. The first step of our pipeline is preparing it. This includes declaring different variables, that the pipeline uses to determine which jobs and steps to run, and which not to. When the pipeline runs on the `main` branch, the entire pipeline is run through. This includes releasing our program and deploying our application and docs. When the pipeline runs on the `staging` branch, the pipeline will skip the deploying jobs, since a staging slot in Azure cost money and we don't want docs for our pre-release. The release it creates will be a pre-release including the short SHA of the latest commit in the version, still following the SemVer version scheme. Every other branch runs testing and linting and skips releasing and deploying.
 
 ## Team work
 
 - Show a screenshot of your project board right before hand-in.
 - Briefly describe which tasks are still unresolved, i.e., which features are missing from your applications or which functionality is incomplete.
 
-When a contributor wants to create a new issue, the first thing they will do is go to the GitHub repository and find the `Issues` sections. The contributor will then find and click on the `new issue` button and will be promted to select an issue template, where in our case there is only 1. The template will help them fill out the issue in a generic way with a issue description and some acceptance criteria if necessary. When the issue is created, it will soon be labeled and assigned to a developer aswell as our Chirp project board. On the project board it will also be given a status, priority aswell as an optional week, start date and end date. We also use milestones to keep track of when issues need to be done. As an example our milestones was the project reviews and the project presentation.
+When a contributor wants to create a new issue, the first thing they will do is go to the GitHub repository and find the `Issues` sections. The contributor will then find and click on the `new issue` button and will be prompted to select an issue template, where in our case there is only one. The template will help them fill out the issue in a generic way with an issue description and some acceptance criteria if necessary. When the issue is created, it will soon be labeled and assigned to a developer, as well as our Chirp project board. On the project board it will also be given a status, priority as well as an optional week, start date and end date. We also use milestones to keep track of when issues need to be done. As an example our milestones was the project reviews and the project presentation.
 
-The issue is now ready for a contributor to pickup and start working on. First step is to branch out from our `staging` branch to create a new feature branch. This branch needs to follow the naming conventions described in the [README.md](https://github.com/ITU-BDSA2024-GROUP22/Chirp/README.md#branch-naming-conventions). When the development of the issue progresses, the contributor will update the acceptance criteria marking them complete, aswell as clear out any complications that might occur under development. When all acceptance criteria are marked completed, the contributor will create a pull request from the feature branch back into the `staging` branch. On all branches, our pipeline (GitHub workflow) will run all our tests as well as lint our code on every commit. This workflow needs to complete successfully before a merge from the feature branch is available, aswell as atleast 2 people needs to review and accept the incoming changes in the pull request. When the pull request is merged into `staging`, our pipeline will be triggered for the staging branch that runs all the same steps aswell as creating a pre-release for the version. The pipeline includes a version check against the [official SemVer regex](https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string). If this fails, the pipeline will crash berfore creating the pre-release.
+The issue is now ready for a contributor to pickup and start working on it. First step is to branch out from our `staging` branch to create a new feature branch. This branch needs to follow the naming conventions described in the [README.md](https://github.com/ITU-BDSA2024-GROUP22/Chirp/README.md#branch-naming-conventions). When the development of the issue progresses, the contributor will update the acceptance criteria marking them complete, as well as clear out any complications that might occur under development. When all acceptance criteria are marked completed, the contributor will create a pull request from the feature branch back into the `staging` branch. On all branches, our pipeline (GitHub workflow) will run all our tests as well as lint our code on every commit. This workflow needs to complete successfully before a merge from the feature branch is available, as well as atleast 2 people needs to review and accept the incoming changes in the pull request. When the pull request is merged into `staging`, our pipeline will be triggered for the staging branch that runs all the same steps as well as creating a pre-release for the version. The pipeline includes a version check against the [official SemVer regex](https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string). If this fails, the pipeline will crash berfore creating the pre-release.
 
 When necessary, we will make sure everything works as expected on the `staging` branch, creating new test for errors we find and at last create a pull request from `staging` into our `main` branch. When the pull-request is accepted, it will again trigger our pipeline wich will automatically verify the version again and also make sure that no previous releases exists of that version. If everything is fine, our pipeline will create a release. We then update the release note to include all changes made referencing the issues we resovled in this version bump. The pipeline will also deploy our new version of the application to Azure.
 
@@ -114,7 +139,7 @@ Now that you have cloned our repository, you should navigate to `Chirp.Web` by r
 cd ./Chirp/src/Chirp.Web
 ```
 
-Before running the application, you need to set up trhe GitHub oAuth secrets. This can be done by running the following commands in your terminal:
+Before running the application, you need to set up the GitHub oAuth secrets. This can be done by running the following commands in your terminal:
 
 ```bash
 dotnet user-secrets set "GH_CLIENT_ID" <YOUR_GITHUB_CLIENT_ID>
