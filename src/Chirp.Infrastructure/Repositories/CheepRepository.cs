@@ -112,10 +112,10 @@ public class CheepRepository : ICheepRepository
     {
         var query = _context.Cheeps
             .Include(cheep => cheep.Author)
-            .Where(cheep => 
+            .Where(cheep =>
                 cheep.Author.UserName == userName ||
-                _context.Followers.Any(f => 
-                    f.FollowerUser.UserName == userName && 
+                _context.Followers.Any(f =>
+                    f.FollowerUser.UserName == userName &&
                     f.FolloweeUser.Id == cheep.Author.Id))
             .OrderByDescending(cheep => cheep.TimeStamp)
             .Skip(page * pageSize)
