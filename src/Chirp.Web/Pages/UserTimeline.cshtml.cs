@@ -91,5 +91,4 @@ public class UserTimelineModel : TimelineModel
 
         Cheeps = cheeps;
     }
-
 }
