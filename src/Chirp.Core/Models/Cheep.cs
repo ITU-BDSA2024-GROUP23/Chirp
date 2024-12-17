@@ -22,7 +22,7 @@ public class Cheep
             Id: CheepId,
             Author: Author.UserName,
             Text: Text,
-            TimeStamp: TimeStamp.ToString()
+            TimeStamp: TimeStamp.ToString("dd/MM/yyyy HH:mm:ss")
         );
     }
 }
