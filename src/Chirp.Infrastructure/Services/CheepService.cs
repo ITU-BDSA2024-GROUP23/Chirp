@@ -11,7 +11,10 @@ public interface ICheepService
     public Task<bool> UnlikeCheep(User unliker, int cheepId);
     public Task<bool> HasLiked(User user, int cheepId);
     public Task<int> GetLikes(int cheepId);
-    Task<int> GetTotalCheeps();
+    public Task<int> GetTotalCheeps();
+    public Task<int> GetTotalCheepsUser(string name, bool authenticated);
+    public Task<List<CheepDTO>> GetCheepsForUserAndFollowees(string name, int page);
+    public Task<int> GetTotalCheepsEmail(string name, bool authenticated);
 }
 
 public class CheepService : ICheepService
@@ -90,8 +93,27 @@ public class CheepService : ICheepService
         return await _cheepRepository.GetLikes(cheepId);
     }
 
+    public async Task<List<CheepDTO>> GetCheepsForUserAndFollowees(string name, int page)
+    {
+        return await _cheepRepository.GetCheepsForUserAndFollowees(name, page);
+    }
+
+    //Used in Public Timeline
     public async Task<int> GetTotalCheeps()
     {
         return await _cheepRepository.GetTotalCheeps();
     }
+
+    //The following methods are used in UserTimeline. Should probably be refactored.
+    public async Task<int> GetTotalCheepsUser(string name, bool authenticated)
+    {
+        return await _cheepRepository.GetTotalCheeps(name, authenticated, false);
+    }
+
+    public async Task<int> GetTotalCheepsEmail(string name, bool authenticated)
+    {
+        return await _cheepRepository.GetTotalCheeps(name, authenticated, true);
+    }
+    
+
 }

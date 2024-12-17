@@ -25,22 +25,29 @@ public class UserTimelineModel : TimelineModel
     /// <param name="page">The page number</param>
     public async Task<IActionResult> OnGetAsync(string user, [FromQuery(Name = "page")] int page = 1)
     {
+        CurrentPage = page; // 1-based here but 0-based below. Bit confusing, so maybe we should change it to 0-based here too.
         page = Math.Max(0, page - 1);
         Regex emailRegex = new(@"^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$");
 
         await GetFollowedUsers();
 
+        //TODO: we need to refactor "TotalCheeps". Its being used in multiple places and is a bit ugly.
+
         if (User.Identity!.IsAuthenticated && User.Identity.Name == user)
         {
             await GetFollowedCheeps(page);
+            TotalCheeps = await _cheepService.GetTotalCheepsUser(user, true);
         }
         else if (emailRegex.IsMatch(user))
         {
             Cheeps = await _cheepService.GetCheepsFromEmail(user, page);
+            TotalCheeps = await _cheepService.GetTotalCheepsEmail(user, false);
+
         }
         else
         {
             Cheeps = await _cheepService.GetCheepsFromUserName(user, page);
+            TotalCheeps = await _cheepService.GetTotalCheepsUser(user, false);
         }
 
         await PrepareUserInfo(user);
@@ -72,7 +79,7 @@ public class UserTimelineModel : TimelineModel
 
     private async Task GetFollowedCheeps(int page)
     {
-        User? currentUser = await _signInManager.UserManager.GetUserAsync(User); // User is authenticated, so this should never be null - unless we delete the user entry from the database
+        User? currentUser = await _signInManager.UserManager.GetUserAsync(User);
         if (currentUser == null)
         {
             TempData["alert-error"] = "Your cookie has expired. Please log in again.";
@@ -81,26 +88,9 @@ public class UserTimelineModel : TimelineModel
             return;
         }
 
-        UserDTO? userDTO = currentUser.ToUserDTO();
-        if (userDTO == null)
-        {
-            TempData["alert-error"] = "An error occurred.";
-            await _signInManager.SignOutAsync();
-            RedirectToPage();
-            return;
-        }
+        var cheeps = await _cheepService.GetCheepsForUserAndFollowees(currentUser.UserName!, page);
 
-        var userCheeps = await _cheepService.GetCheepsFromUserName(userDTO.UserName, page);
-
-        var followedCheeps = new List<CheepDTO>();
-        foreach (UserDTO followee in Following)
-        {
-            followedCheeps.AddRange(await _cheepService.GetCheepsFromUserName(followee.UserName, page));
-        }
-
-        Cheeps = userCheeps
-            .Concat(followedCheeps)
-            .OrderByDescending(cheep => cheep.TimeStamp)
-            .ToList();
+        Cheeps = cheeps;
     }
+
 }

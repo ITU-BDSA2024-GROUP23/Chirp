@@ -1,7 +1,4 @@
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
-
-using NuGet.ProjectModel;
 
 public class CheepRepository : ICheepRepository
 {
@@ -110,6 +107,61 @@ public class CheepRepository : ICheepRepository
         var result = await query.CountAsync();
         return result;
     }
+
+    public async Task<List<CheepDTO>> GetCheepsForUserAndFollowees(string userName, int page)
+    {
+        var query = _context.Cheeps
+            .Include(cheep => cheep.Author)
+            .Where(cheep => 
+                cheep.Author.UserName == userName ||
+                _context.Followers.Any(f => 
+                    f.FollowerUser.UserName == userName && 
+                    f.FolloweeUser.Id == cheep.Author.Id))
+            .OrderByDescending(cheep => cheep.TimeStamp)
+            .Skip(page * pageSize)
+            .Take(pageSize)
+            .Select(cheep => cheep.ToCheepDTO())
+            .OfType<CheepDTO>();
+
+        return await query.ToListAsync();
+    }
+
+    /// <summary>
+    /// This method returns the total number of cheeps for a user. <br/>
+    /// If includeFollowed is true, it also includes the cheeps from the users that the user follows. <br/>
+    /// If isEmail is true, it searches for the user by email, otherwise by username. <br/>
+    /// This should be refactored in a future version, as it is very ugly and very slow. <br/>
+    /// We should look into caching the results
+    /// </summary>
+    /// <returns>0 if the user is not found, otherwise the total number of cheeps</returns>
+    public async Task<int> GetTotalCheeps(string name, bool includeFollowing, bool isEmail)
+    {
+        //get user by either email or username
+        var userFilter = isEmail
+            ? _context.Users.Where(u => u.Email == name)
+            : _context.Users.Where(u => u.UserName == name);
+
+        var user = await userFilter.SingleOrDefaultAsync();
+        if (user == null) return 0;
+
+        //get the cheeps from the user
+        var userCheeps = _context.Cheeps
+            .Include(cheep => cheep.Author)
+            .Where(cheep => cheep.Author.Id == user.Id);
+
+        //get the cheeps from the followed users
+        if (includeFollowing)
+        {
+            var followedCheeps = _context.Cheeps
+                .Include(cheep => cheep.Author)
+                .Where(cheep => _context.Followers.Any(f => f.FollowerId == user.Id && f.FolloweeId == cheep.Author.Id));
+
+            userCheeps = userCheeps.Concat(followedCheeps);
+        }
+
+        return await userCheeps.CountAsync();
+    }
+
     #endregion
 
     #region Commands
