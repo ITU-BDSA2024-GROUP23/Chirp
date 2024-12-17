@@ -7,28 +7,25 @@
 
 <nav aria-label="Page navigation">
     <ul class="pagination justify-content-center">
-        <!-- Previous Button -->
+        <!-- Previous page -->
         <li class="page-item @(currentPage == 1 ? "disabled" : "")">
             <a class="page-link" href="?page=@(currentPage - 1)" aria-label="Previous" data-bs-toggle="tooltip" title="Previous Page">
                 <span aria-hidden="true">&laquo;</span>
             </a>
         </li>
 
-        <!-- First Page -->
-        @if (currentPage > 2)
+        <!-- navgigate back to the first page -->
+        @if (currentPage > 3)
         {
             <li class="page-item">
                 <a class="page-link" href="?page=1" data-bs-toggle="tooltip" title="First Page">1</a>
             </li>
-            @if (currentPage > 3)
-            {
-                <li class="page-item disabled">
-                    <span class="page-link">...</span>
-                </li>
-            }
+            <li class="page-item disabled">
+                <span class="page-link">...</span>
+            </li>
         }
 
-        <!-- Page Numbers -->
+        <!-- page numbers between -->
         @for (var i = Math.Max(1, currentPage - 2); i <= Math.Min(totalPages, currentPage + 2); i++)
         {
             <li class="page-item @(currentPage == i ? "active" : "")">
@@ -37,20 +34,17 @@
         }
 
         <!-- Last Page -->
-        @if (currentPage < totalPages - 1)
+        @if (currentPage < totalPages - 2)
         {
-            @if (currentPage < totalPages - 2)
-            {
-                <li class="page-item disabled">
-                    <span class="page-link">...</span>
-                </li>
-            }
+            <li class="page-item disabled">
+                <span class="page-link">...</span>
+            </li>
             <li class="page-item">
                 <a class="page-link" href="?page=@totalPages" data-bs-toggle="tooltip" title="Last Page">@totalPages</a>
             </li>
         }
 
-        <!-- Next Button -->
+        <!-- Next page -->
         <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
             <a class="page-link" href="?page=@(currentPage + 1)" aria-label="Next" data-bs-toggle="tooltip" title="Next Page">
                 <span aria-hidden="true">&raquo;</span>
