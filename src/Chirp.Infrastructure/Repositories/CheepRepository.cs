@@ -154,7 +154,7 @@ public class CheepRepository : ICheepRepository
         {
             var followedCheeps = _context.Cheeps
                 .Include(cheep => cheep.Author)
-                .Where(cheep => _context.Followers.Any(f => f.FollowerId == user.Id && f.FolloweeId == cheep.Author.Id));
+                .Where(cheep => _context.Followers.Any(f => f.FollowerUser.Id == user.Id && f.FolloweeUser.Id == cheep.Author.Id));
 
             userCheeps = userCheeps.Concat(followedCheeps);
         }
