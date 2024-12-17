@@ -7,18 +7,18 @@ public static class DbInitializer
     {
         if (!(chirpContext.Users.Any() && chirpContext.Cheeps.Any()))
         {
-            var a1 = new User() { UserName = "Roger Histand", Email = "Roger+Histand@hotmail.com"};
-            var a2 = new User() { UserName = "Luanna Muro", Email = "Luanna-Muro@ku.dk"};
-            var a3 = new User() { UserName = "Wendell Ballan", Email = "Wendell-Ballan@gmail.com"};
-            var a4 = new User() { UserName = "Nathan Sirmon", Email = "Nathan+Sirmon@dtu.dk"};
-            var a5 = new User() { UserName = "Quintin Sitts", Email = "Quintin+Sitts@itu.dk"};
-            var a6 = new User() { UserName = "Mellie Yost", Email = "Mellie+Yost@ku.dk"};
-            var a7 = new User() { UserName = "Malcolm Janski", Email = "Malcolm-Janski@gmail.com"};
-            var a8 = new User() { UserName = "Octavio Wagganer", Email = "Octavio.Wagganer@dtu.dk"};
-            var a9 = new User() { UserName = "Johnnie Calixto", Email = "Johnnie+Calixto@itu.dk"};
-            var a10 = new User() { UserName = "Jacqualine Gilcoine", Email = "Jacqualine.Gilcoine@gmail.com"};
-            var a11 = new User() { UserName = "Helge", Email = "ropf@itu.dk"};
-            var a12 = new User() { UserName = "Adrian", Email = "adho@itu.dk"};
+            var a1 = new User() { UserName = "Roger Histand", Email = "Roger+Histand@hotmail.com" };
+            var a2 = new User() { UserName = "Luanna Muro", Email = "Luanna-Muro@ku.dk" };
+            var a3 = new User() { UserName = "Wendell Ballan", Email = "Wendell-Ballan@gmail.com" };
+            var a4 = new User() { UserName = "Nathan Sirmon", Email = "Nathan+Sirmon@dtu.dk" };
+            var a5 = new User() { UserName = "Quintin Sitts", Email = "Quintin+Sitts@itu.dk" };
+            var a6 = new User() { UserName = "Mellie Yost", Email = "Mellie+Yost@ku.dk" };
+            var a7 = new User() { UserName = "Malcolm Janski", Email = "Malcolm-Janski@gmail.com" };
+            var a8 = new User() { UserName = "Octavio Wagganer", Email = "Octavio.Wagganer@dtu.dk" };
+            var a9 = new User() { UserName = "Johnnie Calixto", Email = "Johnnie+Calixto@itu.dk" };
+            var a10 = new User() { UserName = "Jacqualine Gilcoine", Email = "Jacqualine.Gilcoine@gmail.com" };
+            var a11 = new User() { UserName = "Helge", Email = "ropf@itu.dk" };
+            var a12 = new User() { UserName = "Adrian", Email = "adho@itu.dk" };
 
             var authors = new List<User>
             {

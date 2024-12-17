@@ -8,7 +8,7 @@ public class ModelsTest
     public void UserCanBeInstantiated()
     {
         // Arrange
-        User user = new User { UserName = "Victor", Email = "vmem@itu.dk"};
+        User user = new User { UserName = "Victor", Email = "vmem@itu.dk" };
 
         // Assert
         Assert.Equal("Victor", user.UserName);
@@ -19,7 +19,7 @@ public class ModelsTest
     public void CheepCanBeInstantiated()
     {
         // Arrange
-        User user = new User { UserName = "Victor", Email = "vmem@itu.dk"};
+        User user = new User { UserName = "Victor", Email = "vmem@itu.dk" };
         Cheep cheep = new Cheep { CheepId = 1, Author = user, Text = "test", TimeStamp = DateTime.Now };
 
         // Assert
@@ -34,7 +34,7 @@ public class ModelsTest
         Cheep cheep = new Cheep
         {
             CheepId = 1,
-            Author = new User { UserName = "Victor", Email = "vmem@itu.dk"},
+            Author = new User { UserName = "Victor", Email = "vmem@itu.dk" },
             Text = "",
             TimeStamp = DateTime.Now
         };
@@ -56,7 +56,7 @@ public class ModelsTest
         Cheep cheep = new Cheep
         {
             CheepId = 1,
-            Author = new User { UserName = "Victor", Email = "vmem@itu.dk"},
+            Author = new User { UserName = "Victor", Email = "vmem@itu.dk" },
             Text = "",
             TimeStamp = DateTime.Now
         };
