@@ -13,10 +13,9 @@ numbersection: true
 ## Design and architecture
 
 ### Domain model
+The centerpiece of our domain model is the User class. It inherits from the ASP.NET's IdentityUser class allowing us to use ASP.NET Identity to manage our users. This offloads a lot of heavy lifting such as login, registration and authentication, instead letting us focus on developing other essential features for Chirp. All other classes in the domain model are dependent on the User class. Whether it be a Cheep requiering an author, or a Like requiring a liker, they all must reference an instance of a User. This, in combination with ASP.NET Identity, makes it easy to verify that only authenticated users can interact with the site, such as following people, writing or liking cheeps. An illustration of our domain model can be seen below:
 
-- Provide an illustration of your domain model.
-- Make sure that it is correct and complete.
-- In case you are using ASP.NET Identity, make sure to illustrate that accordingly.
+![Domain model of Chirp](./images/domain-model.png)
 
 ### Architecture — In the small
 
@@ -38,18 +37,17 @@ The outermost layer is the **Web** layer. This layer is resposible for deliverin
 
 ![Deployed App](images/deployed-app.png)
 
+
+
+
 ### User activities
 
-- Illustrate typical scenarios of a user journey through your _Chirp!_ application.
-- That is, start illustrating the first page that is presented to a non-authorized user, illustrate what a non-authorized user can do with your _Chirp!_ application, and finally illustrate what a user can do after authentication.
-
-- Make sure that the illustrations are in line with the actual behavior of your application.
-
-Before showing how a user can traverse the chirp application, the diagram is going to follow these annotations:
+In the following section, multiple UML diagrams will visualize the possible journeys through the application. 
+Before showing how a user can interact with the chirp application, the diagrams are going to follow these different legends:
 
 ![Auth Legend](./images/auth-legend.png)
 
-To show what a user can do while being logged out, we have made a 'Unauthorized' UML diagram:
+To show how a user can interact can interact with the website while being logged out, we have made an 'Unauthorized' UML diagram:
 
 ![Auth Unauthed](./images/unauthorized.png)
 
@@ -57,9 +55,9 @@ When a user has logged in or signed up, they now have authorized access. This gr
 
 ![Auth Authed](./images/authorized.png)
 
-To see the full picture of how it works together the whole application is laid out in 'Complete' UML diagram:
+To see the full picture of how it all works together in tandem the whole application is laid out in 'Complete' UML diagram:
 
-![Auth Complete](./images/complete.png)
+![Auth Complete](./images/Complete.png)
 
 ### Sequence of functionality/calls trough _Chirp!_
 
@@ -96,50 +94,75 @@ The issue is now ready for a contributor to pickup and start working on. First s
 When necessary, we will make sure everything works as expected on the `staging` branch, creating new test for errors we find and at last create a pull request from `staging` into our `main` branch. When the pull-request is accepted, it will again trigger our pipeline wich will automatically verify the version again and also make sure that no previous releases exists of that version. If everything is fine, our pipeline will create a release. We then update the release note to include all changes made referencing the issues we resovled in this version bump. The pipeline will also deploy our new version of the application to Azure.
 
 ### How to make _Chirp!_ work locally
+To run and clone the project you need the following prerequisites:
+- .NET 7 (for running the application)
+    - [Installation link](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)
+    - [Setup guide](https://learn.microsoft.com/en-us/dotnet/core/install/)
 
-- There has to be some documentation on how to come from cloning your project to a running system.
-- That is, Adrian or Helge have to know precisely what to do in which order.
-- Likely, it is best to describe how we clone your project, which commands we have to execute, and what we are supposed to see then.
+- Git CLI (for cloning the repository)
+    - [Installation link](https://git-scm.com/downloads)
+    - [Setup guide](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 
-### How to run test suite locally
-
-When running the test suite locally, you have to follow a few steps.
-First, if you haven't already, you need to clone the repository which is described in the previous section. You also need to have .NET 7 SDK installed on your machine. A version can be found [here](https://dotnet.microsoft.com/en-us/download/dotnet/7.0). After those steps are done, you can navigate to the cloned project folder and run the following commands:
-
-- Setup GitHub oAuth secrets
+After the installation of the prerequisites, you can clone the repository by running the following command in your terminal:
 
 ```bash
-cd src/Chirp.Web
+git clone https://github.com/ITU-BDSA2024-GROUP23/Chirp.git
+```
+Now that you have cloned our repository, you should navigate to `Chirp.Web` by running the following command in your terminal:
+
+```bash
+cd ./Chirp/src/Chirp.Web
+```
+
+Before running the application, you need to set up trhe GitHub oAuth secrets. This can be done by running the following commands in your terminal:
+
+```bash
 dotnet user-secrets set "GH_CLIENT_ID" <YOUR_GITHUB_CLIENT_ID>
 dotnet user-secrets set "GH_CLIENT_SECRET" <YOUR_GITHUB_CLIENT_SECRET>
 ```
 
-Replace `YOUR_GITHUB_CLIENT_ID` and `YOUR_GITHUB_CLIENT_SECRET` with your own GitHub OAuth application credentials.
+Replace `YOUR_GITHUB_CLIENT_ID` and `YOUR_GITHUB_CLIENT_SECRET` with your own GitHub oAuth application secrets. If you haven't already created a GitHub oAuth application it can be done [here](https://github.com/settings/applications/new). It is important that the callback URL is `http://localhost:5273/auth/github` and the homepage URL is `http://localhost:5273`.
 
-- Make sure Playwright is installed - if not, run the following command in the root of the project:
-
-```bash
-pwsh test/PlaywrightTests/bin/Debug/net7.0/playwright.ps1 install --with-deps
-```
-
-- Run the tests
+Finally, you can run the application by running the following command in your terminal. Please make sure you are in the `Chirp.Web` directory:
 
 ```bash
-dotnet test
+dotnet run
 ```
+
+### How to run test suite locally
+
+If you haven't already, please refer to the ["How to make _Chirp!_ work locally"](#how-to-make-chirp-work-locally) section to set up the prerequisites for installing .NET 7, Git CLI, and cloning the repository. Also, make sure you have set up the GitHub oAuth secrets as also described in the previous section.
+
+1. Install PowerShell if you haven't already.
+    - Instructions for installing PowerShell can be found [here](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell?view=powershell-7.4).
+2. Navigate to the root of the project in your terminal.
+    ```bash
+    cd ./Chirp
+    ```
+3. Make sure Playwright is installed - if not, run the following command in the root of the project:
+
+    ```bash
+    pwsh test/PlaywrightTests/bin/Debug/net7.0/playwright.ps1 install --with-deps
+    ```
+4. Run the tests
+
+    ```bash
+    dotnet test
+    ```
 
 The tests should run and you should see the results in the terminal.
 
-## Ethics
+## Ethics 
 
 ### License
 
 We are using an Apache 2.0 license.
 
 ### LLMs, ChatGPT, CoPilot, and others
+In the development of _Chirp!_ we have used two different large language models (LLMs) to help us with the development. The first one being GitHub Copilot and the second one being ChatGPT. While Copilot was being used constantly for small code completions, ChatGPT was more useful for finding ways to attack an issue or finding libraries to solve an issue. 
 
-We have used ChatGPT and Github Copilot, which are powered by large language models (LLMs). A big part of utilizing these tools was generating boilerplate code and using them for our frontend development. While CoPilot helped a lot with boilerplate, ChatGPT helped with frontend and BackEnd. ChatGPT was particularly helpful when we wanted to have a starting point and get an idea of how to attack the issue.
+The responses of ChatGPT were often wrong or incomplete, since it didn't have the full picture of the project. This meant that we had to remain critical of the responses, and not just blindly accept the answer. Since the responses were often wrong, we had to spend more time on the issue than if we had just solved it ourselves. The use of Copilot was more successful, since it was used for small code completions, where the context was clear. This meant that we sped up the development process 
 
-The responses of the LLM's were very mixed and often dependent on the user. They could be somewhat confusing at times and if the user did not maintain a critical perspective, when used critically and only for inspiration, the responses were very helpful.
 
-We feel that leveraging LLMs sped up the process of development mainly in getting started with an issue. If the user of the LLM was too reliant on the LLMs we feel it hindered both the learning outcome but also development
+
+
