@@ -42,7 +42,6 @@ public class UserTimelineModel : TimelineModel
         {
             Cheeps = await _cheepService.GetCheepsFromEmail(user, page);
             TotalCheeps = await _cheepService.GetTotalCheepsEmail(user, false);
-
         }
         else
         {
