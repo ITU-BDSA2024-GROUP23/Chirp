@@ -115,5 +115,4 @@ public class CheepService : ICheepService
         return await _cheepRepository.GetTotalCheeps(name, authenticated, true);
     }
 
-
 }
