@@ -2,13 +2,22 @@
 title: _Chirp!_ Project Report
 subtitle: ITU BDSA 2024 Group `23`
 author:
-- "Victor Memborg <vmem@itu.dk>"
+- "Victor Memborg-Heinrichsen <vmem@itu.dk>" 
 - "Axel Lund <axlu@itu.dk>"
-- "Philip Rosenhagen <phro@itu.dk>"
+- "Philip Engelbrecht Rosenhagen <phro@itu.dk>"
 - "Kasper Jønsson <kasjo@itu.dk>"
-- "Peter Hansen <pbjh@itu.dk>"
+- "Peter Bjørholm Hansen <pbjh@itu.dk>"
 numbersections: true
+papersize: a4
+geometry:
+- left=30mm
+- right=30mm
+toc: true
 ---
+
+::: {.raw .latex}
+\pagebreak
+:::
 
 # Design and architecture
 
@@ -65,7 +74,7 @@ When a user has logged in or signed up, they now have authorized access. This gr
 
 To see the full picture of how it all works together in tandem, the whole application is laid out in the 'Complete' UML diagram:
 
-![Auth Complete](./images/Complete.png){width=80%}
+![Auth Complete](./images/complete.png){width=80%}
 
 ## Sequence of functionality/calls trough _Chirp!_
 
@@ -194,10 +203,6 @@ We are using an Apache 2.0 license.
 ## LLMs, ChatGPT, CoPilot, and others
 In the development of _Chirp!_ we have used two different large language models (LLMs) to help us with the development. The first one being GitHub Copilot and the second one being ChatGPT. While Copilot was being used constantly for small code completions, ChatGPT was more useful for finding ways to attack an issue or finding libraries to solve an issue. 
 
-The responses of ChatGPT were often wrong or incomplete, since it didn't have the full picture of the project. This meant that we had to remain critical of the responses, and not just blindly accept the answer. Since the responses were often wrong, we had to spend more time on the issue than if we had just solved it ourselves. The use of Copilot was more successful, since it was used for small code completions, where the context was clear, which sped up the development process.
+The responses of ChatGPT were often wrong or incomplete, since it didn't have the full picture of the project. This meant that we had to remain critical of the responses, and not just blindly accept the answer. Since the responses were often wrong or misleading, we had to spend more time on the issue than if we had just solved it ourselves or remained critical. ChatGPT was more helpful when it came to more simple stuff such as Unit tests with given context. The use of Copilot was more successful, since it was used for small code completions, where the context was clear, which sped up the development process.
 
-
-
-
-
-
+When it comes to co-authoring, we did not perceive these tools as significant contributors. There has been a few cases where their solution was used, and therefore we referenced them in the code.
