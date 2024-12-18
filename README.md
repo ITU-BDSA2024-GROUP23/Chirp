@@ -2,7 +2,7 @@
 
 Chirp project, developed following the course Analysis, Design and Software Architecture (Autumn 2024).
 
-Check out our documentation at <https://itu-bdsa2024-group23.github.io/Chirp/>.
+Our documentation was initially intended for "MkDocs", but we were told to use "pandoc" to convert markdown to PDF instead. Therefore our documentation workflow is deprecated.
 
 ## Committing not working code
 
