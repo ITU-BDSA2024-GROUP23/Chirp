@@ -20,13 +20,13 @@ toc: true
 # Design and architecture
 
 ## Domain model
-The centerpiece of our domain model is the User class. It inherits from the ASP.NET's IdentityUser class allowing us to use ASP.NET Identity to manage our users. This offloads a lot of heavy lifting such as login, registration and authentication, instead letting us focus on developing other essential features for Chirp. All other classes in the domain model are dependent on the User class. Whether it would be a Cheep requiering an author, or a Like requiring a liker, they all must reference an instance of a User. This, in combination with ASP.NET Identity, makes it easy to verify that only authenticated users can interact with the site, such as following people, writing or liking cheeps. An illustration of our domain model can be seen below:
+The centerpiece of our domain model is the User class. It inherits from the ASP.NET's IdentityUser class allowing us to use ASP.NET Identity to manage our users. This offloads a lot of heavy lifting such as login, registration and authentication, instead letting us focus on developing other essential features for Chirp. All other classes in the domain model are dependent on the User class. Whether it would be a Cheep requiring an author, or a Like requiring a liker, they all must reference an instance of a User. This, in combination with ASP.NET Identity, makes it easy to verify that only authenticated users can make certain interactions with the site, such as following people and writing/liking cheeps. An illustration of our domain model can be seen below:
 
 ![Domain model of Chirp](./images/domain-model.png){width=80%}
 
 ## Architecture — In the small
 
-The architecture of our Chirp application is based on the "Onion Architecture" pattern. This pattern is a layered architecture that enforces seperation of concers and invites a clear dependency flow. 
+The architecture of our Chirp application is based on the "Onion Architecture" pattern. This pattern is a layered architecture that enforces separation of concerns and invites a clear dependency flow. 
 
 ![Onion architecture of Chirp](./images/onion.png){width=80%}
 
@@ -34,7 +34,7 @@ At the center of the application is the **Core** layer. This layer contains the 
 
 The **Infrastructure** layer is responsible for data access, migrations, seeding, and our services. This layer is dependent on the **Core** layer, as it needs to interact with the domain model.
 
-The outermost layer is the **Web** layer. This layer is resposible for delivering the application to the user. It uses ASP.NET Core to handle HTTP requests and is responsible for rendering the pages. Furthermore, it has the application's entry point, the `Program` class, which is responsible for configuring the application and starting the server.
+The outermost layer is the **Web** layer. This layer is responsible for delivering the application to the user. It uses ASP.NET Core to handle HTTP requests and is responsible for rendering the pages. Furthermore, it has the application's entry point, the `Program` class, which is responsible for configuring the application and starting the server.
 
 ## Architecture of deployed application
 
@@ -45,7 +45,7 @@ The outermost layer is the **Web** layer. This layer is resposible for deliverin
     - It handles incoming requests, logic and interactions with the database.
 2. User Interaction:
     - Users interact with the application through their browser
-    - The browser sends HTTPS requests to the server hosted on Azure for secure communication.
+    - The browser sends HTTP requests to the server hosted on Azure for secure communication.
 3. Database Communication:
     - The server queries our SQLite database to retrieve and or store data
 4. Third-Party Authentication:
@@ -66,7 +66,7 @@ Before showing how a user can interact with the chirp application, the diagrams 
 
 To show how a user can interact with the website while being logged out, we have made an 'Unauthorized' flowchart:
 
-![Depiction of how an unauthorized user can interact with the application.](./images/unauthorized.png){width=80%}
+![Flowchart of an unauthorized user](./images/unauthorized.png){width=80%}
 
 \newpage
 
@@ -74,7 +74,7 @@ To show how a user can interact with the website while being logged out, we have
 
 When a user has logged in or signed up, they now have authorized access. This grants the user more possibilities on the Chirp platform, visualized in the 'Authorized' flowchart:
 
-![Depiction of how an authorized user can interact with the application.](./images/authorized.png){width=80%}
+![Flowchart of an authorized user](./images/authorized.png){width=80%}
 
 \newpage
 
@@ -82,7 +82,7 @@ When a user has logged in or signed up, they now have authorized access. This gr
 
 To see the full picture of how it all works together in tandem, the whole application is laid out in the 'Complete' flowchart:
 
-![Depiction of how the whole website works in any state.](./images/complete.png){width=80%}
+![Flowchart of the website in any state](./images/complete.png){width=80%}
 
 \newpage
 
@@ -102,13 +102,13 @@ We have made a sequence diagram showing the flow of messages and data when an un
 
 ![Pipeline workflow](./images/pipeline/pipeline.png){width=20%}
 
-This is our pipeline workflow which job is to combine the other workflows. This defines different jobs in order to make sure workflow depend on eachother in the correct way. This is needed since some workflows reads the output of others, aswell as sometimes workflows should not even run if an other workflows fail.
+This is our pipeline workflow which job is to combine the other workflows. This defines different jobs in order to make sure workflow depend on each other in the correct way. This is needed since some workflows reads the output of others, as well as sometimes workflows should not even run if an other workflows fail.
 
 ### Prepare pipeline
 
 ![Prepare pipeline workflow](./images/pipeline/prepare-pipeline.png){width=20%}
 
-This is our prepare pipeline workflow which declares variables that other workflows uses. This is done in different ways like reading what branch the pipeline is running on or reading file contents in the repository. This workflow then outputs these variables aswell as a summary. Other workflows can then use these variables to implment logic that defines the behavior of individual jobs and steps.
+This is our prepare pipeline workflow which declares variables that other workflows uses. This is done in different ways like reading what branch the pipeline is running on or reading file contents in the repository. This workflow then outputs these variables as well as a summary. Other workflows can then use these variables to implement logic that defines the behavior of individual jobs and steps.
 
 ### Linting and testing
 
@@ -140,7 +140,7 @@ This workflow handles the deployment of the application to Azure and is executed
 
 ![Project board as of 18th of december 2024](./images/project-board.png){width=80%}
 
-In the end of the project, almost all of our issues are resolved. The only issue missing is an the one where we will need to add authed inegration tests. We did not resolve this issue because we ran into some problems while working on it. The problem was that we had no way to fake an identity that we could use for these tests. Since the priority was only normal, wich meant that we had other issues that was more important, we decided to postpone that issue till we had time to figure out a solution. As of 18th of december 2024, 1 day before our hand-in we did not have time to figure out a solution for this issue. You can see that in total, we managed to resolve 62 issues out of 63 which we think is very good.
+In the end of the project, almost all of our issues are resolved. The only issue missing is an the one where we will need to add authed integration tests. We did not resolve this issue because we ran into some problems while working on it. The problem was that we had no way to fake an identity that we could use for these tests. Since the priority was only normal, which meant that we had other issues that was more important, we decided to postpone that issue till we had time to figure out a solution. As of 18th of december 2024, 1 day before our hand-in we did not have time to figure out a solution for this issue. You can see that in total, we managed to resolve 62 issues out of 63 which we think is very good.
 
 As of missing features, the only feature we talked about implementing that we did not managed to, was a profile picture feature. The reason we did not implement this, was because we had no time left to address and plan a solution of how to implement this feature, before we had to deliver this project.
 
@@ -148,9 +148,9 @@ As of missing features, the only feature we talked about implementing that we di
 
 When a contributor wants to create a new issue, the first thing they will do is go to the GitHub repository and find the `Issues` sections. The contributor will then find and click on the `new issue` button and will be prompted to select an issue template, where in our case there is only one. The template will help them fill out the issue in a generic way with an issue description and some acceptance criteria if necessary. When the issue is created, it will soon be labeled and assigned to a developer, as well as our Chirp project board. On the project board it will also be given a status, priority as well as an optional week, start date and end date. We also use milestones to keep track of when issues need to be done. As an example our milestones was the project reviews and the project presentation.
 
-The issue is now ready for a contributor to pickup and start working on it. First step is to branch out from our `staging` branch to create a new feature branch. This branch needs to follow the naming conventions described in the [README.md](https://github.com/ITU-BDSA2024-GROUP22/Chirp/README.md#branch-naming-conventions). When the development of the issue progresses, the contributor will update the acceptance criteria marking them complete, as well as clear out any complications that might occur under development. When all acceptance criteria are marked completed, the contributor will create a pull request from the feature branch back into the `staging` branch. On all branches, our pipeline (GitHub workflow) will run all our tests as well as lint our code on every commit. This workflow needs to complete successfully before a merge from the feature branch is available, as well as atleast 2 people needs to review and accept the incoming changes in the pull request. When the pull request is merged into `staging`, our pipeline will be triggered for the staging branch that runs all the same steps as well as creating a pre-release for the version. The pipeline includes a version check against the [official SemVer regex](https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string). If this fails, the pipeline will crash berfore creating the pre-release.
+The issue is now ready for a contributor to pickup and start working on it. First step is to branch out from our `staging` branch to create a new feature branch. This branch needs to follow the naming conventions described in the [README.md](https://github.com/ITU-BDSA2024-GROUP22/Chirp/README.md#branch-naming-conventions). When the development of the issue progresses, the contributor will update the acceptance criteria marking them complete, as well as clear out any complications that might occur under development. When all acceptance criteria are marked completed, the contributor will create a pull request from the feature branch back into the `staging` branch. On all branches, our pipeline (GitHub workflow) will run all our tests as well as lint our code on every commit. This workflow needs to complete successfully before a merge from the feature branch is available, as well as at least 2 people needs to review and accept the incoming changes in the pull request. When the pull request is merged into `staging`, our pipeline will be triggered for the staging branch that runs all the same steps as well as creating a pre-release for the version. The pipeline includes a version check against the [official SemVer regex](https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string). If this fails, the pipeline will crash before creating the pre-release.
 
-When necessary, we will make sure everything works as expected on the `staging` branch, creating new test for errors we find and at last create a pull request from `staging` into our `main` branch. When the pull-request is accepted, it will again trigger our pipeline wich will automatically verify the version again and also make sure that no previous releases exists of that version. If everything is fine, our pipeline will create a release. We then update the release note to include all changes made referencing the issues we resovled in this version bump. The pipeline will also deploy our new version of the application to Azure.
+When necessary, we will make sure everything works as expected on the `staging` branch, creating new test for errors we find and at last create a pull request from `staging` into our `main` branch. When the pull-request is accepted, it will again trigger our pipeline which will automatically verify the version again and also make sure that no previous releases exists of that version. If everything is fine, our pipeline will create a release. We then update the release note to include all changes made referencing the issues we resolved in this version bump. The pipeline will also deploy our new version of the application to Azure.
 
 \newpage
 
