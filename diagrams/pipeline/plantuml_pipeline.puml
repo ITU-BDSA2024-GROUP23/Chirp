@@ -1,0 +1,15 @@
+@startuml
+!theme vibrant
+
+title pipeline.yml
+
+start
+:Prepare pipeline;
+:Lint and test;
+:Build and release;
+:Build and deploy;
+:Build and deploy docs;
+
+stop
+
+@enduml

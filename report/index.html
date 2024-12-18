@@ -1,0 +1,736 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="['Victor Memborg-Heinrichsen <vmem@itu.dk>', 'Axel Lund <axlu@itu.dk>', 'Philip Engelbrecht Rosenhagen <phro@itu.dk>', 'Kasper Jønsson <kasjo@itu.dk>', 'Peter Bjørholm Hansen <pbjh@itu.dk>']">
+      
+      
+      
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.49">
+    
+    
+      
+        <title>_Chirp!_ Project Report - Chirp Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.6f8fc17f.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#design-and-architecture" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Chirp Documentation" class="md-header__button md-logo" aria-label="Chirp Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Chirp Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              _Chirp!_ Project Report
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ITU-BDSA2024-GROUP23/Chrip" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Chirp Documentation" class="md-nav__button md-logo" aria-label="Chirp Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Chirp Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ITU-BDSA2024-GROUP23/Chrip" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    _Chirp!_ Project Report
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    _Chirp!_ Project Report
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#domain-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      Domain model
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-in-the-small" class="md-nav__link">
+    <span class="md-ellipsis">
+      Architecture — In the small
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-of-deployed-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      Architecture of deployed application
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-activities" class="md-nav__link">
+    <span class="md-ellipsis">
+      User activities
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="User activities">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#legend" class="md-nav__link">
+    <span class="md-ellipsis">
+      Legend
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unauthorized" class="md-nav__link">
+    <span class="md-ellipsis">
+      Unauthorized
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authorized" class="md-nav__link">
+    <span class="md-ellipsis">
+      Authorized
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#complete" class="md-nav__link">
+    <span class="md-ellipsis">
+      Complete
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sequence-of-functionalitycalls-trough-chirp" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sequence of functionality/calls trough Chirp!
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#domain-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      Domain model
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-in-the-small" class="md-nav__link">
+    <span class="md-ellipsis">
+      Architecture — In the small
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-of-deployed-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      Architecture of deployed application
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-activities" class="md-nav__link">
+    <span class="md-ellipsis">
+      User activities
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="User activities">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#legend" class="md-nav__link">
+    <span class="md-ellipsis">
+      Legend
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unauthorized" class="md-nav__link">
+    <span class="md-ellipsis">
+      Unauthorized
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authorized" class="md-nav__link">
+    <span class="md-ellipsis">
+      Authorized
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#complete" class="md-nav__link">
+    <span class="md-ellipsis">
+      Complete
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sequence-of-functionalitycalls-trough-chirp" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sequence of functionality/calls trough Chirp!
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<p>\newpage </p>
+<h1 id="design-and-architecture">Design and architecture</h1>
+<h2 id="domain-model">Domain model</h2>
+<p>The centerpiece of our domain model is the User class. It inherits from the ASP.NET's IdentityUser class allowing us to use ASP.NET Identity to manage our users. This offloads a lot of heavy lifting such as login, registration and authentication, instead letting us focus on developing other essential features for Chirp. All other classes in the domain model are dependent on the User class. Whether it would be a Cheep requiring an author, or a Like requiring a liker, they all must reference an instance of a User. This, in combination with ASP.NET Identity, makes it easy to verify that only authenticated users can make certain interactions with the site, such as following people and writing/liking cheeps. An illustration of our domain model can be seen below:</p>
+<p><img alt="Domain model of Chirp" src="../images/domain-model.png" width="80%" /></p>
+<h2 id="architecture-in-the-small">Architecture — In the small</h2>
+<p>The architecture of our Chirp application is based on the "Onion Architecture" pattern. This pattern is a layered architecture that enforces separation of concerns and invites a clear dependency flow. </p>
+<p><img alt="Onion architecture of Chirp" src="../images/onion.png" width="80%" /></p>
+<p>At the center of the application is the <strong>Core</strong> layer. This layer contains the domain model, interfaces, and DTOs. As seen in the diagram, the "Core" layer is dependent on nothing, but is depended on by many other layers. This is, as mentioned, a key principle of the Onion Architecture pattern.</p>
+<p>The <strong>Infrastructure</strong> layer is responsible for data access, migrations, seeding, and our services. This layer is dependent on the <strong>Core</strong> layer, as it needs to interact with the domain model.</p>
+<p>The outermost layer is the <strong>Web</strong> layer. This layer is responsible for delivering the application to the user. It uses ASP.NET Core to handle HTTP requests and is responsible for rendering the pages. Furthermore, it has the application's entry point, the <code>Program</code> class, which is responsible for configuring the application and starting the server.</p>
+<h2 id="architecture-of-deployed-application">Architecture of deployed application</h2>
+<p><img alt="Client-server model of Chirp" src="../images/deployed-app.png" width="80%" /></p>
+<ol>
+<li>Microsoft Azure Server:<ul>
+<li>The application server is hosted on Azure App Service.</li>
+<li>It handles incoming requests, logic and interactions with the database.</li>
+</ul>
+</li>
+<li>User Interaction:<ul>
+<li>Users interact with the application through their browser</li>
+<li>The browser sends HTTP requests to the server hosted on Azure for secure communication.</li>
+</ul>
+</li>
+<li>Database Communication:<ul>
+<li>The server queries our SQLite database to retrieve and or store data</li>
+</ul>
+</li>
+<li>Third-Party Authentication:<ul>
+<li>Users login or sign in via Github Authentication, which is depicted in the er diagram</li>
+</ul>
+</li>
+</ol>
+<h2 id="user-activities">User activities</h2>
+<h3 id="legend">Legend</h3>
+<p>In the following section, multiple flowcharts will visualize the possible journeys through the application. 
+Before showing how a user can interact with the chirp application, the diagrams are going to follow these different legends:</p>
+<p><img alt="Meaning of different symbols" src="../images/auth-legend.png" width="80%" /></p>
+<p>\newpage</p>
+<h3 id="unauthorized">Unauthorized</h3>
+<p>To show how a user can interact with the website while being logged out, we have made an 'Unauthorized' flowchart:</p>
+<p><img alt="Flowchart of an unauthorized user" src="../images/unauthorized.png" width="80%" /></p>
+<p>\newpage</p>
+<h3 id="authorized">Authorized</h3>
+<p>When a user has logged in or signed up, they now have authorized access. This grants the user more possibilities on the Chirp platform, visualized in the 'Authorized' flowchart:</p>
+<p><img alt="Flowchart of an authorized user" src="../images/authorized.png" width="80%" /></p>
+<p>\newpage</p>
+<h3 id="complete">Complete</h3>
+<p>To see the full picture of how it all works together in tandem, the whole application is laid out in the 'Complete' flowchart:</p>
+<p><img alt="Flowchart of the website in any state" src="../images/complete.png" width="80%" /></p>
+<p>\newpage</p>
+<h2 id="sequence-of-functionalitycalls-trough-chirp">Sequence of functionality/calls trough <em>Chirp!</em></h2>
+<p>We have made a sequence diagram showing the flow of messages and data when an unauthorized user visits our homepage. The diagram can be seen below:</p>
+<p><img alt="Sequence diagram" src="../images/sequence.png" width="52%" /></p>
+<p>\newpage</p>
+<h1 id="process">Process</h1>
+<h2 id="build-test-release-and-deployment">Build, test, release, and deployment</h2>
+<h3 id="pipeline">Pipeline</h3>
+<p><img alt="Pipeline workflow" src="../images/pipeline/pipeline.png" width="20%" /></p>
+<p>This is our pipeline workflow which job is to combine the other workflows. This defines different jobs in order to make sure workflow depend on each other in the correct way. This is needed since some workflows reads the output of others, as well as sometimes workflows should not even run if an other workflows fail.</p>
+<h3 id="prepare-pipeline">Prepare pipeline</h3>
+<p><img alt="Prepare pipeline workflow" src="../images/pipeline/prepare-pipeline.png" width="20%" /></p>
+<p>This is our prepare pipeline workflow which declares variables that other workflows uses. This is done in different ways like reading what branch the pipeline is running on or reading file contents in the repository. This workflow then outputs these variables as well as a summary. Other workflows can then use these variables to implement logic that defines the behavior of individual jobs and steps.</p>
+<h3 id="linting-and-testing">Linting and testing</h3>
+<p><img alt="Lint and test workflow" src="../images/pipeline/lint-and-test.png" width="22%" /></p>
+<p>This workflow is responsible for testing and linting our project. Testing is done on both Windows and Linux runners, which ensures the project is compatible for both Windows and Linux. If the tests fail, the pipeline stops, and linting does not run. The linting part validates code formatting using <code>dotnet format --verify-no-changes</code>. This ensures formatting issues are resolved before commits through git hooks. </p>
+<p>\newpage</p>
+<h3 id="build-and-release">Build and release</h3>
+<p><img alt="Build and release workflow" src="../images/pipeline/build-and-release.png" width="25%" /></p>
+<p>This workflow builds the application and generates either full releases or pre-releases. For the <code>main</code> branch, a full release is created while the <code>staging</code> branch generates a pre-release that includes the short SHA of the latest commit in its version. Both full releases and pre-releases are built for multiple platforms including Windows, Linux, and macOS. The releases follow the "SemVer" semantic versioning standard, which is validated through a regex in the pipeline. Using SemVer forced us to consider when to make major, minor, or patch releases. However, since we implemented SemVer quite late in the project, we didn't really work with it until the end.</p>
+<p>\newpage</p>
+<h3 id="deploy-to-azure">Deploy to Azure</h3>
+<p><img alt="Deploy to Azure workflow" src="../images/pipeline/deploy-to-azure.png" width="35%" /></p>
+<p>This workflow handles the deployment of the application to Azure and is executed only from the <code>main</code> branch to publish the application to production. For branches like staging, deployment jobs are skipped because a staging slot in Azure costs money, and we didn't want half done code to be deployed to production.</p>
+<p>\newpage</p>
+<h2 id="team-work">Team work</h2>
+<h3 id="project-board">Project board</h3>
+<p><img alt="Project board as of 18th of december 2024" src="../images/project-board.png" width="80%" /></p>
+<p>In the end of the project, almost all of our issues are resolved. The only issue missing is an the one where we will need to add authed integration tests. We did not resolve this issue because we ran into some problems while working on it. The problem was that we had no way to fake an identity that we could use for these tests. Since the priority was only normal, which meant that we had other issues that was more important, we decided to postpone that issue till we had time to figure out a solution. As of 18th of december 2024, 1 day before our hand-in we did not have time to figure out a solution for this issue. You can see that in total, we managed to resolve 62 issues out of 63 which we think is very good.</p>
+<p>As of missing features, the only feature we talked about implementing that we did not managed to, was a profile picture feature. The reason we did not implement this, was because we had no time left to address and plan a solution of how to implement this feature, before we had to deliver this project.</p>
+<h3 id="from-issue-to-production">From issue to production</h3>
+<p>When a contributor wants to create a new issue, the first thing they will do is go to the GitHub repository and find the <code>Issues</code> sections. The contributor will then find and click on the <code>new issue</code> button and will be prompted to select an issue template, where in our case there is only one. The template will help them fill out the issue in a generic way with an issue description and some acceptance criteria if necessary. When the issue is created, it will soon be labeled and assigned to a developer, as well as our Chirp project board. On the project board it will also be given a status, priority as well as an optional week, start date and end date. We also use milestones to keep track of when issues need to be done. As an example our milestones was the project reviews and the project presentation.</p>
+<p>The issue is now ready for a contributor to pickup and start working on it. First step is to branch out from our <code>staging</code> branch to create a new feature branch. This branch needs to follow the naming conventions described in the <a href="https://github.com/ITU-BDSA2024-GROUP22/Chirp/README.md#branch-naming-conventions">README.md</a>. When the development of the issue progresses, the contributor will update the acceptance criteria marking them complete, as well as clear out any complications that might occur under development. When all acceptance criteria are marked completed, the contributor will create a pull request from the feature branch back into the <code>staging</code> branch. On all branches, our pipeline (GitHub workflow) will run all our tests as well as lint our code on every commit. This workflow needs to complete successfully before a merge from the feature branch is available, as well as at least 2 people needs to review and accept the incoming changes in the pull request. When the pull request is merged into <code>staging</code>, our pipeline will be triggered for the staging branch that runs all the same steps as well as creating a pre-release for the version. The pipeline includes a version check against the <a href="https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string">official SemVer regex</a>. If this fails, the pipeline will crash before creating the pre-release.</p>
+<p>When necessary, we will make sure everything works as expected on the <code>staging</code> branch, creating new test for errors we find and at last create a pull request from <code>staging</code> into our <code>main</code> branch. When the pull-request is accepted, it will again trigger our pipeline which will automatically verify the version again and also make sure that no previous releases exists of that version. If everything is fine, our pipeline will create a release. We then update the release note to include all changes made referencing the issues we resolved in this version bump. The pipeline will also deploy our new version of the application to Azure.</p>
+<p>\newpage</p>
+<h2 id="how-to-make-chirp-work-locally">How to make <em>Chirp!</em> work locally</h2>
+<p>To run and clone the project you need the following prerequisites:</p>
+<ul>
+<li>
+<p>.NET 7 (for running the application)</p>
+<ul>
+<li><a href="https://dotnet.microsoft.com/en-us/download/dotnet/7.0">Installation link</a></li>
+<li><a href="https://learn.microsoft.com/en-us/dotnet/core/install/">Setup guide</a></li>
+</ul>
+</li>
+<li>
+<p>Git CLI (for cloning the repository)</p>
+<ul>
+<li><a href="https://git-scm.com/downloads">Installation link</a></li>
+<li><a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">Setup guide</a></li>
+</ul>
+</li>
+</ul>
+<p>After the installation of the prerequisites, you can clone the repository by running the following command in your terminal:</p>
+<p><div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/ITU-BDSA2024-GROUP23/Chirp.git
+</span></code></pre></div>
+Now that you have cloned our repository, you should navigate to <code>Chirp.Web</code> by running the following command in your terminal:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">cd</span><span class="w"> </span>./Chirp/src/Chirp.Web
+</span></code></pre></div>
+<p>Before running the application, you need to set up the GitHub oAuth secrets. This can be done by running the following commands in your terminal:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>dotnet<span class="w"> </span>user-secrets<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="s2">&quot;GH_CLIENT_ID&quot;</span><span class="w"> </span>&lt;YOUR_GITHUB_CLIENT_ID&gt;
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>dotnet<span class="w"> </span>user-secrets<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="s2">&quot;GH_CLIENT_SECRET&quot;</span><span class="w"> </span>&lt;YOUR_GITHUB_CLIENT_SECRET&gt;
+</span></code></pre></div>
+<p>Replace <code>YOUR_GITHUB_CLIENT_ID</code> and <code>YOUR_GITHUB_CLIENT_SECRET</code> with your own GitHub oAuth application secrets. If you haven't already created a GitHub oAuth application it can be done <a href="https://github.com/settings/applications/new">here</a>. It is important that the callback URL is <code>http://localhost:5273/auth/github</code> and the homepage URL is <code>http://localhost:5273</code>.</p>
+<p>Finally, you can run the application by running the following command in your terminal. Please make sure you are in the <code>Chirp.Web</code> directory:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>dotnet<span class="w"> </span>run
+</span></code></pre></div>
+<h2 id="how-to-run-test-suite-locally">How to run test suite locally</h2>
+<p>If you haven't already, please refer to the <a href="#how-to-make-chirp-work-locally">"How to make <em>Chirp!</em> work locally"</a> section to set up the prerequisites for installing .NET 7, Git CLI, and cloning the repository. Also, make sure you have set up the GitHub oAuth secrets as also described in the previous section.</p>
+<ol>
+<li>Install PowerShell if you haven't already.<ul>
+<li>Instructions for installing PowerShell can be found <a href="https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell?view=powershell-7.4">here</a>.</li>
+</ul>
+</li>
+<li>
+<p>Navigate to the root of the project in your terminal.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">cd</span><span class="w"> </span>./Chirp
+</span></code></pre></div>
+</li>
+<li>
+<p>Make sure Playwright is installed - if not, run the following command in the root of the project:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>pwsh<span class="w"> </span>test/PlaywrightTests/bin/Debug/net7.0/playwright.ps1<span class="w"> </span>install<span class="w"> </span>--with-deps
+</span></code></pre></div>
+</li>
+<li>
+<p>Run the tests</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>dotnet<span class="w"> </span><span class="nb">test</span>
+</span></code></pre></div>
+</li>
+</ol>
+<h1 id="ethics">Ethics</h1>
+<h2 id="license">License</h2>
+<p>We are using an Apache 2.0 license.</p>
+<h2 id="llms-chatgpt-copilot-and-others">LLMs, ChatGPT, CoPilot, and others</h2>
+<p>In the development of <em>Chirp!</em> we have used two different large language models (LLMs) to help us with the development. The first one being GitHub Copilot and the second one being ChatGPT. While Copilot was being used constantly for small code completions, ChatGPT was more useful for finding ways to attack an issue or finding libraries to solve an issue. </p>
+<p>The responses of ChatGPT were often wrong or incomplete, since it didn't have the full picture of the project. This meant that we had to remain critical of the responses, and not just blindly accept the answer. Since the responses were often wrong or misleading, we had to spend more time on the issue than if we had just solved it ourselves or remained critical. ChatGPT was more helpful when it came to more simple stuff such as Unit tests with given context. The use of Copilot was more successful, since it was used for small code completions, where the context was clear, which sped up the development process.</p>
+<p>When it comes to co-authoring, we did not perceive these tools as significant contributors. There has been a few cases where their solution was used, and therefore we referenced them in the code.</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "content.code.select", "content.tooltips"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.88dd0f4e.min.js"></script>
+      
+    
+  </body>
+</html>
