@@ -26,7 +26,7 @@ The centerpiece of our domain model is the User class. It inherits from the ASP.
 
 ## Architecture — In the small
 
-The architecture of our Chirp application is based on the "Onion Architecture" pattern. This pattern is a layered architecture that enforces seperation of concers and invites a clear dependency flow. The following diagram illustrates the layers of our application and the dependencies between them:
+The architecture of our Chirp application is based on the "Onion Architecture" pattern. This pattern is a layered architecture that enforces seperation of concers and invites a clear dependency flow. 
 
 ![Onion architecture of Chirp](./images/onion.png){width=80%}
 
@@ -37,10 +37,11 @@ The **Infrastructure** layer is responsible for data access, migrations, seeding
 The outermost layer is the **Web** layer. This layer is resposible for delivering the application to the user. It uses ASP.NET Core to handle HTTP requests and is responsible for rendering the pages. Furthermore, it has the application's entry point, the `Program` class, which is responsible for configuring the application and starting the server.
 
 ## Architecture of deployed application
+
 ![Client-server model of Chirp](./images/deployed-app.png){width=80%}
 
 1. Microsoft Azure Server:
-    - The application server is hozted on Azure App Service.
+    - The application server is hosted on Azure App Service.
     - It handles incoming requests, logic and interactions with the database.
 2. User Interaction:
     - Users interact with the application through their browser
@@ -52,27 +53,46 @@ The outermost layer is the **Web** layer. This layer is resposible for deliverin
 
 ## User activities
 
+### Legend
+
 In the following section, multiple flowcharts will visualize the possible journeys through the application. 
 Before showing how a user can interact with the chirp application, the diagrams are going to follow these different legends:
 
 ![Meaning of different symbols](./images/auth-legend.png){width=80%}
 
+\newpage
+
+### Unauthorized
+
 To show how a user can interact with the website while being logged out, we have made an 'Unauthorized' flowchart:
 
 ![Depiction of how an unauthorized user can interact with the application.](./images/unauthorized.png){width=80%}
+
+\newpage
+
+### Authorized
 
 When a user has logged in or signed up, they now have authorized access. This grants the user more possibilities on the Chirp platform, visualized in the 'Authorized' flowchart:
 
 ![Depiction of how an authorized user can interact with the application.](./images/authorized.png){width=80%}
 
+\newpage
+
+### Complete
+
 To see the full picture of how it all works together in tandem, the whole application is laid out in the 'Complete' flowchart:
 
 ![Depiction of how the whole website works in any state.](./images/complete.png){width=80%}
 
-## Sequence of functionality/calls trough _Chirp!_
-We have made the following sequence diagram showing the flow of messages and data when an unauthorized user visits our homepage:
+\newpage
 
-![Sequence diagram](./images/sequence.png){width=80%}
+## Sequence of functionality/calls trough _Chirp!_
+
+We have made a sequence diagram showing the flow of messages and data when an unauthorized user visits our homepage. The diagram can be seen below:
+
+![Sequence diagram](./images/sequence.png){width=52%}
+
+\newpage
 
 # Process
 
@@ -92,21 +112,27 @@ This is our prepare pipeline workflow which declares variables that other workfl
 
 ### Linting and testing
 
-![Lint and test workflow](./images/pipeline/lint-and-test.png){width=20%}
+![Lint and test workflow](./images/pipeline/lint-and-test.png){width=22%}
 
 This workflow is responsible for testing and linting our project. Testing is done on both Windows and Linux runners, which ensures the project is compatible for both Windows and Linux. If the tests fail, the pipeline stops, and linting does not run. The linting part validates code formatting using `dotnet format --verify-no-changes`. This ensures formatting issues are resolved before commits through git hooks. 
 
+\newpage
+
 ### Build and release
 
-![Build and release workflow](./images/pipeline/build-and-release.png){width=20%}
+![Build and release workflow](./images/pipeline/build-and-release.png){width=25%}
 
 This workflow builds the application and generates either full releases or pre-releases. For the `main` branch, a full release is created while the `staging` branch generates a pre-release that includes the short SHA of the latest commit in its version. Both full releases and pre-releases are built for multiple platforms including Windows, Linux, and macOS. The releases follow the "SemVer" semantic versioning standard, which is validated through a regex in the pipeline. Using SemVer forced us to consider when to make major, minor, or patch releases. However, since we implemented SemVer quite late in the project, we didn't really work with it until the end.
 
+\newpage
+
 ### Deploy to Azure
 
-![Deploy to Azure workflow](./images/pipeline/deploy-to-azure.png){width=20%}
+![Deploy to Azure workflow](./images/pipeline/deploy-to-azure.png){width=35%}
 
 This workflow handles the deployment of the application to Azure and is executed only from the `main` branch to publish the application to production. For branches like staging, deployment jobs are skipped because a staging slot in Azure costs money, and we didn't want half done code to be deployed to production.
+
+\newpage
 
 ## Team work
 
@@ -116,7 +142,7 @@ This workflow handles the deployment of the application to Azure and is executed
 
 In the end of the project, almost all of our issues are resolved. The only issue missing is an the one where we will need to add authed inegration tests. We did not resolve this issue because we ran into some problems while working on it. The problem was that we had no way to fake an identity that we could use for these tests. Since the priority was only normal, wich meant that we had other issues that was more important, we decided to postpone that issue till we had time to figure out a solution. As of 18th of december 2024, 1 day before our hand-in we did not have time to figure out a solution for this issue. You can see that in total, we managed to resolve 62 issues out of 63 which we think is very good.
 
-As of missing features, the only feature we talked about implementing that we did not managed to, was a profile picture. The reason we did not implement this, was because we had no time left to address and plan a solution of how to implement this feature, before we had to deliver this project.
+As of missing features, the only feature we talked about implementing that we did not managed to, was a profile picture feature. The reason we did not implement this, was because we had no time left to address and plan a solution of how to implement this feature, before we had to deliver this project.
 
 ### From issue to production
 
@@ -126,9 +152,12 @@ The issue is now ready for a contributor to pickup and start working on it. Firs
 
 When necessary, we will make sure everything works as expected on the `staging` branch, creating new test for errors we find and at last create a pull request from `staging` into our `main` branch. When the pull-request is accepted, it will again trigger our pipeline wich will automatically verify the version again and also make sure that no previous releases exists of that version. If everything is fine, our pipeline will create a release. We then update the release note to include all changes made referencing the issues we resovled in this version bump. The pipeline will also deploy our new version of the application to Azure.
 
+\newpage
+
 ## How to make _Chirp!_ work locally
 
 To run and clone the project you need the following prerequisites:
+
 - .NET 7 (for running the application)
     - [Installation link](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)
     - [Setup guide](https://learn.microsoft.com/en-us/dotnet/core/install/)
@@ -170,21 +199,22 @@ If you haven't already, please refer to the ["How to make _Chirp!_ work locally"
 1. Install PowerShell if you haven't already.
     - Instructions for installing PowerShell can be found [here](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell?view=powershell-7.4).
 2. Navigate to the root of the project in your terminal.
+
     ```bash
     cd ./Chirp
     ```
+
 3. Make sure Playwright is installed - if not, run the following command in the root of the project:
 
     ```bash
     pwsh test/PlaywrightTests/bin/Debug/net7.0/playwright.ps1 install --with-deps
     ```
+
 4. Run the tests
 
     ```bash
     dotnet test
     ```
-
-The tests should run and you should see the results in the terminal.
 
 # Ethics 
 
