@@ -85,27 +85,35 @@ The flow of data in the application is depicted in the UML sequence diagram 'seq
 
 ## Build, test, release, and deployment
 
+### Pipeline (not done)
+
 ![Pipeline](./images/pipeline/pipeline.png){width=80%}
 
 This is our pipeline workflow which job is to combine the other workflows.
+
+### Prepare pipeline (not done)
 
 ![Prepare pipeline](./images/pipeline/prepare-pipeline.png){width=80%}
 
 Our prepare pipeline workflow prepares declares variables that other workflows uses.
 
+### Linting and testing
+
 ![Lint and test](./images/pipeline/lint-and-test.png){width=80%}
 
-This workflow is responsible for linting and testing our code. The testing is done on a Windows and a Linux runner. If the tests fail, the linting will not run. The linting is only done on the Linux runner - it lints by running `dotnet format --verify-`
+This workflow is responsible for testing and linting our project. Testing is done on both Windows and Linux runners, which ensures the project is compatible for both Windows and Linux. If the tests fail, the pipeline stops, and linting does not run. The linting part validates code formatting using `dotnet format --verify-no-changes`. This ensures formatting issues are resolved before commits through git hooks. 
+
+### Build and release
 
 ![Build and release](./images/pipeline/build-and-release.png){width=80%}
 
-Will build and create a release/pre-release depending on which branch it runs on.
+This workflow builds the application and generates either full releases or pre-releases. For the `main` branch, a full release is created while the `staging` branch generates a pre-release that includes the short SHA of the latest commit in its version. Both full releases and pre-releases are built for multiple platforms including Windows, Linux, and macOS. The releases follow the "SemVer" semantic versioning standard, which is validated through a regex in the pipeline. Using SemVer forced us to consider when to make major, minor, or patch releases. However, since we implemented SemVer quite late in the project, we didn't really work with it until the end.
+
+### Deploy to Azure
 
 ![Deploy to Azure](./images/pipeline/deploy-to-azure.png){width=80%}
 
-This deploys our service to Azure.
-
-Building, testing, releasing and deploying our application is all done via our pipeline. The first step of our pipeline is preparing it. This includes declaring different variables, that the pipeline uses to determine which jobs and steps to run, and which not to. When the pipeline runs on the `main` branch, the entire pipeline is run through. This includes releasing our program and deploying our application and docs. When the pipeline runs on the `staging` branch, the pipeline will skip the deploying jobs, since a staging slot in Azure cost money and we don't want docs for our pre-release. The release it creates will be a pre-release including the short SHA of the latest commit in the version, still following the SemVer version scheme. Every other branch runs testing and linting and skips releasing and deploying.
+This workflow handles the deployment of the application to Azure and is executed only from the `main` branch to publish the application to production. For branches like staging, deployment jobs are skipped because a staging slot in Azure costs money, and we didn't want half done code to be deployed to production.
 
 ## Team work
 
