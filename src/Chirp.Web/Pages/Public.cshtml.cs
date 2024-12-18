@@ -13,14 +13,10 @@ public class PublicModel : TimelineModel
     {
     }
 
-    /// <summary>
-    /// Handles HTTP GET requests to display a paginated list of "cheeps" (user-generated content).<br/>
-    /// This method fetches followed users and retrieves the appropriate page of cheeps based on the query parameter.
-    /// </summary>
-    /// <param name="page"></param>
-    /// <returns></returns>
     public async Task<IActionResult> OnGetAsync([FromQuery] int page = 1)
     {
+        CurrentPage = page;
+        TotalCheeps = await _cheepService.GetTotalCheeps();
         await GetFollowedUsers();
         int offset = page - 1;
         Cheeps = await _cheepService.GetCheeps(offset);

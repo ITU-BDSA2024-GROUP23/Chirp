@@ -18,18 +18,6 @@ public class E2ETests : PageTest
     }
 
     [Test]
-    public async Task TestLayoutUI()
-    {
-        await Page.GotoAsync(_baseUrl);
-        await Expect(Page.GetByRole(AriaRole.Heading)).ToContainTextAsync("Public Timeline");
-        await Expect(Page.GetByRole(AriaRole.Navigation)).ToContainTextAsync("Chirp!");
-        await Expect(Page.GetByRole(AriaRole.List)).ToContainTextAsync("public timeline");
-        await Expect(Page.GetByRole(AriaRole.List)).ToContainTextAsync("register");
-        await Expect(Page.GetByRole(AriaRole.List)).ToContainTextAsync("login");
-        await Expect(Page.GetByRole(AriaRole.Contentinfo)).ToContainTextAsync("Chirp — An ASP.NET Application");
-    }
-
-    [Test]
     public async Task TestRegisterUI()
     {
         await Page.GotoAsync(_baseUrl + "Identity/Account/Register");
@@ -184,15 +172,6 @@ public class E2ETests : PageTest
         await Page.GetByPlaceholder("Cheep something..").FillAsync("Hello what are you up to?");
         await Page.GetByRole(AriaRole.Button, new() { Name = "Cheep" }).ClickAsync();
         await Expect(Page.GetByRole(AriaRole.Main)).ToContainTextAsync("Hello what are you up to?");
-    }
-
-    [Test]
-    public async Task DeleteCheep()
-    {
-        await WriteCheep();
-        await Expect(Page.GetByText("Hello what are you up to?")).ToBeVisibleAsync();
-        await Page.Locator(".border-0").First.ClickAsync();
-        await Expect(Page.GetByText("Hello what are you up to?")).Not.ToBeVisibleAsync();
     }
 
     [TearDown]

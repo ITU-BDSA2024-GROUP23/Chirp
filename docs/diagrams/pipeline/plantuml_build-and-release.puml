@@ -1,0 +1,20 @@
+@startuml
+!theme vibrant
+
+title build-and-release.yml
+
+start
+:Checkout repository;
+:Validate version against SemVer;
+:Validate the solution version;
+:Setup .NET;
+:Restore project dependencies;
+:Build and zip the solution for Windows;
+:Build and zip the solution for Linux;
+:Build and zip the solution for MacOS;
+:Archive the solution packages;
+:Create a GitHub release;
+
+stop
+
+@enduml

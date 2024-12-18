@@ -14,7 +14,7 @@ public class UserRepository : IUserRepository
     public async Task<List<UserDTO>> GetFollowers(UserDTO user)
     {
         var query = _context.Followers
-            .Where(f => f.FolloweeId == user.Id)
+            .Where(f => f.FolloweeUser.Id == user.Id)
             .Select(f => f.FollowerUser.ToUserDTO())
             .OfType<UserDTO>();
         var result = await query.ToListAsync();
@@ -24,7 +24,7 @@ public class UserRepository : IUserRepository
     public async Task<List<UserDTO>> GetFollowing(UserDTO user)
     {
         var query = _context.Followers
-            .Where(f => f.FollowerId == user.Id)
+            .Where(f => f.FollowerUser.Id == user.Id)
             .Select(f => f.FolloweeUser.ToUserDTO())
             .OfType<UserDTO>();
         var result = await query.ToListAsync();
@@ -70,7 +70,7 @@ public class UserRepository : IUserRepository
         _context.Cheeps.RemoveRange(cheepsToRemove);
 
         // Remove followers
-        var followersToRemove = _context.Followers.Where(f => f.FolloweeId == user.Id || f.FollowerId == user.Id);
+        var followersToRemove = _context.Followers.Where(f => f.FolloweeUser.Id == user.Id || f.FollowerUser.Id == user.Id);
         _context.Followers.RemoveRange(followersToRemove);
 
         // Remove user
@@ -87,9 +87,7 @@ public class UserRepository : IUserRepository
 
         Follower newFollowRelation = new Follower
         {
-            FollowerId = followerUser.Id,
             FollowerUser = followerUser,
-            FolloweeId = followeeUser.Id,
             FolloweeUser = followeeUser,
             FollowDate = DateTime.Now
         };
@@ -102,7 +100,7 @@ public class UserRepository : IUserRepository
 
     public async Task<bool> UnfollowUser(UserDTO follower, UserDTO followee)
     {
-        var query = _context.Followers.Where(f => f.FollowerId == follower.Id && f.FolloweeId == followee.Id);
+        var query = _context.Followers.Where(f => f.FollowerUser.Id == follower.Id && f.FolloweeUser.Id == followee.Id);
         Follower? relationToRemove = await query.FirstOrDefaultAsync();
         if (relationToRemove == null) return false;
 

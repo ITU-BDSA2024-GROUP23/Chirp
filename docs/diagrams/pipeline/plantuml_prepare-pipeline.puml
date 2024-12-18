@@ -1,0 +1,13 @@
+@startuml
+!theme vibrant
+
+title prepare-pipeline.yml
+
+start
+:Checkout the repository;
+:Get deployment variables;
+:Write pipeline vars summary;
+
+stop
+
+@enduml
