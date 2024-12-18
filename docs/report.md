@@ -15,9 +15,10 @@ geometry:
 toc: true
 ---
 
-::: {.raw .latex}
-\pagebreak
-:::
+$if(latex)$
+\newpage
+$endif$
+
 
 # Design and architecture
 
@@ -44,7 +45,7 @@ The outermost layer is the **Web** layer. This layer is resposible for deliverin
 - Remember, you developed a client-server application.
 - Illustrate the server component and to where it is deployed, illustrate a client component, and show how these communicate with each other.
 
-![Deployed App](images/deployed-app.png){width=80%}
+![Deployed App](./images/deployed-app.png){width=80%}
 
 1. Microsoft Azure Server:
     - The application server is hozted on Azure App Service.
