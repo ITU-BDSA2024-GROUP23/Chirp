@@ -15,10 +15,7 @@ geometry:
 toc: true
 ---
 
-$if(latex)$
-\newpage
-$endif$
-
+\newpage 
 
 # Design and architecture
 
@@ -99,13 +96,13 @@ The flow of data in the application is depicted in the UML sequence diagram 'seq
 
 ![Pipeline](./images/pipeline/pipeline.png){width=80%}
 
-This is our pipeline workflow which job is to combine the other workflows.
+This is our pipeline workflow which job is to combine the other workflows. This defines different jobs in order to make sure workflow depend on eachother in the correct way. This is needed since some workflows reads the output of others, aswell as sometimes workflows should not even run if an other workflows fail.
 
 ### Prepare pipeline (not done)
 
 ![Prepare pipeline](./images/pipeline/prepare-pipeline.png){width=80%}
 
-Our prepare pipeline workflow prepares declares variables that other workflows uses.
+This is our prepare pipeline workflow which declares variables that other workflows uses. This is done in different ways like reading what branch the pipeline is running on or reading file contents in the repository. This workflow then outputs these variables aswell as a summary. Other workflows can then use these variables to implment logic that defines the behavior of individual jobs and steps.
 
 ### Linting and testing
 
@@ -127,8 +124,15 @@ This workflow handles the deployment of the application to Azure and is executed
 
 ## Team work
 
-- Show a screenshot of your project board right before hand-in.
-- Briefly describe which tasks are still unresolved, i.e., which features are missing from your applications or which functionality is incomplete.
+### Project board
+
+![Project board as of 18th of december 2024](./images/project-board.png){width=80%}
+
+In the end of the project, almost all of our issues are resolved. The only issue missing is an the one where we will need to add authed inegration tests. We did not resolve this issue because we ran into some problems while working on it. The problem was that we had no way to fake an identity that we could use for these tests. Since the priority was only normal, wich meant that we had other issues that was more important, we decided to postpone that issue till we had time to figure out a solution. As of 18th of december 2024, 1 day before our hand-in we did not have time to figure out a solution for this issue. You can see that in total, we managed to resolve 62 issues out of 63 which we think is very good.
+
+As of missing features, the only feature we talked about implementing that we did not managed to, was a profile picture. The reason we did not implement this, was because we had no time left to address and plan a solution of how to implement this feature, before we had to deliver this project.
+
+### From issue to production
 
 When a contributor wants to create a new issue, the first thing they will do is go to the GitHub repository and find the `Issues` sections. The contributor will then find and click on the `new issue` button and will be prompted to select an issue template, where in our case there is only one. The template will help them fill out the issue in a generic way with an issue description and some acceptance criteria if necessary. When the issue is created, it will soon be labeled and assigned to a developer, as well as our Chirp project board. On the project board it will also be given a status, priority as well as an optional week, start date and end date. We also use milestones to keep track of when issues need to be done. As an example our milestones was the project reviews and the project presentation.
 
@@ -137,6 +141,7 @@ The issue is now ready for a contributor to pickup and start working on it. Firs
 When necessary, we will make sure everything works as expected on the `staging` branch, creating new test for errors we find and at last create a pull request from `staging` into our `main` branch. When the pull-request is accepted, it will again trigger our pipeline wich will automatically verify the version again and also make sure that no previous releases exists of that version. If everything is fine, our pipeline will create a release. We then update the release note to include all changes made referencing the issues we resovled in this version bump. The pipeline will also deploy our new version of the application to Azure.
 
 ## How to make _Chirp!_ work locally
+
 To run and clone the project you need the following prerequisites:
 - .NET 7 (for running the application)
     - [Installation link](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)
