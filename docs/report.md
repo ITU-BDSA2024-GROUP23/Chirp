@@ -28,7 +28,7 @@ The centerpiece of our domain model is the User class. It inherits from the ASP.
 
 The architecture of our Chirp application is based on the "Onion Architecture" pattern. This pattern is a layered architecture that enforces seperation of concers and invites a clear dependency flow. The following diagram illustrates the layers of our application and the dependencies between them:
 
-![Onion Architecture](./images/onion.png){width=80%}
+![Onion architecture of Chirp](./images/onion.png){width=80%}
 
 At the center of the application is the **Core** layer. This layer contains the domain model, interfaces, and DTOs. As seen in the diagram, the "Core" layer is dependent on nothing, but is depended on by many other layers. This is, as mentioned, a key principle of the Onion Architecture pattern.
 
@@ -37,12 +37,7 @@ The **Infrastructure** layer is responsible for data access, migrations, seeding
 The outermost layer is the **Web** layer. This layer is resposible for delivering the application to the user. It uses ASP.NET Core to handle HTTP requests and is responsible for rendering the pages. Furthermore, it has the application's entry point, the `Program` class, which is responsible for configuring the application and starting the server.
 
 ## Architecture of deployed application
-
-- Illustrate the architecture of your deployed application.
-- Remember, you developed a client-server application.
-- Illustrate the server component and to where it is deployed, illustrate a client component, and show how these communicate with each other.
-
-![Deployed App](./images/deployed-app.png){width=80%}
+![Client-server model of Chirp](./images/deployed-app.png){width=80%}
 
 1. Microsoft Azure Server:
     - The application server is hozted on Azure App Service.
@@ -57,68 +52,59 @@ The outermost layer is the **Web** layer. This layer is resposible for deliverin
 
 ## User activities
 
-In the following section, multiple UML diagrams will visualize the possible journeys through the application. 
+In the following section, multiple flowcharts will visualize the possible journeys through the application. 
 Before showing how a user can interact with the chirp application, the diagrams are going to follow these different legends:
 
-![Auth Legend](./images/auth-legend.png){width=80%}
+![Meaning of different symbols](./images/auth-legend.png){width=80%}
 
-To show how a user can interact with the website while being logged out, we have made an 'Unauthorized' UML diagram:
+To show how a user can interact with the website while being logged out, we have made an 'Unauthorized' flowchart:
 
-![Auth Unauthed](./images/unauthorized.png){width=80%}
+![Depiction of how an unauthorized user can interact with the application.](./images/unauthorized.png){width=80%}
 
-When a user has logged in or signed up, they now have authorized access. This grants the user more possibilities on the Chirp platform, visualized in the 'Authorized' UML diagram:
+When a user has logged in or signed up, they now have authorized access. This grants the user more possibilities on the Chirp platform, visualized in the 'Authorized' flowchart:
 
-![Auth Authed](./images/authorized.png){width=80%}
+![Depiction of how an authorized user can interact with the application.](./images/authorized.png){width=80%}
 
-To see the full picture of how it all works together in tandem, the whole application is laid out in the 'Complete' UML diagram:
+To see the full picture of how it all works together in tandem, the whole application is laid out in the 'Complete' flowchart:
 
-![Auth Complete](./images/complete.png){width=80%}
+![Depiction of how the whole website works in any state.](./images/complete.png){width=80%}
 
 ## Sequence of functionality/calls trough _Chirp!_
+We have made the following sequence diagram showing the flow of messages and data when an unauthorized user visits our homepage:
 
-- With a UML sequence diagram, illustrate the flow of messages and data through your _Chirp!_ application.
-- Start with an HTTP request that is sent by an unauthorized user to the root endpoint of your application and end with the completely rendered web-page that is returned to the user.
-
-- Make sure that your illustration is complete.
-- That is, likely for many of you there will be different kinds of "calls" and responses.
-- Some HTTP calls and responses, some calls and responses in C# and likely some more.
-- (Note the previous sentence is vague on purpose. I want that you create a complete illustration.)
-
-The flow of data in the application is depicted in the UML sequence diagram 'sequence':
-
-![Auth Complete](./images/sequence.png){width=80%}
+![Sequence diagram](./images/sequence.png){width=80%}
 
 # Process
 
 ## Build, test, release, and deployment
 
-### Pipeline (not done)
+### Pipeline
 
-![Pipeline](./images/pipeline/pipeline.png){width=80%}
+![Pipeline workflow](./images/pipeline/pipeline.png){width=20%}
 
 This is our pipeline workflow which job is to combine the other workflows. This defines different jobs in order to make sure workflow depend on eachother in the correct way. This is needed since some workflows reads the output of others, aswell as sometimes workflows should not even run if an other workflows fail.
 
-### Prepare pipeline (not done)
+### Prepare pipeline
 
-![Prepare pipeline](./images/pipeline/prepare-pipeline.png){width=80%}
+![Prepare pipeline workflow](./images/pipeline/prepare-pipeline.png){width=20%}
 
 This is our prepare pipeline workflow which declares variables that other workflows uses. This is done in different ways like reading what branch the pipeline is running on or reading file contents in the repository. This workflow then outputs these variables aswell as a summary. Other workflows can then use these variables to implment logic that defines the behavior of individual jobs and steps.
 
 ### Linting and testing
 
-![Lint and test](./images/pipeline/lint-and-test.png){width=80%}
+![Lint and test workflow](./images/pipeline/lint-and-test.png){width=20%}
 
 This workflow is responsible for testing and linting our project. Testing is done on both Windows and Linux runners, which ensures the project is compatible for both Windows and Linux. If the tests fail, the pipeline stops, and linting does not run. The linting part validates code formatting using `dotnet format --verify-no-changes`. This ensures formatting issues are resolved before commits through git hooks. 
 
 ### Build and release
 
-![Build and release](./images/pipeline/build-and-release.png){width=80%}
+![Build and release workflow](./images/pipeline/build-and-release.png){width=20%}
 
 This workflow builds the application and generates either full releases or pre-releases. For the `main` branch, a full release is created while the `staging` branch generates a pre-release that includes the short SHA of the latest commit in its version. Both full releases and pre-releases are built for multiple platforms including Windows, Linux, and macOS. The releases follow the "SemVer" semantic versioning standard, which is validated through a regex in the pipeline. Using SemVer forced us to consider when to make major, minor, or patch releases. However, since we implemented SemVer quite late in the project, we didn't really work with it until the end.
 
 ### Deploy to Azure
 
-![Deploy to Azure](./images/pipeline/deploy-to-azure.png){width=80%}
+![Deploy to Azure workflow](./images/pipeline/deploy-to-azure.png){width=20%}
 
 This workflow handles the deployment of the application to Azure and is executed only from the `main` branch to publish the application to production. For branches like staging, deployment jobs are skipped because a staging slot in Azure costs money, and we didn't want half done code to be deployed to production.
 
